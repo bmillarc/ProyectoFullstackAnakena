@@ -17,14 +17,19 @@ export default function Navbar({ logo, items }: NavbarProps) {
       <AppBar position="fixed">
         <Toolbar>
           {/* Logo */}
-          <Box sx={{ flexGrow: 1 }}>
-            <img src={logo} alt="Logo" style={{ height: 40 }} />
+          <Box sx={{ 
+            minHeight: '48px', 
+            height: 48,
+            py: 0,
+            px: 2,
+          }}>
+            <img src={logo} alt="Logo" style={{ height: 100 }} />
           </Box>
 
           {/* Desktop Menu */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {items.map((item, index) => (
-              <Button key={index} color="inherit" href={item.href}>
+              <Button key={index} color="inherit" href={item.href} sx= {{ px: 2, py: 0 }}>
                 {item.label}
               </Button>
             ))}
@@ -61,7 +66,7 @@ export default function Navbar({ logo, items }: NavbarProps) {
       </Drawer>
 
       {/* Spacer */}
-      <Toolbar />
+      <Toolbar/>
     </>
   );
 }

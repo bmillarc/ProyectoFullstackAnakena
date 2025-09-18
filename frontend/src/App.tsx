@@ -3,14 +3,16 @@ import Navbar from './components/Navbar';
 import Slider from './components/Slider';
 import type { NavbarItem } from './types/navbar';
 import type { SliderData } from './types/slider';
+import bannerImg from './assets/banner.png';
+import logoImg from './assets/logo.png';
 
-//Tema personalizado anakena
+// Tema personalizado anakena
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#19d251ff', 
+      main: '#2f8549ff',
       dark: '#073d23ff',
-      light: '#42f563ff',
+      light: '#184821ff',
     },
     secondary: {
       main: '#f50057',
@@ -48,8 +50,8 @@ const theme = createTheme({
 });
 
 function App() {
-  //Logo Navbar
-  const logo = '';
+  //Logo navbar
+  const logo = logoImg;
 
   //Menu Navbar
   const navbarItems: NavbarItem[] = [
@@ -79,25 +81,25 @@ function App() {
     },
   ];
 
-  //Datos Slider
+  //Datos Slider - usar las variables importadas correctamente
   const slides: SliderData[] = [
     {
       id: 'slide1',
-      title: 'holi',
+      title: 'Bienvenido a Anakena',
       subtitle: '',
-      image: '',
+      image: bannerImg, 
     },
     {
       id: 'slide2',
-      title: 'teni',
+      title: 'Nuestro Equipo',
       subtitle: '',
-      image: '',
+      image: bannerImg, 
     },
     {
       id: 'slide3',
-      title: 'pololi',
+      title: 'Historia y Tradición',
       subtitle: '',
-      image: '',
+      image: bannerImg, 
     },
   ];
 

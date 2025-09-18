@@ -50,7 +50,7 @@ export default function Slider({ slides, autoPlay = true, autoPlayInterval = 500
               alignItems: 'center',
               justifyContent: 'center',
               opacity: index === currentSlide ? 1 : 0,
-              transition: 'opacity 0.5s ease-in-out',
+              transition: 'opacity 1s ease-in-out',
               '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -166,7 +166,7 @@ export default function Slider({ slides, autoPlay = true, autoPlayInterval = 500
                 width: 12,
                 height: 12,
                 borderRadius: '50%',
-                bgcolor: index === currentSlide ? 'white' : alpha('#fff', 0.5),
+                bgcolor: index === currentSlide ? 'white' : alpha('#ffffffff', 0.5),
                 cursor: 'pointer',
                 transition: 'background-color 0.3s ease',
                 '&:hover': {
