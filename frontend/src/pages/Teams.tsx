@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { 
   SportsSoccer, SportsBasketball, SportsVolleyball, SportsHandball,
-  SportsTennis, Sports, DirectionsRun, FitnessCenter
+  SportsTennis, DirectionsRun, FitnessCenter
 } from '@mui/icons-material';
 import bannerImg from '../assets/banner.png';
 
@@ -50,7 +50,6 @@ export default function Teams() {
       case 'vóleibol': return <SportsVolleyball {...iconProps} />;
       case 'handball': return <SportsHandball {...iconProps} />;
       case 'tenis': return <SportsTennis {...iconProps} />;
-      case 'béisbol': return <Sports {...iconProps} />; // Cambiado de SportsBaseballSelector a Sports
       case 'atletismo': return <DirectionsRun {...iconProps} />;
       default: return <FitnessCenter {...iconProps} />;
     }
