@@ -12,6 +12,13 @@ export default function Navbar({ logo, items }: NavbarProps) {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleItemClick = (item: any, event: React.MouseEvent) => {
+    event.preventDefault();
+    if (item.onClick) {
+      item.onClick();
+    }
+  };
+
   return (
     <>
       <AppBar position="fixed">
@@ -29,7 +36,12 @@ export default function Navbar({ logo, items }: NavbarProps) {
           {/* Desktop Menu */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {items.map((item, index) => (
-              <Button key={index} color="inherit" href={item.href} sx= {{ px: 2, py: 0 }}>
+              <Button 
+                key={index} 
+                color="inherit" 
+                onClick={(e) => handleItemClick(item, e)}
+                sx={{ px: 2, py: 0 }}
+              >
                 {item.label}
               </Button>
             ))}
@@ -56,7 +68,12 @@ export default function Navbar({ logo, items }: NavbarProps) {
           <List>
             {items.map((item, index) => (
               <ListItem key={index} disablePadding>
-                <ListItemButton href={item.href} onClick={handleDrawerToggle}>
+                <ListItemButton 
+                  onClick={(e) => {
+                    handleItemClick(item, e);
+                    handleDrawerToggle();
+                  }}
+                >
                   <ListItemText primary={item.label} />
                 </ListItemButton>
               </ListItem>

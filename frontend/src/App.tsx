@@ -1,9 +1,9 @@
+import { useState } from 'react';
 import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
 import Navbar from './components/Navbar';
-import Slider from './components/Slider';
+import Home from './pages/Home';
+import Teams from './pages/Teams';
 import type { NavbarItem } from './types/navbar';
-import type { SliderData } from './types/slider';
-import bannerImg from './assets/banner.png';
 import logoImg from './assets/logo.png';
 
 // Tema personalizado anakena
@@ -50,58 +50,55 @@ const theme = createTheme({
 });
 
 function App() {
-  //Logo navbar
+  const [currentPage, setCurrentPage] = useState('inicio');
   const logo = logoImg;
 
-  //Menu Navbar
+  const handleNavigation = (page: string) => {
+    setCurrentPage(page);
+  };
+
   const navbarItems: NavbarItem[] = [
     {
       label: 'Inicio',
-      href: '/',
+      href: 'inicio',
+      onClick: () => handleNavigation('inicio'),
+    },
+    {
+      label: 'Equipos',
+      href: 'equipos',
+      onClick: () => handleNavigation('equipos'),
     },
     {
       label: 'Noticias',
-      href: '/noticias',
-    },
-    {
-      label: 'Equipo',
-      href: '/equipo',
+      href: 'noticias',
+      onClick: () => handleNavigation('noticias'),
     },
     {
       label: 'Historia',
-      href: '/historia',
+      href: 'historia',
+      onClick: () => handleNavigation('historia'),
     },
     {
       label: 'Calendario',
-      href: '/calendario',
+      href: 'calendario',
+      onClick: () => handleNavigation('calendario'),
     },
     {
       label: 'Tienda',
-      href: '/tienda',
+      href: 'tienda',
+      onClick: () => handleNavigation('tienda'),
     },
   ];
 
-  //Datos Slider - usar las variables importadas correctamente
-  const slides: SliderData[] = [
-    {
-      id: 'slide1',
-      title: 'Bienvenido a Anakena',
-      subtitle: '',
-      image: bannerImg, 
-    },
-    {
-      id: 'slide2',
-      title: 'Nuestro Equipo',
-      subtitle: '',
-      image: bannerImg, 
-    },
-    {
-      id: 'slide3',
-      title: 'Historia y Tradición',
-      subtitle: '',
-      image: bannerImg, 
-    },
-  ];
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'equipos':
+        return <Teams />;
+      case 'inicio':
+      default:
+        return <Home />;
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -109,7 +106,7 @@ function App() {
       <Box sx={{ minHeight: '100vh' }}>
         <Navbar logo={logo} items={navbarItems} />
         <Box component="main">
-          <Slider slides={slides} autoPlay={true} autoPlayInterval={4000} />
+          {renderCurrentPage()}
         </Box>
       </Box>
     </ThemeProvider>
