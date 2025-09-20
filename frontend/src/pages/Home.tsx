@@ -4,15 +4,8 @@ import { CalendarToday, EmojiEvents, Groups, Timeline } from '@mui/icons-materia
 import Slider from '../components/Slider';
 import type { SliderData } from '../types/slider';
 import bannerImg from '../assets/banner.png';
+import apiService, { type NewsItem } from '../services/api';
 
-interface NewsItem {
-  id: number;
-  title: string;
-  summary: string;
-  date: string;
-  image: string;
-  category: string;
-}
 
 interface Stat {
   icon: React.ReactNode;
@@ -23,6 +16,9 @@ interface Stat {
 
 export default function Home() {
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const [stats] = useState<Stat[]>([
     {
       icon: <Groups sx={{ fontSize: 40 }} />,
@@ -50,39 +46,71 @@ export default function Home() {
     }
   ]);
 
-  // Simular carga de noticias desde API (mock)
-  useEffect(() => {
-    // Simulamos un delay de carga
-    const timer = setTimeout(() => {
-      setNews([
-        {
-          id: 1,
-          title: 'Victoria histórica en el torneo de fútbol',
-          summary: 'El equipo de fútbol masculino de Anakena logró una victoria decisiva 3-1 contra el equipo de Ingeniería.',
-          date: '2024-09-15',
-          image: bannerImg,
-          category: 'Fútbol'
-        },
-        {
-          id: 2,
-          title: 'Nuevas incorporaciones en básquetbol femenino',
-          summary: 'Se suman 4 nuevas jugadoras al plantel de básquetbol femenino para la temporada 2024.',
-          date: '2024-09-12',
-          image: bannerImg,
-          category: 'Básquetbol'
-        },
-        {
-          id: 3,
-          title: 'Torneo interuniversitario de vóleibol',
-          summary: 'Anakena participa en el torneo interuniversitario con grandes expectativas.',
-          date: '2024-09-10',
-          image: bannerImg,
-          category: 'Vóleibol'
-        }
-      ]);
-    }, 1000);
+  // Navigation function
+  const handleNavigation = (page: string) => {
+    window.location.hash = `#${page}`;
+  };
 
-    return () => clearTimeout(timer);
+  useEffect(() => {
+    const loadNews = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Intentar cargar noticias desde la API
+        const newsData = await apiService.getNews();
+        setNews(newsData.slice(0, 3)); // Mostrar solo las 3 más recientes
+        
+      } catch (err) {
+        console.error('Error loading news from API:', err);
+        setError('Error al cargar las noticias desde el servidor');
+        
+        // Fallback a datos mock si falla la API
+        const mockNews: NewsItem[] = [
+          {
+            id: 1,
+            title: 'Victoria histórica en el torneo de fútbol',
+            summary: 'El equipo de fútbol masculino de Anakena logró una victoria decisiva 3-1 contra el equipo de Ingeniería.',
+            content: 'Contenido completo...',
+            date: '2024-09-18',
+            author: 'Comunicaciones Anakena',
+            category: 'Fútbol',
+            image: bannerImg,
+            teamId: 1,
+            featured: true
+          },
+          {
+            id: 2,
+            title: 'Nuevas incorporaciones en básquetbol femenino',
+            summary: 'Se suman 4 nuevas jugadoras al plantel de básquetbol femenino para la temporada 2024.',
+            content: 'Contenido completo...',
+            date: '2024-09-15',
+            author: 'Staff Técnico',
+            category: 'Básquetbol',
+            image: bannerImg,
+            teamId: 2,
+            featured: false
+          },
+          {
+            id: 3,
+            title: 'Torneo interuniversitario de vóleibol',
+            summary: 'Anakena participa en el torneo interuniversitario con grandes expectativas.',
+            content: 'Contenido completo...',
+            date: '2024-09-12',
+            author: 'Prensa Anakena',
+            category: 'Vóleibol',
+            image: bannerImg,
+            teamId: 3,
+            featured: true
+          }
+        ];
+        setNews(mockNews);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNews();
   }, []);
 
   const slides: SliderData[] = [
@@ -166,7 +194,13 @@ export default function Home() {
             Últimas Noticias
           </Typography>
           
-          {news.length === 0 ? (
+          {error && (
+            <Typography color="warning.main" textAlign="center" sx={{ mt: 2, mb: 2 }}>
+              {error} (Mostrando datos de ejemplo)
+            </Typography>
+          )}
+          
+          {loading ? (
             <Typography textAlign="center" color="text.secondary" sx={{ mt: 4 }}>
               Cargando noticias...
             </Typography>
@@ -207,6 +241,7 @@ export default function Home() {
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {new Date(item.date).toLocaleDateString('es-CL')}
+                      {item.author && ` - ${item.author}`}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -215,7 +250,11 @@ export default function Home() {
           )}
           
           <Box textAlign="center" sx={{ mt: 4 }}>
-            <Button variant="outlined" size="large">
+            <Button 
+              variant="outlined" 
+              size="large"
+              onClick={() => handleNavigation('noticias')}
+            >
               Ver Todas las Noticias
             </Button>
           </Box>
@@ -232,10 +271,18 @@ export default function Home() {
           ¡Te esperamos en los entrenamientos!
         </Typography>
         <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Button variant="contained" size="large">
+          <Button 
+            variant="contained" 
+            size="large"
+            onClick={() => handleNavigation('equipos')}
+          >
             Ver Equipos
           </Button>
-          <Button variant="outlined" size="large">
+          <Button 
+            variant="outlined" 
+            size="large"
+            onClick={() => handleNavigation('calendario')}
+          >
             Calendario
           </Button>
         </Box>

@@ -1,0 +1,301 @@
+{
+  "info": "Este archivo es un backup de la base de datos inicial",
+  "version": "1.0.0",
+  "lastUpdate": "2024-09-18",
+  "teams": [
+    {
+      "id": 1,
+      "sport": "Fútbol",
+      "name": "Anakena FC Masculino",
+      "category": "Masculino",
+      "description": "El equipo más tradicional del club, con participación en el torneo interfacultades desde 1999.",
+      "founded": "1999",
+      "captain": "Carlos Rodríguez",
+      "playersCount": 22,
+      "achievements": [
+        "Campeón Torneo Interfacultades 2022",
+        "Subcampeón Copa Universidad 2023",
+        "Mejor defensa temporada 2023"
+      ],
+      "nextMatch": {
+        "id": 1,
+        "date": "2024-09-25",
+        "opponent": "Ingeniería FC",
+        "location": "Cancha Sur Campus",
+        "time": "15:30"
+      },
+      "image": "/assets/teams/futbol-masculino.jpg"
+    },
+    {
+      "id": 2,
+      "sport": "Básquetbol",
+      "name": "Anakena Basquet Femenino",
+      "category": "Femenino",
+      "description": "Equipo de básquetbol femenino con gran proyección y talento joven.",
+      "founded": "2005",
+      "captain": "María González",
+      "playersCount": 12,
+      "achievements": [
+        "Tercer lugar Liga Universitaria 2023",
+        "Mejor anotadora individual 2022",
+        "Equipo revelación 2021"
+      ],
+      "nextMatch": {
+        "id": 2,
+        "date": "2024-09-28",
+        "opponent": "Medicina Panthers",
+        "location": "Gimnasio Central",
+        "time": "18:00"
+      },
+      "image": "/assets/teams/basquet-femenino.jpg"
+    },
+    {
+      "id": 3,
+      "sport": "Vóleibol",
+      "name": "Anakena Volley Mixto",
+      "category": "Mixto",
+      "description": "Equipo mixto de vóleibol que representa la diversidad y el compañerismo del club.",
+      "founded": "2010",
+      "captain": "Andrea Silva",
+      "playersCount": 16,
+      "achievements": [
+        "Campeón Torneo Mixto 2023",
+        "Mejor equipo en fair play 2022",
+        "Finalista Copa de Verano 2024"
+      ],
+      "nextMatch": {
+        "id": 3,
+        "date": "2024-09-30",
+        "opponent": "Psicología Spikers",
+        "location": "Cancha Techada",
+        "time": "19:30"
+      },
+      "image": "/assets/teams/volley-mixto.jpg"
+    },
+    {
+      "id": 4,
+      "sport": "Handball",
+      "name": "Anakena Handball Masculino",
+      "category": "Masculino",
+      "description": "Equipo de handball con técnica europea y pasión sudamericana.",
+      "founded": "2015",
+      "captain": "Diego Morales",
+      "playersCount": 14,
+      "achievements": [
+        "Subcampeón Regional 2023",
+        "Mejor portero del torneo 2022"
+      ],
+      "nextMatch": {
+        "id": 4,
+        "date": "2024-10-02",
+        "opponent": "Derecho Lawyers",
+        "location": "Cancha Norte",
+        "time": "16:00"
+      },
+      "image": "/assets/teams/handball-masculino.jpg"
+    },
+    {
+      "id": 5,
+      "sport": "Tenis",
+      "name": "Anakena Tennis Club",
+      "category": "Mixto",
+      "description": "Club de tenis con modalidades individuales y dobles, tanto masculino como femenino.",
+      "founded": "2008",
+      "captain": "Javiera Pérez",
+      "playersCount": 8,
+      "achievements": [
+        "Campeón dobles mixtos 2023",
+        "Finalista individual femenino 2023"
+      ],
+      "nextMatch": {
+        "id": 5,
+        "date": "2024-10-05",
+        "opponent": "Arquitectura Racquets",
+        "location": "Canchas de Tenis",
+        "time": "14:00"
+      },
+      "image": "/assets/teams/tenis-mixto.jpg"
+    },
+    {
+      "id": 6,
+      "sport": "Atletismo",
+      "name": "Anakena Runners",
+      "category": "Mixto",
+      "description": "Grupo de atletismo especializado en carreras de medio fondo y fondo.",
+      "founded": "2020",
+      "captain": "Pedro Contreras",
+      "playersCount": 20,
+      "achievements": [
+        "Mejor tiempo 10K universitario 2023",
+        "Equipo más numeroso en Maratón de Santiago 2024"
+      ],
+      "nextMatch": {
+        "id": 6,
+        "date": "2024-10-07",
+        "opponent": "Universidad de Chile",
+        "location": "Estadio Nacional",
+        "time": "09:00"
+      },
+      "image": "/assets/teams/atletismo-mixto.jpg"
+    }
+  ],
+  "players": [
+    {
+      "id": 1,
+      "name": "Carlos Rodríguez",
+      "teamId": 1,
+      "position": "Mediocampista",
+      "number": 10,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": true
+    },
+    {
+      "id": 2,
+      "name": "Juan Pérez",
+      "teamId": 1,
+      "position": "Delantero",
+      "number": 9,
+      "age": 21,
+      "carrera": "Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 3,
+      "name": "Mario Silva",
+      "teamId": 1,
+      "position": "Defensor",
+      "number": 4,
+      "age": 23,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 4,
+      "name": "Luis González",
+      "teamId": 1,
+      "position": "Arquero",
+      "number": 1,
+      "age": 24,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 5,
+      "name": "María González",
+      "teamId": 2,
+      "position": "Base",
+      "number": 5,
+      "age": 20,
+      "carrera": "Ciencias de la Computación",
+      "isCaptain": true
+    },
+    {
+      "id": 6,
+      "name": "Carolina Morales",
+      "teamId": 2,
+      "position": "Alero",
+      "number": 7,
+      "age": 21,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    }
+  ],
+  "matches": [
+    {
+      "id": 1,
+      "teamId": 1,
+      "opponent": "Ingeniería FC",
+      "date": "2024-09-25",
+      "time": "15:30",
+      "location": "Cancha Sur Campus",
+      "type": "local",
+      "status": "scheduled",
+      "tournament": "Torneo Interfacultades 2024"
+    },
+    {
+      "id": 2,
+      "teamId": 2,
+      "opponent": "Medicina Panthers",
+      "date": "2024-09-28",
+      "time": "18:00",
+      "location": "Gimnasio Central",
+      "type": "visitante",
+      "status": "scheduled",
+      "tournament": "Liga Universitaria Femenina 2024"
+    },
+    {
+      "id": 3,
+      "teamId": 1,
+      "opponent": "Derecho United",
+      "date": "2024-09-18",
+      "time": "16:00",
+      "location": "Cancha Norte",
+      "type": "local",
+      "status": "finished",
+      "result": {
+        "anakena": 3,
+        "opponent": 1
+      },
+      "tournament": "Torneo Interfacultades 2024"
+    }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "title": "Victoria histórica en el torneo de fútbol",
+      "summary": "El equipo de fútbol masculino de Anakena logró una victoria decisiva 3-1 contra el equipo de Derecho United.",
+      "content": "En un partido lleno de emoción disputado en la Cancha Norte del campus, el equipo de fútbol masculino de Anakena demostró su calidad futbolística al vencer 3-1 a Derecho United. Los goles fueron anotados por Juan Pérez (2) y Carlos Rodríguez (1), quien además tuvo una actuación destacada como capitán del equipo. Esta victoria coloca a Anakena en la cima de la tabla del Torneo Interfacultades 2024.",
+      "date": "2024-09-18",
+      "author": "Comunicaciones Anakena",
+      "category": "Fútbol",
+      "image": "/assets/news/futbol-victoria.jpg",
+      "teamId": 1,
+      "featured": true
+    },
+    {
+      "id": 2,
+      "title": "Nuevas incorporaciones en básquetbol femenino",
+      "summary": "Se suman 4 nuevas jugadoras al plantel de básquetbol femenino para la temporada 2024.",
+      "content": "El equipo de básquetbol femenino de Anakena ha confirmado la incorporación de cuatro nuevas jugadoras para fortalecer el plantel de cara a la Liga Universitaria Femenina 2024. Las nuevas integrantes son estudiantes de primer y segundo año que destacaron en los entrenamientos de pretemporada. 'Estamos muy emocionadas con estos nuevos talentos', comentó la capitana María González.",
+      "date": "2024-09-15",
+      "author": "Staff Técnico",
+      "category": "Básquetbol",
+      "image": "/assets/news/basquet-nuevas.jpg",
+      "teamId": 2,
+      "featured": false
+    },
+    {
+      "id": 3,
+      "title": "Torneo interuniversitario de vóleibol",
+      "summary": "Anakena participa en el torneo interuniversitario con grandes expectativas.",
+      "content": "El equipo mixto de vóleibol de Anakena se prepara para participar en el prestigioso Torneo Interuniversitario de Vóleibol que se realizará el próximo mes. El equipo ha mostrado un excelente nivel en los entrenamientos y cuenta con el apoyo incondicional de toda la comunidad del DCC. 'Vamos con todo por el título', declaró la capitana Andrea Silva.",
+      "date": "2024-09-12",
+      "author": "Prensa Anakena",
+      "category": "Vóleibol",
+      "image": "/assets/news/volley-torneo.jpg",
+      "teamId": 3,
+      "featured": true
+    }
+  ],
+  "tournaments": [
+    {
+      "id": 1,
+      "name": "Torneo Interfacultades 2024",
+      "sport": "Fútbol",
+      "startDate": "2024-08-15",
+      "endDate": "2024-11-30",
+      "teams": 12,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "name": "Liga Universitaria Femenina 2024",
+      "sport": "Básquetbol",
+      "startDate": "2024-09-01",
+      "endDate": "2024-12-15",
+      "teams": 8,
+      "status": "active"
+    }
+  ]
+}
