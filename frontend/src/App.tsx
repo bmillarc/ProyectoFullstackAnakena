@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Teams from './pages/Teams';
 import ComingSoon from './pages/ComingSoon';
 import type { NavbarItem } from './types/navbar';
-import logoImg from './assets/logo.png';
+import logoImg from './assets/logo-sin-fondo.png';
 
 // Tema personalizado anakena
 const theme = createTheme({
