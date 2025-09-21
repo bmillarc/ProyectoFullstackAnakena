@@ -7,7 +7,7 @@ import ComingSoon from './pages/ComingSoon';
 import type { NavbarItem } from './types/navbar';
 import logoImg from './assets/logo-sin-fondo.png';
 
-// Tema personalizado anakena
+// Tema 'Anakena'
 const theme = createTheme({
   palette: {
     primary: {
@@ -51,35 +51,35 @@ const theme = createTheme({
 });
 
 function App() {
-  // Function to get the current page from URL hash
+  // Funcion para obtener página actual de hash URL
   const getPageFromHash = (): string => {
-    const hash = window.location.hash.slice(1); // Remove the '#'
+    const hash = window.location.hash.slice(1); // Quitar el '#'
     return hash || 'inicio';
   };
 
   const [currentPage, setCurrentPage] = useState(getPageFromHash());
   const logo = logoImg;
 
-  // Handle navigation and update URL hash
+  // Encargo de navegación y actualización de hash URL
   const handleNavigation = (page: string) => {
     setCurrentPage(page);
     window.location.hash = `#${page}`;
   };
 
-  // Listen for hash changes (back/forward buttons, direct hash changes)
+  // Listener para cambios de hash (botones atrás/adelante, cambios de hash directos)
   useEffect(() => {
     const handleHashChange = () => {
       const newPage = getPageFromHash();
       setCurrentPage(newPage);
     };
 
-    // Listen for hash changes
+    // Listener para cambios de hash
     window.addEventListener('hashchange', handleHashChange);
 
-    // Set initial page based on current hash
+    // Setea página inicial según hash actual
     handleHashChange();
 
-    // Cleanup listener on component unmount
+    // Limpiador para unmount de componente
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
@@ -125,11 +125,11 @@ function App() {
       case 'noticias':
         return <ComingSoon pageName="Noticias" description="Aquí encontrarás todas las noticias y novedades del club Anakena. Incluirá artículos completos, galerías de fotos y videos de los partidos más importantes." />;
       case 'historia':
-        return <ComingSoon pageName="Historia del Club" description="Una línea de tiempo interactiva con los hitos más importantes de los 25+ años de historia del club Anakena DCC." />;
+        return <ComingSoon pageName="Historia del Club" description="Una línea de tiempo interactiva con los hitos más importantes de los 3+ años de historia del club Anakena DCC." />;
       case 'calendario':
         return <ComingSoon pageName="Calendario" description="Aquí podrás ver todos los partidos programados, horarios, ubicaciones y resultados de todos nuestros equipos." />;
       case 'tienda':
-        return <ComingSoon pageName="Tienda Anakena" description="Próximamente podrás adquirir merchandising oficial del club: camisetas, gorras, accesorios y más." />;
+        return <ComingSoon pageName="Tienda Anakena" description="Próximamente podrás adquirir merch oficial del club: camisetas, stickers, accesorios y más." />;
       case 'inicio':
       default:
         return <Home />;

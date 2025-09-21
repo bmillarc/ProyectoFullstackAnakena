@@ -84,7 +84,7 @@ class ApiService {
     }
   }
 
-  // Teams
+  // Equipos
   async getTeams(): Promise<Team[]> {
     return this.fetchApi<Team[]>('/teams');
   }
@@ -97,7 +97,7 @@ class ApiService {
     return this.fetchApi<Team[]>(`/teams?sport=${sport}`);
   }
 
-  // Players
+  // Jugadores
   async getPlayers(): Promise<Player[]> {
     return this.fetchApi<Player[]>('/players');
   }
@@ -110,7 +110,7 @@ class ApiService {
     return this.fetchApi<Player>(`/players/${id}`);
   }
 
-  // Matches
+  // Partidos
   async getMatches(): Promise<Match[]> {
     return this.fetchApi<Match[]>('/matches');
   }
@@ -127,7 +127,7 @@ class ApiService {
     return this.fetchApi<Match[]>('/matches?status=finished');
   }
 
-  // News
+  // Noticias
   async getNews(): Promise<NewsItem[]> {
     return this.fetchApi<NewsItem[]>('/news');
   }
@@ -144,7 +144,7 @@ class ApiService {
     return this.fetchApi<NewsItem>(`/news/${id}`);
   }
 
-  // Tournaments
+  // Torneos
   async getTournaments(): Promise<Tournament[]> {
     return this.fetchApi<Tournament[]>('/tournaments');
   }

@@ -11,7 +11,7 @@ export default function ComingSoon({
   description = "Esta funcionalidad estará disponible en los próximos hitos del proyecto." 
 }: ComingSoonProps) {
   
-  // Navigation function
+  // Funcion de navegación
   const handleNavigation = (page: string) => {
     window.location.hash = `#${page}`;
   };

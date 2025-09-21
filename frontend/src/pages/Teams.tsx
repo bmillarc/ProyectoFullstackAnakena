@@ -11,7 +11,7 @@ import {
 import { apiService, type Team, type Player } from '../services/api';
 import bannerImg from '../assets/banner.png';
 
-// Extender la interfaz Team para incluir la propiedad icon
+// Extensión de la interfaz 'Team' para incluir la propiedad 'icon'
 interface TeamWithIcon extends Team {
   icon: React.ReactNode;
 }
@@ -53,7 +53,7 @@ export default function Teams() {
         setError(null);
         
         const teamsData = await apiService.getTeams();
-        // Agregar iconos y imágenes a los equipos
+        // Agregar iconos e imágenes a los equipos
         const teamsWithIcons = teamsData.map(team => ({
           ...team,
           icon: getSportIcon(team.sport),
@@ -62,10 +62,10 @@ export default function Teams() {
         setTeams(teamsWithIcons);
         
       } catch (err) {
-        console.error('Error loading teams from API:', err);
+        console.error('Error cargando equipos desde API:', err);
         setError('Error al cargar los equipos desde el servidor');
         
-        // Fallback a datos mock si falla la API - Nueva lógica sin béisbol
+        // Fallback a datos mock si falla la API
         const mockTeams: TeamWithIcon[] = [
           {
             id: 1,
@@ -295,7 +295,6 @@ export default function Teams() {
             </Typography>
           </Box>
         ) : (
-          // Usando CSS Grid como en la nueva lógica
           <Box 
             sx={{ 
               display: 'grid',
@@ -416,7 +415,7 @@ export default function Teams() {
                 {selectedTeam.description}
               </Typography>
               
-              {/* Usando CSS Grid como en la nueva lógica */}
+              {/* CSS Grid */}
               <Box 
                 sx={{ 
                   display: 'grid',
