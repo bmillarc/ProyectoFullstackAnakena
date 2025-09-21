@@ -117,7 +117,7 @@ export default function Home() {
     {
       id: 'slide1',
       title: 'Bienvenido a Anakena DCC',
-      subtitle: 'El corazón deportivo del Departamento de Ciencias de la Computación',
+      subtitle: 'El corazón deportivo del Departamento de Ciencias de la Computación de la Universidad de Chile',
       image: bannerImg, 
     },
     {
@@ -129,7 +129,7 @@ export default function Home() {
     {
       id: 'slide3',
       title: 'Únete a Nosotros',
-      subtitle: 'Conoce nuestras 8 disciplinas y sé parte de la familia Anakena.',
+      subtitle: 'Conoce nuestras 8 disciplinas y sé parte de la familia Anakena',
       image: bannerImg, 
     },
   ];
