@@ -41,12 +41,12 @@ export default function Home() {
     {
       icon: <Timeline sx={{ fontSize: 40 }} />,
       label: 'Historia',
-      value: '25+',
+      value: '3+',
       description: 'Años de tradición'
     }
   ]);
 
-  // Navigation function
+  // Función de navegacion
   const handleNavigation = (page: string) => {
     window.location.hash = `#${page}`;
   };
@@ -57,7 +57,7 @@ export default function Home() {
         setLoading(true);
         setError(null);
         
-        // Intentar cargar noticias desde la API
+        // Se intenta cargar noticias desde la API
         const newsData = await apiService.getNews();
         setNews(newsData.slice(0, 3)); // Mostrar solo las 3 más recientes
         
@@ -123,13 +123,13 @@ export default function Home() {
     {
       id: 'slide2',
       title: 'Tradición y Excelencia',
-      subtitle: 'Más de 25 años formando deportistas y construyendo comunidad',
+      subtitle: 'Más de 3 años formando deportistas y construyendo comunidad',
       image: bannerImg, 
     },
     {
       id: 'slide3',
       title: 'Únete a Nosotros',
-      subtitle: '8 disciplinas esperan por ti. ¡Sé parte de la familia Anakena!',
+      subtitle: 'Conoce nuestras 8 disciplinas y sé parte de la familia Anakena.',
       image: bannerImg, 
     },
   ];
@@ -267,7 +267,10 @@ export default function Home() {
           ¿Listo para Ser Parte de Anakena?
         </Typography>
         <Typography variant="h6" color="text.secondary" paragraph sx={{ maxWidth: 600, mx: 'auto' }}>
-          Únete a nuestra comunidad deportiva y forma parte de la tradición más importante del DCC.
+          Únete a nuestra comunidad deportiva y sé parte de una de las tradiciones más queridas del DCC.
+        </Typography>
+
+        <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
           ¡Te esperamos en los entrenamientos!
         </Typography>
         <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
