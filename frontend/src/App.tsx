@@ -5,9 +5,11 @@ import Home from './pages/Home';
 import Teams from './pages/Teams';
 import ComingSoon from './pages/ComingSoon';
 import type { NavbarItem } from './types/navbar';
+import Footer from './components/Footer';
 import logoImg from './assets/logo-sin-fondo.png';
 
-// Tema 'Anakena'
+
+//Tema personalizado anakena
 const theme = createTheme({
   palette: {
     primary: {
@@ -51,35 +53,35 @@ const theme = createTheme({
 });
 
 function App() {
-  // Funcion para obtener página actual de hash URL
+  // Function to get the current page from URL hash
   const getPageFromHash = (): string => {
-    const hash = window.location.hash.slice(1); // Quitar el '#'
+    const hash = window.location.hash.slice(1); // Remove the '#'
     return hash || 'inicio';
   };
 
   const [currentPage, setCurrentPage] = useState(getPageFromHash());
-  const logo = logoImg;
+  const logo = logoImg; 
 
-  // Encargo de navegación y actualización de hash URL
+  // Handle navigation and update URL hash
   const handleNavigation = (page: string) => {
     setCurrentPage(page);
     window.location.hash = `#${page}`;
   };
 
-  // Listener para cambios de hash (botones atrás/adelante, cambios de hash directos)
+  // Listen for hash changes (back/forward buttons, direct hash changes)
   useEffect(() => {
     const handleHashChange = () => {
       const newPage = getPageFromHash();
       setCurrentPage(newPage);
     };
 
-    // Listener para cambios de hash
+    // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange);
 
-    // Setea página inicial según hash actual
+    // Set initial page based on current hash
     handleHashChange();
 
-    // Limpiador para unmount de componente
+    // Cleanup listener on component unmount
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
@@ -125,11 +127,11 @@ function App() {
       case 'noticias':
         return <ComingSoon pageName="Noticias" description="Aquí encontrarás todas las noticias y novedades del club Anakena. Incluirá artículos completos, galerías de fotos y videos de los partidos más importantes." />;
       case 'historia':
-        return <ComingSoon pageName="Historia del Club" description="Una línea de tiempo interactiva con los hitos más importantes de los 3+ años de historia del club Anakena DCC." />;
+        return <ComingSoon pageName="Historia del Club" description="Una línea de tiempo interactiva con los hitos más importantes de los 25+ años de historia del club Anakena DCC." />;
       case 'calendario':
         return <ComingSoon pageName="Calendario" description="Aquí podrás ver todos los partidos programados, horarios, ubicaciones y resultados de todos nuestros equipos." />;
       case 'tienda':
-        return <ComingSoon pageName="Tienda Anakena" description="Próximamente podrás adquirir merch oficial del club: camisetas, stickers, accesorios y más." />;
+        return <ComingSoon pageName="Tienda Anakena" description="Próximamente podrás adquirir merchandising oficial del club: camisetas, gorras, accesorios y más." />;
       case 'inicio':
       default:
         return <Home />;
@@ -137,16 +139,21 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ minHeight: '100vh' }}>
-        <Navbar logo={logo} items={navbarItems} />
-        <Box component="main">
-          {renderCurrentPage()}
-        </Box>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <Box sx={{ 
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <Navbar logo={logo} items={navbarItems} />
+      <Box component="main" sx={{ flex: 1 }}>
+        {renderCurrentPage()}
       </Box>
-    </ThemeProvider>
-  );
+      <Footer onNavigate={handleNavigation} />
+    </Box>
+  </ThemeProvider>
+);
 }
 
 export default App;
