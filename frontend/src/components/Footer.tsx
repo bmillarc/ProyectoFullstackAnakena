@@ -97,14 +97,14 @@ class Footer extends Component<FooterProps> {
             alignItems: { xs: 'flex-start', md: 'flex-start' },
             gap: 4
           }}>
-            {/* Left side - Sponsors and sections */}
+            {/* Left Side (Sponsors and Sections) */}
             <Box sx={{ 
               display: 'flex', 
               flexDirection: { xs: 'column', md: 'row' },
               gap: 4,
               flex: 1
             }}>
-              {/* Sponsors section */}
+              {/* Sponsors Section */}
               <Box sx={{ minWidth: '200px' }}>
                 <Typography 
                   variant="h6" 
@@ -138,18 +138,18 @@ class Footer extends Component<FooterProps> {
                 </Box>
               </Box>
               
-              {/* Navigation sections */}
+              {/* Navigation Sections */}
               {this.footerSections.map((section, index) => 
                 this.renderSection(section, index)
               )}
             </Box>
             
-            {/* Right side - Social and contact */}
+            {/* Right Side (Social and Contact) */}
             <Box sx={{ 
               minWidth: '250px',
               textAlign: { xs: 'left', md: 'right' }
             }}>
-              {/* Social icons */}
+              {/* Social Icons */}
               <Box sx={{ mb: 2 }}>
                 <Link href="https://youtube.com/@cdanakena?si=13OYeoRrJpNa38es" sx={{ color: 'white', mr: 1 }}>
                   <YouTube />
@@ -162,7 +162,7 @@ class Footer extends Component<FooterProps> {
                 </Link>
               </Box>
               
-              {/* Contact info */}
+              {/* Contact Info */}
               <Typography 
                 variant="body2" 
                 sx={{ 
@@ -177,7 +177,7 @@ class Footer extends Component<FooterProps> {
             </Box>
           </Box>
           
-          {/* Bottom copyright */}
+          {/* Bottom Copyright */}
           <Box
             sx={{
               borderTop: '1px solid rgba(255,255,255,0.2)',
