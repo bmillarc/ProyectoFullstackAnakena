@@ -21,7 +21,7 @@ export default function ComingSoon({
       {/* Header Section */}
       <Box 
         sx={{ 
-          bgcolor: 'primary.main',
+          bgcolor: 'primary.light',
           color: 'white',
           py: 8,
           textAlign: 'center'

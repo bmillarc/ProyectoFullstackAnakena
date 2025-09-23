@@ -253,20 +253,26 @@ export default function Teams() {
   };
 
   const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'Masculino': return 'primary';
-      case 'Femenino': return 'secondary';
-      case 'Mixto': return 'success';
-      default: return 'default';
-    }
-  };
+  switch (category) {
+    case 'Masculino': 
+      return '#000000'; 
+    case 'Femenino': 
+      return '#dd5415ff'; 
+    case 'Mixto': 
+      return '#2f8549'; 
+    default: 
+      return '#9e9e9e';
+  }
+};
+
+
 
   return (
     <Box>
       {/* Header Section */}
       <Box 
         sx={{ 
-          bgcolor: 'primary.main',
+          bgcolor: 'primary.light',
           color: 'white',
           py: 8,
           textAlign: 'center'
@@ -340,11 +346,14 @@ export default function Teams() {
                         {team.name}
                       </Typography>
                       <Chip 
-                        label={team.category} 
-                        size="small" 
-                        color={getCategoryColor(team.category) as any}
-                        sx={{ mt: 0.5 }}
-                      />
+                      label={team.category} 
+                      size="small" 
+                      sx={{ 
+                        mt: 0.5, 
+                        backgroundColor: getCategoryColor(team.category),  
+                        color: 'white',
+                      }}
+                    />
                     </Box>
                   </Box>
                   
@@ -404,10 +413,14 @@ export default function Teams() {
                     {selectedTeam.name}
                   </Typography>
                   <Chip 
-                    label={selectedTeam.category} 
-                    size="small" 
-                    color={getCategoryColor(selectedTeam.category) as any}
-                  />
+                  label={selectedTeam.category} 
+                  size="small" 
+                  sx={{ 
+                    mt: 0.5, 
+                    backgroundColor: getCategoryColor(selectedTeam.category),  
+                    color: 'white',
+                  }}
+                />
                 </Box>
               </Box>
             </DialogTitle>
