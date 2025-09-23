@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Box, Container, Typography, Link } from '@mui/material';
 import type { FooterItem, FooterSection, FooterProps } from '../types/footer';
 import { Instagram, YouTube, Telegram } from '@mui/icons-material';
-import sponsor1 from './../assets/solotodo.png';
+import sponsor1 from './../assets/solotodo2.png';
 
 class Footer extends Component<FooterProps> {
   private footerSections: FooterSection[] = [
