@@ -50,7 +50,7 @@ class Footer extends Component<FooterProps> {
             fontSize: '1rem'
           }}
         >
-          ▶ {section.title}
+          ★ {section.title}
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           {section.items.map((item, itemIndex) => (
