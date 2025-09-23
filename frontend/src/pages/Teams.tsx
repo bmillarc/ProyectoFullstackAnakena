@@ -10,6 +10,8 @@ import {
 } from '@mui/icons-material';
 import { apiService, type Team, type Player } from '../services/api';
 import bannerImg from '../assets/banner.png';
+import { resolveTeamImage } from '../utils/imagenes';
+
 
 // Extensión de la interfaz 'Team' para incluir la propiedad 'icon'
 interface TeamWithIcon extends Team {
@@ -57,7 +59,7 @@ export default function Teams() {
         const teamsWithIcons = teamsData.map(team => ({
           ...team,
           icon: getSportIcon(team.sport),
-          image: team.image || bannerImg // Fallback a imagen por defecto
+          image: resolveTeamImage(team.image) || bannerImg // Fallback a imagen por defecto
         }));
         setTeams(teamsWithIcons);
         
