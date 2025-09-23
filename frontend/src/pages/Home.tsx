@@ -7,6 +7,9 @@ import bannerImg from '../assets/banner.png';
 import apiService, { type NewsItem } from '../services/api';
 import { resolveNewsImage } from '../utils/imagenes';
 
+import imagen2 from '../assets/banner2.jpg';
+import imagen3 from '../assets/banner3.jpg';
+
 
 interface Stat {
   icon: React.ReactNode;
@@ -131,13 +134,13 @@ export default function Home() {
       id: 'slide2',
       title: 'Tradición y Excelencia',
       subtitle: 'Más de 3 años formando deportistas y construyendo comunidad',
-      image: bannerImg, 
+      image: imagen2, 
     },
     {
       id: 'slide3',
       title: 'Únete a Nosotros',
       subtitle: 'Conoce nuestras 8 disciplinas y sé parte de la familia Anakena',
-      image: bannerImg, 
+      image: imagen3, 
     },
   ];
 
