@@ -5,6 +5,7 @@ import Slider from '../components/Slider';
 import type { SliderData } from '../types/slider';
 import bannerImg from '../assets/banner.png';
 import apiService, { type NewsItem } from '../services/api';
+import { resolveNewsImage } from '../utils/imagenes';
 
 
 interface Stat {
@@ -59,8 +60,14 @@ export default function Home() {
         
         // Se intenta cargar noticias desde la API
         const newsData = await apiService.getNews();
-        setNews(newsData.slice(0, 3)); // Mostrar solo las 3 más recientes
-        
+
+        // Si la API manda "/assets/news/blabla.jpg" o "blabla.jpg", se traduce a la URL real
+        const newsWithImg = newsData.slice(0, 3).map(n => ({
+          ...n,
+          image: resolveNewsImage(n.image) || bannerImg, // fallback
+        }));
+        setNews(newsWithImg);
+
       } catch (err) {
         console.error('Error loading news from API:', err);
         setError('Error al cargar las noticias desde el servidor');

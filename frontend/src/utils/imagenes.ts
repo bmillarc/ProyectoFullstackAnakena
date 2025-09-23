@@ -15,3 +15,16 @@ export function resolveTeamImage(img?: string) {
 
   return (images as Record<string, string>)[key] ?? '';
 }
+
+export const newsImages = import.meta.glob('/src/assets/news/*', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+});
+
+export function resolveNewsImage(img?: string) {
+  if (!img) return '';
+  const filename = img.split('/').pop()!; // "olimpiadas-computinas.jpg"
+  const key = `/src/assets/news/${filename}`;
+  return (newsImages as Record<string, string>)[key] ?? '';
+}

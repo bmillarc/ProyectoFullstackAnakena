@@ -238,43 +238,44 @@
     }
   ],
   "news": [
-    {
-      "id": 1,
-      "title": "Victoria histórica en el torneo de fútbol",
-      "summary": "El equipo de fútbol masculino de Anakena logró una victoria decisiva 3-1 contra el equipo de Derecho United.",
-      "content": "En un partido lleno de emoción disputado en la Cancha Norte del campus, el equipo de fútbol masculino de Anakena demostró su calidad futbolística al vencer 3-1 a Derecho United. Los goles fueron anotados por Juan Pérez (2) y Carlos Rodríguez (1), quien además tuvo una actuación destacada como capitán del equipo. Esta victoria coloca a Anakena en la cima de la tabla del Torneo Interfacultades 2024.",
-      "date": "2024-09-18",
-      "author": "Comunicaciones Anakena",
-      "category": "Fútbol",
-      "image": "/assets/news/futbol-victoria.jpg",
-      "teamId": 1,
-      "featured": true
-    },
-    {
-      "id": 2,
-      "title": "Nuevas incorporaciones en básquetbol femenino",
-      "summary": "Se suman 4 nuevas jugadoras al plantel de básquetbol femenino para la temporada 2024.",
-      "content": "El equipo de básquetbol femenino de Anakena ha confirmado la incorporación de cuatro nuevas jugadoras para fortalecer el plantel de cara a la Liga Universitaria Femenina 2024. Las nuevas integrantes son estudiantes de primer y segundo año que destacaron en los entrenamientos de pretemporada. 'Estamos muy emocionadas con estos nuevos talentos', comentó la capitana María González.",
-      "date": "2024-09-15",
-      "author": "Staff Técnico",
-      "category": "Básquetbol",
-      "image": "/assets/news/basquet-nuevas.jpg",
-      "teamId": 2,
-      "featured": false
-    },
-    {
-      "id": 3,
-      "title": "Torneo interuniversitario de vóleibol",
-      "summary": "Anakena participa en el torneo interuniversitario con grandes expectativas.",
-      "content": "El equipo mixto de vóleibol de Anakena se prepara para participar en el prestigioso Torneo Interuniversitario de Vóleibol que se realizará el próximo mes. El equipo ha mostrado un excelente nivel en los entrenamientos y cuenta con el apoyo incondicional de toda la comunidad del DCC. 'Vamos con todo por el título', declaró la capitana Andrea Silva.",
-      "date": "2024-09-12",
-      "author": "Prensa Anakena",
-      "category": "Vóleibol",
-      "image": "/assets/news/volley-torneo.jpg",
-      "teamId": 3,
-      "featured": true
-    }
-  ],
+  {
+    "id": 1,
+    "title": "Victoria en las Olimpiadas Computinas: Anakena Campeón",
+    "summary": "El equipo de Anakena se coronó campeón en las Olimpiadas Computinas, competencia entre departamentos de computación universitarios en Santiago.",
+    "content": "Después de intensas jornadas de competiciones deportivas entre los departamentos de computación de la Universidad de Chile, la PUC, la USM y la USACH, Anakena logró adjudicarse el primer lugar en las Olimpiadas Computinas. El triunfo se consiguió gracias al esfuerzo colectivo y al gran rendimiento en fútbol, básquetbol 3×3 y vóleibol mixto. Felicitaciones a todos los atletas y al staff por su compromiso y entrega.",
+    "date": "2025-09-10",
+    "author": "Comunicaciones Anakena",
+    "category": "Competencia Interuniversitaria",
+    "image": "/assets/news/olimpiadas-computinas.jpg",
+    "teamId": null,
+    "featured": true
+  },
+  {
+    "id": 2,
+    "title": "Se viene la Copa CDI en la FCFM",
+    "summary": "La tradicional Copa CDI de la Facultad de Ciencias Físicas y Matemáticas se realizará próximamente con todas las especialidades participantes.",
+    "content": "El Centro Deportivo de Ingeniería (CDI) de la FCFM organiza la Copa CDI 2025, que se llevará a cabo entre las distintas especialidades de la facultad. Anakena ya está preparando su equipo, esperando repetir buenos resultados en disciplinas como fútbol, básquetbol, tenis de mesa y vóleibol. Próximamente se anunciarán la fecha exacta, el fixture y las categorías.",
+    "date": "2025-10-05",
+    "author": "Staff Deportivo Anakena",
+    "category": "Copa CDI",
+    "image": "/assets/news/copa-cdi-fcfm.jpg",
+    "teamId": null,
+    "featured": false
+  },
+  {
+    "id": 3,
+    "title": "Ganamos La Mona en la FCFM: ¡Somos tricampeones!",
+    "summary": "Anakena se alzó con La Mona, consiguiendo su tercer campeonato consecutivo en este torneo de la FCFM.",
+    "content": "La Mona 2025 fue un éxito para Anakena: después de semanas de partidos intensos en las distintas disciplinas deportivas, logramos el campeonato por tercer año consecutivo. Si bien tuvimos derrotas en algunos encuentros, en todo momento dimos lo mejor de nosotros y finalmente alcanzamos la victoria general, reflejo del esfuerzo, la unión y el compromiso de cada integrante del club.",
+    "date": "2025-09-25",
+    "author": "Prensa Anakena",
+    "category": "La Mona",
+    "image": "/assets/news/la-mona-tricampeones.jpg",
+    "teamId": null,
+    "featured": true
+  }
+]
+,
   "tournaments": [
     {
       "id": 1,
