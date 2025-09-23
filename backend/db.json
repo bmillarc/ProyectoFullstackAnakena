@@ -5,8 +5,8 @@
       "sport": "Fútbol",
       "name": "Anakena FC Masculino",
       "category": "Masculino",
-      "description": "El equipo más tradicional del club, con participación en el torneo interfacultades desde 1999.",
-      "founded": "1999",
+      "description": "El equipo más tradicional del club, con participación en el torneo interfacultades, La Mona, desde 2022.",
+      "founded": "2022",
       "captain": "Carlos Rodríguez",
       "playersCount": 22,
       "achievements": [
@@ -16,9 +16,9 @@
       ],
       "nextMatch": {
         "id": 1,
-        "date": "2024-09-25",
-        "opponent": "Ingeniería FC",
-        "location": "Cancha Sur Campus",
+        "date": "2025-09-25",
+        "opponent": "DCC UC",
+        "location": "Cancha Sur Campus San Joaquín",
         "time": "15:30"
       },
       "image": "/assets/teams/futbol-masculino.jpg"
@@ -26,89 +26,89 @@
     {
       "id": 2,
       "sport": "Básquetbol",
-      "name": "Anakena Basquet Femenino",
-      "category": "Femenino",
-      "description": "Equipo de básquetbol femenino con gran proyección y talento joven.",
-      "founded": "2005",
+      "name": "Anakena Basquet Mixto",
+      "category": "Mixto",
+      "description": "Equipo de básquetbol mixto con gran proyección y talento joven.",
+      "founded": "2022",
       "captain": "María González",
       "playersCount": 12,
       "achievements": [
         "Tercer lugar Liga Universitaria 2023",
         "Mejor anotadora individual 2022",
-        "Equipo revelación 2021"
+        "Equipo revelación 2022"
       ],
       "nextMatch": {
         "id": 2,
-        "date": "2024-09-28",
-        "opponent": "Medicina Panthers",
-        "location": "Gimnasio Central",
+        "date": "2025-09-28",
+        "opponent": "Medicina USACH",
+        "location": "Gimnasio Central USACH",
         "time": "18:00"
       },
-      "image": "/assets/teams/basquet-femenino.jpg"
+      "image": "/assets/teams/basquet-mixto.jpg"
     },
     {
       "id": 3,
       "sport": "Vóleibol",
-      "name": "Anakena Volley Mixto",
-      "category": "Mixto",
-      "description": "Equipo mixto de vóleibol que representa la diversidad y el compañerismo del club.",
-      "founded": "2010",
+      "name": "Anakena Volley Femenino",
+      "category": "Femenino",
+      "description": "Equipo femenino de vóleibol que representa la fuerza y la unidad del club.",
+      "founded": "2023",
       "captain": "Andrea Silva",
       "playersCount": 16,
       "achievements": [
-        "Campeón Torneo Mixto 2023",
-        "Mejor equipo en fair play 2022",
-        "Finalista Copa de Verano 2024"
+        "Campeón Torneo Femenino 2023",
+        "Mejor equipo en fair play 2024",
+        "Finalista Copa CDI 2024"
       ],
       "nextMatch": {
         "id": 3,
-        "date": "2024-09-30",
-        "opponent": "Psicología Spikers",
-        "location": "Cancha Techada",
+        "date": "2025-09-30",
+        "opponent": "Psico-Remate UCH",
+        "location": "Campo Deportivo Juan Gómez Millas UCH",
         "time": "19:30"
       },
-      "image": "/assets/teams/volley-mixto.jpg"
+      "image": "/assets/teams/volley-femenino.jpg"
     },
     {
       "id": 4,
       "sport": "Handball",
-      "name": "Anakena Handball Masculino",
-      "category": "Masculino",
-      "description": "Equipo de handball con técnica europea y pasión sudamericana.",
-      "founded": "2015",
+      "name": "Anakena Handball Mixto",
+      "category": "Mixto",
+      "description": "Equipo de handball mixto que combina estrategia, habilidades técnicas y un fuerte espíritu de equipo.",
+      "founded": "2023",
       "captain": "Diego Morales",
       "playersCount": 14,
       "achievements": [
-        "Subcampeón Regional 2023",
-        "Mejor portero del torneo 2022"
+        "Campeón La Mona 2023",
+        "Mejor portero del torneo 2024"
       ],
       "nextMatch": {
         "id": 4,
-        "date": "2024-10-02",
-        "opponent": "Derecho Lawyers",
-        "location": "Cancha Norte",
+        "date": "2025-10-02",
+        "opponent": "Derecho Defensores UDP",
+        "location": "Cancha Norte UDP",
         "time": "16:00"
       },
-      "image": "/assets/teams/handball-masculino.jpg"
+      "image": "/assets/teams/handball-mixto.jpg"
     },
     {
       "id": 5,
       "sport": "Tenis",
-      "name": "Anakena Tennis Club",
+      "name": "Anakena Tenis de Mesa Club",
       "category": "Mixto",
-      "description": "Club de tenis con modalidades individuales y dobles, tanto masculino como femenino.",
-      "founded": "2008",
+      "description": "Club de tenis de mesa con modalidades individuales y dobles, tanto masculino como femenino.",
+      "founded": "2025",
       "captain": "Javiera Pérez",
       "playersCount": 8,
       "achievements": [
-        "Campeón dobles mixtos 2023",
-        "Finalista individual femenino 2023"
+        "Campeón dobles mixtos 2025",
+        "Finalista individual femenino 2024"
       ],
       "nextMatch": {
         "id": 5,
-        "date": "2024-10-05",
-        "opponent": "Arquitectura Racquets",
-        "location": "Canchas de Tenis",
+        "date": "2025-10-05",
+        "opponent": "ArquiRAQ UCH",
+        "location": "Patio Sur FAU",
         "time": "14:00"
       },
       "image": "/assets/teams/tenis-mixto.jpg"
@@ -118,24 +118,27 @@
       "sport": "Atletismo",
       "name": "Anakena Runners",
       "category": "Mixto",
-      "description": "Grupo de atletismo especializado en carreras de medio fondo y fondo.",
-      "founded": "2020",
+      "description": "Grupo de running especializado en carreras de medio fondo y fondo.",
+      "founded": "2024",
       "captain": "Pedro Contreras",
       "playersCount": 20,
       "achievements": [
-        "Mejor tiempo 10K universitario 2023",
-        "Equipo más numeroso en Maratón de Santiago 2024"
+        "Mejor tiempo 10K universitario 2024",
+        "Equipo más numeroso en Corrida Beauchef 2025"
       ],
       "nextMatch": {
         "id": 6,
-        "date": "2024-10-07",
-        "opponent": "Universidad de Chile",
-        "location": "Estadio Nacional",
+        "date": "2025-10-07",
+        "opponent": "DCC Runners PUC",
+        "location": "Parque O'Higgins",
         "time": "09:00"
       },
       "image": "/assets/teams/atletismo-mixto.jpg"
     }
   ],
+
+
+
   "players": [
     {
       "id": 1,
@@ -154,7 +157,7 @@
       "position": "Delantero",
       "number": 9,
       "age": 21,
-      "carrera": "Ciencias de la Computación",
+      "carrera": "Ingeniería Civil en Computación",
       "isCaptain": false
     },
     {
@@ -178,13 +181,195 @@
       "isCaptain": false
     },
     {
+      "id": 7,
+      "name": "Sebastián Torres",
+      "teamId": 1,
+      "position": "Defensor",
+      "number": 2,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 8,
+      "name": "Andrés Morales",
+      "teamId": 1,
+      "position": "Defensor",
+      "number": 3,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 9,
+      "name": "Felipe Muñoz",
+      "teamId": 1,
+      "position": "Defensor",
+      "number": 5,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 10,
+      "name": "Cristián Vargas",
+      "teamId": 1,
+      "position": "Mediocampista",
+      "number": 6,
+      "age": 23,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 11,
+      "name": "Rodrigo Hernández",
+      "teamId": 1,
+      "position": "Mediocampista",
+      "number": 8,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 12,
+      "name": "Nicolás Rojas",
+      "teamId": 1,
+      "position": "Mediocampista",
+      "number": 11,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 13,
+      "name": "Gabriel Castro",
+      "teamId": 1,
+      "position": "Delantero",
+      "number": 7,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 14,
+      "name": "Matías Pinto",
+      "teamId": 1,
+      "position": "Delantero",
+      "number": 19,
+      "age": 22,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 15,
+      "name": "Diego Santander",
+      "teamId": 1,
+      "position": "Arquero",
+      "number": 12,
+      "age": 23,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 16,
+      "name": "Ignacio Fuentes",
+      "teamId": 1,
+      "position": "Defensor",
+      "number": 13,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 17,
+      "name": "Jorge Olivares",
+      "teamId": 1,
+      "position": "Mediocampista",
+      "number": 14,
+      "age": 24,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 18,
+      "name": "Tomás Mendoza",
+      "teamId": 1,
+      "position": "Delantero",
+      "number": 15,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 19,
+      "name": "Francisco Espinoza",
+      "teamId": 1,
+      "position": "Mediocampista",
+      "number": 16,
+      "age": 22,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 20,
+      "name": "Eduardo Valenzuela",
+      "teamId": 1,
+      "position": "Defensor",
+      "number": 17,
+      "age": 21,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 21,
+      "name": "Benjamín Soto",
+      "teamId": 1,
+      "position": "Delantero",
+      "number": 18,
+      "age": 23,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 22,
+      "name": "Patricio Ramírez",
+      "teamId": 1,
+      "position": "Mediocampista",
+      "number": 20,
+      "age": 22,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 23,
+      "name": "Vicente Alarcón",
+      "teamId": 1,
+      "position": "Defensor",
+      "number": 21,
+      "age": 20,
+      "carrera": "Ingeniería Civil Mecánica",
+      "isCaptain": false
+    },
+    {
+      "id": 24,
+      "name": "Maximiliano León",
+      "teamId": 1,
+      "position": "Delantero",
+      "number": 22,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    
+
+    {
       "id": 5,
       "name": "María González",
       "teamId": 2,
       "position": "Base",
       "number": 5,
       "age": 20,
-      "carrera": "Ciencias de la Computación",
+      "carrera": "Astronomía",
       "isCaptain": true
     },
     {
@@ -196,36 +381,727 @@
       "age": 21,
       "carrera": "Ingeniería Civil en Computación",
       "isCaptain": false
+    },
+    {
+      "id": 25,
+      "name": "Javier Núñez",
+      "teamId": 2,
+      "position": "Pívot",
+      "number": 15,
+      "age": 23,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 26,
+      "name": "Valentina Cortés",
+      "teamId": 2,
+      "position": "Escolta",
+      "number": 8,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 27,
+      "name": "Gonzalo Rivas",
+      "teamId": 2,
+      "position": "Ala-Pívot",
+      "number": 14,
+      "age": 21,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 28,
+      "name": "Isidora Flores",
+      "teamId": 2,
+      "position": "Base",
+      "number": 4,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 29,
+      "name": "Martín Vega",
+      "teamId": 2,
+      "position": "Alero",
+      "number": 11,
+      "age": 22,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 30,
+      "name": "Francisca Díaz",
+      "teamId": 2,
+      "position": "Ala-Pívot",
+      "number": 9,
+      "age": 21,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 31,
+      "name": "Álvaro Sandoval",
+      "teamId": 2,
+      "position": "Escolta",
+      "number": 12,
+      "age": 23,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 32,
+      "name": "Amanda Torres",
+      "teamId": 2,
+      "position": "Pívot",
+      "number": 13,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 33,
+      "name": "Ricardo Peña",
+      "teamId": 2,
+      "position": "Base",
+      "number": 6,
+      "age": 24,
+      "carrera": "Astronomía",
+      "isCaptain": false
+    },
+    {
+      "id": 34,
+      "name": "Camila Herrera",
+      "teamId": 2,
+      "position": "Alero",
+      "number": 10,
+      "age": 21,
+      "carrera": "Ingeniería Civil en Eléctrica",
+      "isCaptain": false
+    },
+
+  
+    {
+      "id": 35,
+      "name": "Andrea Silva",
+      "teamId": 3,
+      "position": "Armadora",
+      "number": 1,
+      "age": 21,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": true
+    },
+    {
+      "id": 36,
+      "name": "Javiera Carrasco",
+      "teamId": 3,
+      "position": "Atacadora",
+      "number": 4,
+      "age": 22,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 37,
+      "name": "Sofía Martínez",
+      "teamId": 3,
+      "position": "Central",
+      "number": 8,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 38,
+      "name": "Catalina Bravo",
+      "teamId": 3,
+      "position": "Líbero",
+      "number": 12,
+      "age": 21,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 39,
+      "name": "Florencia Navarro",
+      "teamId": 3,
+      "position": "Atacadora",
+      "number": 7,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 40,
+      "name": "Constanza Reyes",
+      "teamId": 3,
+      "position": "Central",
+      "number": 11,
+      "age": 23,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 41,
+      "name": "Antonia Lagos",
+      "teamId": 3,
+      "position": "Armadora",
+      "number": 2,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 42,
+      "name": "Bárbara Mendez",
+      "teamId": 3,
+      "position": "Atacadora",
+      "number": 5,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 43,
+      "name": "Josefa Ruiz",
+      "teamId": 3,
+      "position": "Central",
+      "number": 9,
+      "age": 22,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 44,
+      "name": "Macarena Villalobos",
+      "teamId": 3,
+      "position": "Líbero",
+      "number": 6,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 45,
+      "name": "Daniela Campos",
+      "teamId": 3,
+      "position": "Atacadora",
+      "number": 3,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 46,
+      "name": "Fernanda Gutiérrez",
+      "teamId": 3,
+      "position": "Central",
+      "number": 10,
+      "age": 23,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 47,
+      "name": "Esperanza Castro",
+      "teamId": 3,
+      "position": "Armadora",
+      "number": 13,
+      "age": 22,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 48,
+      "name": "Trinidad Moreno",
+      "teamId": 3,
+      "position": "Atacadora",
+      "number": 14,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 49,
+      "name": "Amelia Sánchez",
+      "teamId": 3,
+      "position": "Central",
+      "number": 15,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 50,
+      "name": "Paloma Jiménez",
+      "teamId": 3,
+      "position": "Líbero",
+      "number": 16,
+      "age": 22,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+
+    
+    {
+      "id": 51,
+      "name": "Diego Morales",
+      "teamId": 4,
+      "position": "Lateral Derecho",
+      "number": 7,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": true
+    },
+    {
+      "id": 52,
+      "name": "Rocío Medina",
+      "teamId": 4,
+      "position": "Arquera",
+      "number": 1,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 53,
+      "name": "Mateo Riveros",
+      "teamId": 4,
+      "position": "Pívot",
+      "number": 9,
+      "age": 23,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 54,
+      "name": "Emilia Robles",
+      "teamId": 4,
+      "position": "Lateral Izquierda",
+      "number": 11,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 55,
+      "name": "Cristóbal Aguilar",
+      "teamId": 4,
+      "position": "Central",
+      "number": 6,
+      "age": 22,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 56,
+      "name": "Isabella Paredes",
+      "teamId": 4,
+      "position": "Extremo Derecho",
+      "number": 2,
+      "age": 21,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 57,
+      "name": "Joaquín Salinas",
+      "teamId": 4,
+      "position": "Extremo Izquierdo",
+      "number": 3,
+      "age": 24,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 58,
+      "name": "Antonella Vásquez",
+      "teamId": 4,
+      "position": "Central",
+      "number": 8,
+      "age": 22,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 59,
+      "name": "Lucas Ortega",
+      "teamId": 4,
+      "position": "Arquero",
+      "number": 12,
+      "age": 21,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 60,
+      "name": "Renata Sepúlveda",
+      "teamId": 4,
+      "position": "Lateral Derecha",
+      "number": 4,
+      "age": 20,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 61,
+      "name": "Agustín Cáceres",
+      "teamId": 4,
+      "position": "Pívot",
+      "number": 10,
+      "age": 23,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 62,
+      "name": "Victoria Palacios",
+      "teamId": 4,
+      "position": "Extremo Izquierda",
+      "number": 5,
+      "age": 21,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 63,
+      "name": "Sebastián Ibáñez",
+      "teamId": 4,
+      "position": "Lateral Izquierdo",
+      "number": 13,
+      "age": 22,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 64,
+      "name": "Magdalena Quiroz",
+      "teamId": 4,
+      "position": "Central",
+      "number": 14,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+
+
+    {
+      "id": 65,
+      "name": "Javiera Pérez",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 1,
+      "age": 21,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": true
+    },
+    {
+      "id": 66,
+      "name": "Felipe Cortez",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 2,
+      "age": 22,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 67,
+      "name": "Monserrat Loyola",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 3,
+      "age": 20,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 68,
+      "name": "Esteban Miranda",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 4,
+      "age": 23,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 69,
+      "name": "Pilar Valdés",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 5,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 70,
+      "name": "Rodrigo Tapia",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 6,
+      "age": 24,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 71,
+      "name": "Camila Escobar",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 7,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 72,
+      "name": "Tomás Araya",
+      "teamId": 5,
+      "position": "Individual/Dobles",
+      "number": 8,
+      "age": 20,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+
+    
+    {
+      "id": 73,
+      "name": "Pedro Contreras",
+      "teamId": 6,
+      "position": "Medio Fondo",
+      "number": 1,
+      "age": 23,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": true
+    },
+    {
+      "id": 74,
+      "name": "Fernanda Lagos",
+      "teamId": 6,
+      "position": "Fondo",
+      "number": 2,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 75,
+      "name": "Óscar Ramírez",
+      "teamId": 6,
+      "position": "Velocidad",
+      "number": 3,
+      "age": 22,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 76,
+      "name": "Almudena Mora",
+      "teamId": 6,
+      "position": "Medio Fondo",
+      "number": 4,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 77,
+      "name": "Hernán Castillo",
+      "teamId": 6,
+      "position": "Fondo",
+      "number": 5,
+      "age": 24,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 78,
+      "name": "Valentina Bustos",
+      "teamId": 6,
+      "position": "Velocidad",
+      "number": 6,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 79,
+      "name": "Claudio Figueroa",
+      "teamId": 6,
+      "position": "Medio Fondo",
+      "number": 7,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 80,
+      "name": "Ignacia Varela",
+      "teamId": 6,
+      "position": "Fondo",
+      "number": 8,
+      "age": 23,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 81,
+      "name": "Maximiliano Cuevas",
+      "teamId": 6,
+      "position": "Velocidad",
+      "number": 9,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 82,
+      "name": "Carla Mondaca",
+      "teamId": 6,
+      "position": "Medio Fondo",
+      "number": 10,
+      "age": 21,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 83,
+      "name": "Iván Poblete",
+      "teamId": 6,
+      "position": "Fondo",
+      "number": 11,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 84,
+      "name": "Martina Ulloa",
+      "teamId": 6,
+      "position": "Velocidad",
+      "number": 12,
+      "age": 24,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 85,
+      "name": "Bruno Ahumada",
+      "teamId": 6,
+      "position": "Medio Fondo",
+      "number": 13,
+      "age": 21,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 86,
+      "name": "Florencia Bello",
+      "teamId": 6,
+      "position": "Fondo",
+      "number": 14,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 87,
+      "name": "Leonardo Donoso",
+      "teamId": 6,
+      "position": "Velocidad",
+      "number": 15,
+      "age": 23,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 88,
+      "name": "Isadora Cabrera",
+      "teamId": 6,
+      "position": "Medio Fondo",
+      "number": 16,
+      "age": 22,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 89,
+      "name": "Emilio Garrido",
+      "teamId": 6,
+      "position": "Fondo",
+      "number": 17,
+      "age": 21,
+      "carrera": "Ingeniería Civil Matemática",
+      "isCaptain": false
+    },
+    {
+      "id": 90,
+      "name": "Agustina Henríquez",
+      "teamId": 6,
+      "position": "Velocidad",
+      "number": 18,
+      "age": 20,
+      "carrera": "Ingeniería Civil en Computación",
+      "isCaptain": false
+    },
+    {
+      "id": 91,
+      "name": "Damián Loyola",
+      "teamId": 6,
+      "position": "Medio Fondo",
+      "number": 19,
+      "age": 24,
+      "carrera": "Ingeniería Civil Industrial",
+      "isCaptain": false
+    },
+    {
+      "id": 92,
+      "name": "Josefina Navarro",
+      "teamId": 6,
+      "position": "Fondo",
+      "number": 20,
+      "age": 22,
+      "carrera": "Magíster en Ciencias de la Computación",
+      "isCaptain": false
     }
   ],
+
+
+
   "matches": [
     {
       "id": 1,
       "teamId": 1,
-      "opponent": "Ingeniería FC",
-      "date": "2024-09-25",
+      "opponent": "DCC Ingeniería UC",
+      "date": "2025-09-25",
       "time": "15:30",
       "location": "Cancha Sur Campus",
       "type": "local",
       "status": "scheduled",
-      "tournament": "Torneo Interfacultades 2024"
+      "tournament": "Torneo Interfacultades 2025"
     },
     {
       "id": 2,
       "teamId": 2,
       "opponent": "Medicina Panthers",
-      "date": "2024-09-28",
+      "date": "2025-09-28",
       "time": "18:00",
       "location": "Gimnasio Central",
       "type": "visitante",
       "status": "scheduled",
-      "tournament": "Liga Universitaria Femenina 2024"
+      "tournament": "Liga Universitaria Femenina 2025"
     },
     {
       "id": 3,
       "teamId": 1,
       "opponent": "Derecho United",
-      "date": "2024-09-18",
+      "date": "2025-09-18",
       "time": "16:00",
       "location": "Cancha Norte",
       "type": "local",
@@ -234,9 +1110,12 @@
         "anakena": 3,
         "opponent": 1
       },
-      "tournament": "Torneo Interfacultades 2024"
+      "tournament": "Torneo Interfacultades 2025"
     }
   ],
+
+
+
   "news": [
   {
     "id": 1,
@@ -274,24 +1153,26 @@
     "teamId": null,
     "featured": true
   }
-]
-,
+],
+
+
+
   "tournaments": [
     {
       "id": 1,
-      "name": "Torneo Interfacultades 2024",
+      "name": "Torneo Interfacultades 2025",
       "sport": "Fútbol",
-      "startDate": "2024-08-15",
-      "endDate": "2024-11-30",
+      "startDate": "2025-08-15",
+      "endDate": "2025-11-30",
       "teams": 12,
       "status": "active"
     },
     {
-      "id": 2,
-      "name": "Liga Universitaria Femenina 2024",
-      "sport": "Básquetbol",
-      "startDate": "2024-09-01",
-      "endDate": "2024-12-15",
+      "id": 3,
+      "name": "Liga Universitaria Femenina 2025",
+      "sport": "Vóleibol",
+      "startDate": "2025-09-01",
+      "endDate": "2025-12-15",
       "teams": 8,
       "status": "active"
     }
