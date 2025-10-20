@@ -9,21 +9,21 @@ const mockStoreItems: StoreItem[] = [
     id: 1,
     label: 'Polera Anakena (local)',
     price: '$$$$',
-    image: 'https://via.placeholder.com/300x300/1a1a1a/00ff00?text=Polera+Local',
+    image: 'frontend/src/assets/store/photo_2025-10-20 13.14.41.jpeg',
     category: 'Poleras'
   },
   {
     id: 2,
     label: 'Polera Anakena (visita)',
     price: '$$$$',
-    image: 'https://via.placeholder.com/300x300/4ade80/ffffff?text=Polera+Visita',
+    image: 'frontend/src/assets/store/photo_2025-10-20 13.14.30.jpeg',
     category: 'Poleras'
   },
   {
     id: 3,
     label: 'Polera Anakena (DR)',
     price: '$$$$',
-    image: 'https://via.placeholder.com/300x300/ffffff/1a1a1a?text=Polera+DR',
+    image: 'frontend/src/assets/store/photo_2025-10-20 13.14.46.jpeg',
     category: 'Poleras'
   },
 ];

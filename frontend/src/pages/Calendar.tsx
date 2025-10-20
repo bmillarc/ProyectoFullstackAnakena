@@ -9,18 +9,18 @@ const mockEvents: Event[] = [
     id: 1,
     start: new Date(2025, 9, 20, 15, 0),
     end: new Date(2025, 9, 20, 17, 0),
-    title: 'Partido de Fútbol vs Ingeniería',
-    category: 'Fútbol',
-    location: 'Estadio Nacional',
-    description: 'Partido decisivo por la clasificación al torneo universitario. ¡Ven a apoyar al equipo de Anakena!'
+    title: 'Partido de Fútbol ALumnos vs Profesores',
+    category: 'Partido',
+    location: 'Cancha 850',
+    description: 'Partido amistoso entre alumnos y profesores de la DCC. ¡Ven a apoyar a tu equipo favorito!'
   },
   {
     id: 2,
     start: new Date(2025, 9, 20, 18, 30),
     end: new Date(2025, 9, 20, 20, 0),
     title: 'Entrenamiento Básquetbol Femenino',
-    category: 'Básquetbol',
-    location: 'Gimnasio DCC',
+    category: 'Entrenamiento',
+    location: 'Cancha 851, -3er piso',
     description: 'Entrenamiento táctico enfocado en defensa y contraataque. Todas las jugadoras deben asistir.'
   },
   {
@@ -28,27 +28,27 @@ const mockEvents: Event[] = [
     start: new Date(2025, 9, 22, 16, 0),
     end: new Date(2025, 9, 22, 18, 0),
     title: 'Torneo Interuniversitario Vóleibol',
-    category: 'Vóleibol',
-    location: 'Cancha Central',
+    category: 'Torneo',
+    location: 'Casa central Universidad de Chile',
     description: 'Primera fase del torneo interuniversitario. Enfrentaremos a los equipos de Medicina y Derecho.'
   },
   {
     id: 4,
     start: new Date(2025, 9, 25, 14, 0),
     end: new Date(2025, 9, 25, 16, 0),
-    title: 'Práctica de Tenis',
-    category: 'Tenis',
-    location: 'Canchas de Tenis',
+    title: 'Práctica de Tenis de mesa',
+    category: 'Practica',
+    location: 'Gimnasio casino',
     description: 'Sesión de práctica abierta. Todos los niveles son bienvenidos.'
   },
   {
     id: 5,
     start: new Date(2025, 9, 25, 17, 0),
     end: new Date(2025, 9, 25, 19, 0),
-    title: 'Reunión Directiva Anakena',
-    category: 'Administrativo',
-    location: 'Sala de Reuniones',
-    description: 'Planificación de eventos del próximo mes y revisión del presupuesto deportivo.'
+    title: 'Bingo benefico Anakena DCC',
+    category: 'Evento Social',
+    location: 'Araña 851',
+    description: 'Evento social para recaudar fondos para el club. Habrá premios y sorpresas para los asistentes. Carton a 2000 CLP.'
   }
 ];
 

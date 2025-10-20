@@ -3,7 +3,7 @@ export interface Event {
   start: Date;
   end: Date;
   title: string;
-  category?: string;
-  location?: string;
-  description?: string;
+  category: string;
+  location: string;
+  description: string;
 }
