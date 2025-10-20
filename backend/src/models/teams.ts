@@ -13,7 +13,7 @@ if (url) {
   });
 }
 
-// Interfaz para NextMatch
+
 interface NextMatch {
   id: number;
   date: string;
@@ -22,7 +22,7 @@ interface NextMatch {
   time: string;
 }
 
-// Interfaz para Team
+
 export interface ITeam extends Document {
   id: number;
   sport: string;
@@ -37,7 +37,7 @@ export interface ITeam extends Document {
   image: string;
 }
 
-// Schema para NextMatch (subdocumento)
+
 const nextMatchSchema = new Schema<NextMatch>({
   id: { type: Number, required: true },
   date: { type: String, required: true },
@@ -46,7 +46,7 @@ const nextMatchSchema = new Schema<NextMatch>({
   time: { type: String, required: true }
 }, { _id: false });
 
-// Schema para Team
+
 const teamSchema = new Schema<ITeam>({
   id: { type: Number, required: true, unique: true },
   sport: { type: String, required: true, minlength: 1 },
