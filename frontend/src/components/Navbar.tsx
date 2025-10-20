@@ -4,7 +4,7 @@ import {
   Menu, MenuItem, Typography,
 } from '@mui/material';
 import { Menu as MenuIcon, AccountCircle } from '@mui/icons-material';
-import type { NavbarProps } from '../types/navbar';
+import type { NavbarProps, NavbarItem } from '../types/navbar';
 import { useAuth } from '../context/AuthContext';
 import LoginDialog from './Login';
 import RegisterDialog from './Register';
@@ -20,7 +20,7 @@ export default function Navbar({ logo, items }: NavbarProps) {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleItemClick = (item: any, event: React.MouseEvent) => {
+  const handleItemClick = (item: NavbarItem, event: React.MouseEvent) => {
     event.preventDefault();
     if (item.onClick) {
       item.onClick();

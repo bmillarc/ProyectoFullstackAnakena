@@ -52,8 +52,8 @@ export default function RegisterDialog({ open, onClose, onSwitchToLogin }: Regis
       setPassword('');
       setConfirmPassword('');
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'Error al registrarse');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al registrarse');
     } finally {
       setIsLoading(false);
     }
