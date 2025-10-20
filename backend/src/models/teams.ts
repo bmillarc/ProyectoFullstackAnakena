@@ -1,17 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import mongoose, { Schema, Document } from 'mongoose';
-
-const url = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DBNAME;
-
-mongoose.set("strictQuery", false);
-if (url) {
-  mongoose.connect(url, { dbName }).catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
-  });
-}
 
 
 interface NextMatch {

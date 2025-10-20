@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import mongoose from "mongoose";
 import TeamModel from "./models/teams";
 import PlayerModel from "./models/players";
 import MatchModel from "./models/matches";
@@ -9,17 +11,39 @@ import NewsModel from "./models/news";
 import TournamentModel from "./models/tournaments";
 import EventModel from "./models/events";
 import StoreItemModel from "./models/store";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 
+// CORS configuration to allow credentials (cookies)
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, Postman, curl, etc.)
+    if (!origin) return callback(null, true);
 
-app.use(cors());
+    // List of allowed origins
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:5176',
+      process.env.FRONTEND_URL
+    ].filter(Boolean);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 
 const requestLogger = (
   request: Request,
-  response: Response,
+  _response: Response,
   next: NextFunction
 ) => {
   console.log("Method:", request.method);
@@ -30,8 +54,23 @@ const requestLogger = (
 };
 app.use(requestLogger);
 
+// MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/';
+const MONGODB_DBNAME = process.env.MONGODB_DBNAME || 'anakena';
 
-app.get("/api/teams", (request, response, next) => {
+mongoose.connect(`${MONGODB_URI}${MONGODB_DBNAME}`)
+  .then(() => {
+    console.log('✅ Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('❌ MongoDB connection error:', error);
+  });
+
+// Auth routes
+app.use('/api/auth', authRoutes);
+
+// Teams routes
+app.get("/api/teams", (_request, response, next) => {
   TeamModel.find({})
     .then((teams) => {
       response.json(teams);

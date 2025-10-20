@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import logoImg from './assets/logo-sin-fondo.png';
 import Calendar from './pages/Calendar';
 import Store from './pages/Store';
+import { AuthProvider } from './context/AuthContext';
 
 
 //Tema personalizado anakena
@@ -141,21 +142,23 @@ function App() {
   };
 
   return (
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <Box sx={{ 
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
-      <Navbar logo={logo} items={navbarItems} />
-      <Box component="main" sx={{ flex: 1 }}>
-        {renderCurrentPage()}
-      </Box>
-      <Footer onNavigate={handleNavigation} />
-    </Box>
-  </ThemeProvider>
-);
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <Navbar logo={logo} items={navbarItems} />
+          <Box component="main" sx={{ flex: 1 }}>
+            {renderCurrentPage()}
+          </Box>
+          <Footer onNavigate={handleNavigation} />
+        </Box>
+      </ThemeProvider>
+    </AuthProvider>
+  );
 }
 
 export default App;
