@@ -1,0 +1,48 @@
+{"events": [
+    {
+      "id": 1,
+      "start": "2025-10-20T15:00:00",
+      "end": "2025-10-20T17:00:00",
+      "title": "Partido de Fútbol vs Ingeniería",
+      "category": "Fútbol",
+      "location": "Estadio Nacional",
+      "description": "Partido decisivo por la clasificación al torneo universitario. ¡Ven a apoyar al equipo de Anakena!"
+    },
+    {
+      "id": 2,
+      "start": "2025-10-20T18:30:00",
+      "end": "2025-10-20T20:00:00",
+      "title": "Entrenamiento Básquetbol Femenino",
+      "category": "Básquetbol",
+      "location": "Gimnasio DCC",
+      "description": "Entrenamiento táctico enfocado en defensa y contraataque. Todas las jugadoras deben asistir."
+    },
+    {
+      "id": 3,
+      "start": "2025-10-22T16:00:00",
+      "end": "2025-10-22T18:00:00",
+      "title": "Torneo Interuniversitario Vóleibol",
+      "category": "Vóleibol",
+      "location": "Cancha Central",
+      "description": "Primera fase del torneo interuniversitario. Enfrentaremos a los equipos de Medicina y Derecho."
+    },
+    {
+      "id": 4,
+      "start": "2025-10-25T14:00:00",
+      "end": "2025-10-25T16:00:00",
+      "title": "Práctica de Tenis",
+      "category": "Tenis",
+      "location": "Canchas de Tenis",
+      "description": "Sesión de práctica abierta. Todos los niveles son bienvenidos."
+    },
+    {
+      "id": 5,
+      "start": "2025-10-25T17:00:00",
+      "end": "2025-10-25T19:00:00",
+      "title": "Reunión Directiva Anakena",
+      "category": "Administrativo",
+      "location": "Sala de Reuniones",
+      "description": "Planificación de eventos del próximo mes y revisión del presupuesto deportivo."
+    }
+  ]
+}

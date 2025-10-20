@@ -7,6 +7,8 @@ import ComingSoon from './pages/ComingSoon';
 import type { NavbarItem } from './types/navbar';
 import Footer from './components/Footer';
 import logoImg from './assets/logo-sin-fondo.png';
+import Calendar from './pages/Calendar';
+import Store from './pages/Store';
 
 
 //Tema personalizado anakena
@@ -129,9 +131,9 @@ function App() {
       case 'historia':
         return <ComingSoon pageName="Historia del Club" description="Una línea de tiempo interactiva con los hitos más importantes de los 25+ años de historia del club Anakena DCC." />;
       case 'calendario':
-        return <ComingSoon pageName="Calendario" description="Aquí podrás ver todos los partidos programados, horarios, ubicaciones y resultados de todos nuestros equipos." />;
+        return <Calendar/>;
       case 'tienda':
-        return <ComingSoon pageName="Tienda Anakena" description="Próximamente podrás adquirir merchandising oficial del club: camisetas, gorras, accesorios y más." />;
+        return <Store/>;
       case 'inicio':
       default:
         return <Home />;
