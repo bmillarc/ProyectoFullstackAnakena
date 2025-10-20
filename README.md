@@ -31,9 +31,11 @@ Desarrollamos una aplicación web **reactiva** (SPA: Single Page Application) qu
 - **Vite** como build tool y dev server
 - **ESLint** para linting de código
 
-### Backend (Simulado)
-- **json-server 0.17.4** como API REST simulada
-- **Base de datos JSON** con datos mock estructurados
+### Backend
+- **Express 4.18.2** con TypeScript para servidor REST
+- **MongoDB** como base de datos NoSQL
+- **Mongoose 8.0.0** como ODM para modelado de datos
+- **CORS** habilitado para comunicación con frontend
 
 ### Herramientas de Desarrollo
 - **TypeScript** para tipado estático
@@ -45,9 +47,20 @@ Desarrollamos una aplicación web **reactiva** (SPA: Single Page Application) qu
 ```
 ProyectoFullstackAnakena/
 ├── backend/
-│   ├── db.json              # Base de datos principal
-│   ├── db.backup.json       # Backup de datos iniciales
-│   └── package.json         # Dependencias del backend
+│   ├── src/
+│   │   ├── models/          # Modelos de Mongoose
+│   │   │   ├── teams.ts
+│   │   │   ├── players.ts
+│   │   │   ├── matches.ts
+│   │   │   ├── news.ts
+│   │   │   ├── tournaments.ts
+│   │   │   ├── events.ts
+│   │   │   └── store.ts
+│   │   └── index.ts         # Servidor Express
+│   ├── .env                 # Variables de entorno
+│   ├── .env.example         # Ejemplo de configuración
+│   ├── package.json
+│   └── tsconfig.json
 ├── frontend/
 │   ├── public/
 │   │   └── vite.svg
@@ -168,6 +181,7 @@ interface NewsItem {
 ### Prerrequisitos
 - Node.js (versión 18 o superior)
 - npm (incluido con Node.js)
+- MongoDB (versión 6 o superior) - [Descargar aquí](https://www.mongodb.com/try/download/community)
 
 ### Pasos de Instalación
 
@@ -177,13 +191,20 @@ git clone https://github.com/bmillarc/ProyectoFullstackAnakena/tree/hito-1
 cd ProyectoFullstackAnakena
 ```
 
-2. **Instalar dependencias del backend**
+2. **Instalar y configurar MongoDB**
+   - Instalar MongoDB Community Server
+   - Iniciar el servicio de MongoDB (usualmente se inicia automáticamente)
+   
+3. **Configurar el backend**
 ```bash
-cd ../backend
+cd backend
 npm install
+# Copiar y configurar variables de entorno
+cp .env.example .env
+# Editar .env con tu configuración de MongoDB
 ```
 
-3. **Instalar dependencias del frontend**
+4. **Instalar dependencias del frontend**
 ```bash
 cd ../frontend
 npm install
@@ -196,9 +217,15 @@ npm install
 #### Backend (Terminal 1)
 ```bash
 cd backend
-json-server --watch db.json --port 3001
+npm run dev
 ```
 El servidor estará disponible en: `http://localhost:3001`
+
+Verás un mensaje como:
+```
+🚀 Server running on http://localhost:3001
+📊 MongoDB connection: mongodb://localhost:27017/anakena_db
+```
 
 #### Frontend (Terminal 2)
 ```bash
@@ -223,11 +250,14 @@ npm run preview
 
 #### Backend
 ```bash
-# Servidor con delay simulado
+# Modo desarrollo con auto-reload
 npm run dev
 
-# Restaurar base de datos inicial
-npm run reset
+# Compilar TypeScript
+npm run build
+
+# Ejecutar servidor compilado
+npm start
 ```
 
 ## Decisiones de Diseño y Arquitectura
@@ -256,15 +286,29 @@ npm run reset
 
 ### Backend
 
-1. **json-server como Mock API**
-   - Endpoints REST automáticos (/teams, /players, /news, etc.)
-   - Soporte para queries y filtros
-   - Backup de datos para desarrollo y testing
+1. **Express + TypeScript**
+   - Servidor REST completo con tipado estático
+   - Middleware de logging y manejo de errores
+   - CORS habilitado para desarrollo
 
-2. **Estructura de Datos**
+2. **MongoDB con Mongoose**
+   - Modelos con validaciones robustas
    - Relaciones entre entidades (teams/players)
-   - Datos realistas del club Anakena
-   - Preparado para expansión a base de datos real
+   - Schemas con timestamps automáticos
+
+3. **Endpoints REST**
+   - CRUD completo para todas las entidades
+   - Query params para filtrado (ej: `/api/players?teamId=1`)
+   - Códigos HTTP estándar y manejo de errores consistente
+
+4. **Entidades Modeladas**
+   - **Teams**: Equipos deportivos con información completa
+   - **Players**: Jugadores con relación a equipos
+   - **Matches**: Partidos con resultados y estado
+   - **News**: Noticias del club con categorías
+   - **Tournaments**: Torneos activos y completados
+   - **Events**: Eventos del calendario
+   - **Store**: Productos de la tienda del club
 
 ## Priorización de Funcionalidades
 
@@ -290,18 +334,56 @@ npm run reset
 ## Próximos Pasos Posibles (Hitos Futuros)
 
 **Hito 2**: 
+   - ✅ Backend real con Express + TypeScript + MongoDB
+   - ✅ Modelos de Mongoose con validaciones
+   - ✅ Endpoints REST completos (CRUD)
+   - ✅ Manejo de errores consistente
    - Implementación completa del sistema de noticias
    - Desarrollo del calendario interactivo
    - Mejoras en UX/UI basadas en feedback
-   - Actualizaciones en tiempo real
-   - Base de datos real (MongoDB/PostgreSQL)
+   - Sistema de autenticación
+
+## API Endpoints
+
+El backend expone los siguientes endpoints REST:
+
+### Teams (Equipos)
+- `GET /api/teams` - Listar todos los equipos
+- `GET /api/teams/:id` - Obtener equipo por ID
+- `POST /api/teams` - Crear nuevo equipo
+- `PUT /api/teams/:id` - Actualizar equipo
+- `DELETE /api/teams/:id` - Eliminar equipo
+
+### Players (Jugadores)
+- `GET /api/players` - Listar jugadores (soporta `?teamId=1`)
+- `GET /api/players/:id` - Obtener jugador por ID
+- `POST /api/players` - Crear jugador
+- `PUT /api/players/:id` - Actualizar jugador
+- `DELETE /api/players/:id` - Eliminar jugador
+
+### Matches (Partidos)
+- `GET /api/matches` - Listar partidos (soporta `?teamId=1`)
+- `GET /api/matches/:id` - Obtener partido por ID
+- `POST /api/matches` - Crear partido
+- `PUT /api/matches/:id` - Actualizar partido
+- `DELETE /api/matches/:id` - Eliminar partido
+
+### News (Noticias)
+- `GET /api/news` - Listar noticias (soporta `?featured=true`)
+- `GET /api/news/:id` - Obtener noticia por ID
+- `POST /api/news` - Crear noticia
+- `PUT /api/news/:id` - Actualizar noticia
+- `DELETE /api/news/:id` - Eliminar noticia
+
+### Tournaments, Events y Store
+- Endpoints similares disponibles para torneos, eventos y tienda
 
 ## Problemas Conocidos y Limitaciones
 
-1. **Dependencia de json-server**: El backend actual es solo para desarrollo
-2. **Imágenes mock**: Algunas imágenes de equipos son placeholders
-3. **Sin persistencia real**: Los cambios no persisten entre reinicios
-4. **Falta de testing**: Pendiente implementación de tests unitarios
+1. **Imágenes mock**: Algunas imágenes de equipos son placeholders
+2. **Falta de testing**: Pendiente implementación de tests unitarios
+3. **Sin autenticación**: Endpoints públicos sin protección
+4. **Datos iniciales**: La base de datos comienza vacía (puedes poblarla manualmente)
 
 ## Equipo de Desarrollo
 
