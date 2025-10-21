@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Box, Typography, Container, Card, CardMedia, CardContent, Alert, AlertTitle, Chip } from '@mui/material';
 import { ShoppingBag, Info } from '@mui/icons-material';
 import type { StoreItem } from '../types/store';
+import polera1 from '../assets/store/polera1.jpeg';
+import polera2 from '../assets/store/polera2.jpeg';
+import polera3 from '../assets/store/polera3.jpeg';
 
 //Datos de ejemplo
 const mockStoreItems: StoreItem[] = [
@@ -9,21 +12,21 @@ const mockStoreItems: StoreItem[] = [
     id: 1,
     label: 'Polera Anakena (local)',
     price: '$$$$',
-    image: 'frontend/src/assets/store/photo_2025-10-20 13.14.41.jpeg',
+    image: polera1,
     category: 'Poleras'
   },
   {
     id: 2,
     label: 'Polera Anakena (visita)',
     price: '$$$$',
-    image: 'frontend/src/assets/store/photo_2025-10-20 13.14.30.jpeg',
+    image: polera2,
     category: 'Poleras'
   },
   {
     id: 3,
     label: 'Polera Anakena (DR)',
     price: '$$$$',
-    image: 'frontend/src/assets/store/photo_2025-10-20 13.14.46.jpeg',
+    image: polera3,
     category: 'Poleras'
   },
 ];
