@@ -102,27 +102,27 @@ ProyectoFullstackAnakena/
 ## Funcionalidades Implementadas
 
 ### Hito 1
-- ✅ Página de inicio con slider y estadísticas
-- ✅ Página de equipos con grid responsivo
-- ✅ Navegación por hash (SPA)
-- ✅ Componentes reutilizables (Navbar, Footer, Slider)
-- ✅ Diseño responsivo con Material-UI
-- ✅ API Service para llamadas centralizadas
+-  Página de inicio con slider y estadísticas
+-  Página de equipos con grid responsivo
+-  Navegación por hash (SPA)
+-  Componentes reutilizables (Navbar, Footer, Slider)
+-  Diseño responsivo con Material-UI
+-  API Service para llamadas centralizadas
 
 ### Hito 2
-- ✅ **Backend real con Express + TypeScript**
-- ✅ **MongoDB como base de datos NoSQL**
-- ✅ **7 modelos Mongoose** (Teams, Players, Matches, News, Tournaments, Events, Store)
-- ✅ **35+ endpoints REST** con operaciones CRUD completas
-- ✅ **Sistema de autenticación con JWT**
+-  **Backend real con Express + TypeScript**
+-  **MongoDB como base de datos NoSQL**
+-  **7 modelos Mongoose** (Teams, Players, Matches, News, Tournaments, Events, Store)
+-  **35+ endpoints REST** con operaciones CRUD completas
+-  **Sistema de autenticación con JWT**
   - Registro e inicio de sesión de usuarios
   - Hash de contraseñas con bcrypt
   - Protección de rutas con middleware de autenticación
   - Tokens JWT para sesiones
-- ✅ **Validaciones robustas** en todos los modelos
-- ✅ **Manejo de errores** consistente con códigos HTTP estándar
-- ✅ **CORS habilitado** para comunicación frontend-backend
-- ✅ **Variables de entorno** para configuración segura
+-  **Validaciones robustas** en todos los modelos
+-  **Manejo de errores** consistente con códigos HTTP estándar
+-  **CORS habilitado** para comunicación frontend-backend
+-  **Variables de entorno** para configuración segura
 
 ### Vistas Completas Desarrolladas
 
@@ -572,5 +572,5 @@ Body: {"name": "Anakena Fútbol", "sport": "Fútbol", "category": "Varones"}
 ---
 
 **Nota**: Este proyecto está en desarrollo activo como parte del curso CC5003. 
-- **Hito 1**: Frontend con React + Material-UI ✅
-- **Hito 2**: Backend con Express + MongoDB + TypeScript + Autenticación JWT ✅
+- **Hito 1**: Frontend con React + Material-UI 
+- **Hito 2**: Backend con Express + MongoDB + TypeScript + Autenticación JWT 
