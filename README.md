@@ -1,14 +1,16 @@
-# Anakena DCC: Aplicación Web Fullstack | Hito 1
+# Anakena DCC: Aplicación Web Fullstack | Hito 2
 
 **Curso:** \[CC5003] Aplicaciones Web Reactivas  
 **Profesor:** Matías Toro  
 **Auxiliares:** Martín Rojas, Carlos Ruz  
 **Ayudantes:** Bastián Corrales, Javier Kauer, Martín Pinochet, Juan Valdivia  
-**Fecha de Entrega:** 23-09-25
+**Fecha de Entrega Hito 2:** 20-10-25
 
 ## Descripción del Proyecto
 
-El portal web Anakena es una aplicación web fullstack desarrollada como parte del **Hito 1** del curso CC5003. El proyecto busca centralizar toda la información deportiva del club Anakena del Departamento de Ciencias de la Computación (DCC) de la Universidad de Chile.
+El portal web Anakena es una aplicación web fullstack desarrollada como parte del curso CC5003. El proyecto busca centralizar toda la información deportiva del club Anakena del Departamento de Ciencias de la Computación (DCC) de la Universidad de Chile.
+
+**Hito 2**: Backend real con Express + TypeScript + MongoDB, reemplazando el json-server del Hito 1.
 
 ### Motivación
 
@@ -35,6 +37,8 @@ Desarrollamos una aplicación web **reactiva** (SPA: Single Page Application) qu
 - **Express 4.18.2** con TypeScript para servidor REST
 - **MongoDB** como base de datos NoSQL
 - **Mongoose 8.0.0** como ODM para modelado de datos
+- **JWT (jsonwebtoken)** para autenticación basada en tokens
+- **bcrypt** para hash de contraseñas
 - **CORS** habilitado para comunicación con frontend
 
 ### Herramientas de Desarrollo
@@ -55,7 +59,8 @@ ProyectoFullstackAnakena/
 │   │   │   ├── news.ts
 │   │   │   ├── tournaments.ts
 │   │   │   ├── events.ts
-│   │   │   └── store.ts
+│   │   │   ├── store.ts
+│   │   │   └── users.ts     # Modelo de usuarios (autenticación)
 │   │   └── index.ts         # Servidor Express
 │   ├── .env                 # Variables de entorno
 │   ├── .env.example         # Ejemplo de configuración
@@ -94,7 +99,30 @@ ProyectoFullstackAnakena/
 └── README.md
 ```
 
-## Funcionalidades Implementadas (Hito 1)
+## Funcionalidades Implementadas
+
+### Hito 1
+- ✅ Página de inicio con slider y estadísticas
+- ✅ Página de equipos con grid responsivo
+- ✅ Navegación por hash (SPA)
+- ✅ Componentes reutilizables (Navbar, Footer, Slider)
+- ✅ Diseño responsivo con Material-UI
+- ✅ API Service para llamadas centralizadas
+
+### Hito 2
+- ✅ **Backend real con Express + TypeScript**
+- ✅ **MongoDB como base de datos NoSQL**
+- ✅ **7 modelos Mongoose** (Teams, Players, Matches, News, Tournaments, Events, Store)
+- ✅ **35+ endpoints REST** con operaciones CRUD completas
+- ✅ **Sistema de autenticación con JWT**
+  - Registro e inicio de sesión de usuarios
+  - Hash de contraseñas con bcrypt
+  - Protección de rutas con middleware de autenticación
+  - Tokens JWT para sesiones
+- ✅ **Validaciones robustas** en todos los modelos
+- ✅ **Manejo de errores** consistente con códigos HTTP estándar
+- ✅ **CORS habilitado** para comunicación frontend-backend
+- ✅ **Variables de entorno** para configuración segura
 
 ### Vistas Completas Desarrolladas
 
@@ -127,10 +155,11 @@ ProyectoFullstackAnakena/
 
 ## Modelo de Datos
 
-La aplicación maneja las siguientes entidades principales:
+La aplicación maneja las siguientes entidades principales con sus interfaces TypeScript y modelos Mongoose:
 
 ### Teams (Equipos)
 ```typescript
+// Frontend Interface
 interface Team {
   id: number;
   sport: string;
@@ -144,10 +173,20 @@ interface Team {
   nextMatch?: NextMatch;
   image: string;
 }
+
+// Backend Mongoose Interface
+interface ITeam extends Document {
+  name: string;
+  sport: string;
+  category: string;
+  description?: string;
+  players?: string[];
+}
 ```
 
 ### Players (Jugadores)
 ```typescript
+// Frontend Interface
 interface Player {
   id: number;
   name: string;
@@ -158,10 +197,20 @@ interface Player {
   carrera: string;
   isCaptain: boolean;
 }
+
+// Backend Mongoose Interface
+interface IPlayer extends Document {
+  name: string;
+  sport: string;
+  position?: string;
+  number?: number;
+  bio?: string;
+}
 ```
 
 ### News (Noticias)
 ```typescript
+// Frontend Interface
 interface NewsItem {
   id: number;
   title: string;
@@ -173,6 +222,77 @@ interface NewsItem {
   image: string;
   teamId?: number;
   featured: boolean;
+}
+
+// Backend Mongoose Interface
+interface INews extends Document {
+  title: string;
+  content: string;
+  author: string;
+  date: Date;
+  imageUrl?: string;
+}
+```
+
+### Matches (Partidos)
+```typescript
+// Backend Mongoose Interface
+interface IMatch extends Document {
+  homeTeam: string;
+  awayTeam: string;
+  date: Date;
+  location: string;
+  homeScore?: number;
+  awayScore?: number;
+  status: 'scheduled' | 'ongoing' | 'finished';
+}
+```
+
+### Tournaments (Torneos)
+```typescript
+// Backend Mongoose Interface
+interface ITournament extends Document {
+  name: string;
+  sport: string;
+  startDate: Date;
+  endDate: Date;
+  description?: string;
+}
+```
+
+### Events (Eventos)
+```typescript
+// Backend Mongoose Interface
+interface IEvent extends Document {
+  title: string;
+  description: string;
+  date: Date;
+  location: string;
+  type: 'partido' | 'entrenamiento' | 'reunión' | 'otro';
+}
+```
+
+### Store (Tienda)
+```typescript
+// Backend Mongoose Interface
+interface IStore extends Document {
+  name: string;
+  description: string;
+  price: number;
+  imageUrl?: string;
+  stock: number;
+}
+```
+
+### Users (Usuarios - Autenticación)
+```typescript
+// Backend Mongoose Interface
+interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;  // Hash generado con bcrypt
+  role?: string;
+  createdAt?: Date;
 }
 ```
 
@@ -187,13 +307,16 @@ interface NewsItem {
 
 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/bmillarc/ProyectoFullstackAnakena/tree/hito-1
+git clone https://github.com/bmillarc/ProyectoFullstackAnakena/tree/hito-2
 cd ProyectoFullstackAnakena
 ```
 
 2. **Instalar y configurar MongoDB**
-   - Instalar MongoDB Community Server
-   - Iniciar el servicio de MongoDB (usualmente se inicia automáticamente)
+   - Instalar MongoDB Community Server desde [mongodb.com](https://www.mongodb.com/try/download/community)
+   - Iniciar el servicio de MongoDB:
+     - **Windows**: `net start MongoDB` (o buscar en Services)
+     - **macOS**: `brew services start mongodb-community`
+     - **Linux**: `sudo systemctl start mongod`
    
 3. **Configurar el backend**
 ```bash
@@ -201,7 +324,15 @@ cd backend
 npm install
 # Copiar y configurar variables de entorno
 cp .env.example .env
-# Editar .env con tu configuración de MongoDB
+```
+
+Editar el archivo `.env` con tu configuración:
+```env
+PORT=3001
+HOST=localhost
+MONGODB_URI=mongodb://localhost:27017/
+MONGODB_DBNAME=anakena_db
+JWT_SECRET=tu_clave_secreta_muy_segura_aqui
 ```
 
 4. **Instalar dependencias del frontend**
@@ -309,6 +440,7 @@ npm start
    - **Tournaments**: Torneos activos y completados
    - **Events**: Eventos del calendario
    - **Store**: Productos de la tienda del club
+   - **Users**: Sistema de autenticación con JWT y bcrypt
 
 ## Priorización de Funcionalidades
 
@@ -326,22 +458,19 @@ npm start
 
 
 ### Baja Prioridad (Futuro)
-- **Sistema de autenticación**: Login para capitanes y dirigencia
 - **Tienda online**: Merch del club
 - **Notificaciones push?**: Alertas de partidos y resultados
 - **Sistema de comentarios?**: Interacción de la comunidad
+- **Panel de administración**: Dashboard para gestión de contenido
 
 ## Próximos Pasos Posibles (Hitos Futuros)
 
-**Hito 2**: 
-   - ✅ Backend real con Express + TypeScript + MongoDB
-   - ✅ Modelos de Mongoose con validaciones
-   - ✅ Endpoints REST completos (CRUD)
-   - ✅ Manejo de errores consistente
-   - Implementación completa del sistema de noticias
+**Hito 3 (Potencial)**: 
+   - Implementación completa del sistema de noticias con administración
    - Desarrollo del calendario interactivo
+   - Panel de administración protegido con autenticación
    - Mejoras en UX/UI basadas en feedback
-   - Sistema de autenticación
+   - Tests unitarios y de integración
 
 ## API Endpoints
 
@@ -378,16 +507,62 @@ El backend expone los siguientes endpoints REST:
 ### Tournaments, Events y Store
 - Endpoints similares disponibles para torneos, eventos y tienda
 
+### Auth (Autenticación) 
+- `POST /api/auth/register` - Registrar nuevo usuario
+  ```json
+  Body: {
+    "username": "usuario123",
+    "email": "usuario@email.com",
+    "password": "contraseña_segura"
+  }
+  ```
+- `POST /api/auth/login` - Iniciar sesión
+  ```json
+  Body: {
+    "email": "usuario@email.com",
+    "password": "contraseña_segura"
+  }
+  Response: {
+    "token": "jwt_token_aqui",
+    "user": { "id": "...", "username": "...", "email": "..." }
+  }
+  ```
+- `GET /api/auth/verify` - Verificar token (requiere header `Authorization: Bearer <token>`)
+
+**Nota**: Para probar estos endpoints, puedes usar:
+- **Thunder Client** (extensión de VS Code)
+- **Postman** 
+- **cURL** desde terminal
+- Directamente en el navegador para peticiones GET
+
+Ejemplo con Thunder Client:
+```
+GET http://localhost:3001/api/teams
+POST http://localhost:3001/api/teams
+Body: {"name": "Anakena Fútbol", "sport": "Fútbol", "category": "Varones"}
+```
+
 ## Problemas Conocidos y Limitaciones
 
 1. **Imágenes mock**: Algunas imágenes de equipos son placeholders
 2. **Falta de testing**: Pendiente implementación de tests unitarios
-3. **Sin autenticación**: Endpoints públicos sin protección
-4. **Datos iniciales**: La base de datos comienza vacía (puedes poblarla manualmente)
+3. **Datos iniciales**: La base de datos comienza vacía (se puede poblar manualmente vía API)
+4. **Rutas protegidas**: Algunas rutas están abiertas, se implementará protección completa en próximos hitos
+
+### Solución de Problemas Comunes
+
+**Error: "MongooseServerSelectionError"**
+- MongoDB no está corriendo. Iniciar con `net start MongoDB` (Windows) o verificar el servicio
+
+**Error: "Port 3001 already in use"**
+- Cambiar el puerto en `.env`: `PORT=3002`
+
+**Error: "MONGODB_URI is not defined"**
+- Verificar que existe el archivo `.env` en la carpeta `backend/` con la variable configurada
 
 ## Equipo de Desarrollo
 
-**[CC5003] Hito 1 | Equipo 102**
+**[CC5003] Equipo 102**
 
 - **Ignacio Balbontín**
 - **Pablo Reyes**  
@@ -396,4 +571,6 @@ El backend expone los siguientes endpoints REST:
 
 ---
 
-**Nota**: Este proyecto está en desarrollo activo como parte del curso CC5003. La funcionalidad completa estará disponible en los próximos hitos del proyecto.
+**Nota**: Este proyecto está en desarrollo activo como parte del curso CC5003. 
+- **Hito 1**: Frontend con React + Material-UI ✅
+- **Hito 2**: Backend con Express + MongoDB + TypeScript + Autenticación JWT ✅
