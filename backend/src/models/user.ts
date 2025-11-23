@@ -74,10 +74,11 @@ userSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.password; // Never send password to client
+    delete returnedObject.password; 
   }
 });
 
-const UserModel = mongoose.model<IUser>('User', userSchema);
+
+const UserModel = mongoose.model<IUser>('AnakenaUser', userSchema, 'anakena_users');
 
 export default UserModel;

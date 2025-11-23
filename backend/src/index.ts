@@ -3,7 +3,8 @@ dotenv.config();
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import path from 'path';
 import TeamModel from "./models/teams";
 import PlayerModel from "./models/players";
 import MatchModel from "./models/matches";
@@ -14,6 +15,18 @@ import StoreItemModel from "./models/store";
 import authRoutes from "./routes/authRoutes";
 
 const app = express();
+const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || '0.0.0.0';
+let skipDb = process.env.SKIP_DB === 'true';
+const redactMongoUri = (uri: string) => uri.replace(/:?\/\/([^:@]+):([^@]+)@/, '://$1:***@');
+
+// Middleware para bloquear rutas si no hay DB
+const dbGuard = (req: Request, res: Response, next: NextFunction) => {
+  if (skipDb) {
+    return res.status(503).json({ error: 'Database disabled (SKIP_DB=true)' });
+  }
+  next();
+};
 
 // CORS configuration to allow credentials (cookies)
 app.use(cors({
@@ -26,12 +39,18 @@ app.use(cors({
       'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:5176',
+      'http://fullstack.dcc.uchile.cl:7112',
+      'https://fullstack.dcc.uchile.cl:7112',
+      `http://fullstack.dcc.uchile.cl:${PORT}`,
+      `https://fullstack.dcc.uchile.cl:${PORT}`,
       process.env.FRONTEND_URL
     ].filter(Boolean);
 
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      // En desarrollo, log del origen rechazado para debug
+      console.warn(`⚠️ CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -54,20 +73,17 @@ const requestLogger = (
 };
 app.use(requestLogger);
 
-// MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/';
-const MONGODB_DBNAME = process.env.MONGODB_DBNAME || 'anakena';
-
-mongoose.connect(`${MONGODB_URI}${MONGODB_DBNAME}`)
-  .then(() => {
-    console.log('✅ Connected to MongoDB');
-  })
-  .catch((error) => {
-    console.error('❌ MongoDB connection error:', error);
-  });
-
 // Auth routes
 app.use('/api/auth', authRoutes);
+
+// Aplicar guard a todas las rutas de datos si SKIP_DB
+app.use('/api/teams', dbGuard);
+app.use('/api/players', dbGuard);
+app.use('/api/matches', dbGuard);
+app.use('/api/news', dbGuard);
+app.use('/api/tournaments', dbGuard);
+app.use('/api/events', dbGuard);
+app.use('/api/store', dbGuard);
 
 // Teams routes
 app.get("/api/teams", (_request, response, next) => {
@@ -640,7 +656,6 @@ app.delete("/api/store/:id", (request, response, next) => {
 });
 
 
-
 const errorHandler = (
   error: { name: string; message: string },
   request: Request,
@@ -663,12 +678,51 @@ const errorHandler = (
 
 app.use(errorHandler);
 
+// Servir frontend compilado (si existe) - DEBE IR AL FINAL
+const frontendPath = __dirname;
+if (process.env.SERVE_UI === 'true') {
+  app.use(express.static(frontendPath));
+  // Catch-all solo para rutas que no son API
+  app.get('*', (_req, res, next) => {
+    // No interceptar rutas de API
+    if (_req.path.startsWith('/api/')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
+      if (err) {
+        console.error('Error serving index.html:', err);
+        res.status(500).send('Error loading application');
+      }
+    });
+  });
+}
+
+async function start() {
+  if (skipDb) {
+    console.warn('[WARN] SKIP_DB=true -> no se intenta conexión a MongoDB');
+  } else {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI as string, {
+        dbName: process.env.MONGODB_DBNAME
+      });
+      console.log('✅ MongoDB conectado');
+      skipDb = false; // Confirmamos que DB está disponible
+    } catch (err) {
+      console.error('❌ Error conectando a MongoDB:', err);
+      console.warn('[WARN] Continuando sin DB (modo degradado)');
+      skipDb = true; // Marcamos que DB no está disponible
+    }
+  }
+  app.listen(Number(PORT), HOST, () => {
+    console.log(`🚀 Server running on http://${HOST}:${PORT} (skipDb=${skipDb})`);
+    if (process.env.MONGODB_URI) {
+      console.log(`📊 MongoDB URI: ${redactMongoUri(process.env.MONGODB_URI)} dbName: ${process.env.MONGODB_DBNAME}`);
+    }
+  });
+}
+
+start();
 
 
-const PORT = process.env.PORT || 3001;
-const HOST = process.env.HOST || "localhost";
 
-app.listen(Number(PORT), HOST, () => {
-  console.log(`🚀 Server running on http://${HOST}:${PORT}`);
-  console.log(`📊 MongoDB connection: ${process.env.MONGODB_URI}${process.env.MONGODB_DBNAME}`);
-});
+

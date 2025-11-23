@@ -47,9 +47,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setUser(currentUser);
           } catch (error) {
             // Session expired or invalid
-            console.log('Session expired, clearing local storage');
-            localStorage.removeItem('user');
-            localStorage.removeItem('csrfToken');
+            console.log('Session expired, clearing stored credentials');
+            try {
+              window.localStorage.removeItem('user');
+              window.localStorage.removeItem('csrfToken');
+            } catch {
+              // ignore if unavailable
+            }
             setUser(null);
           }
         }
@@ -101,8 +105,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       console.error('Logout error:', error);
       // Even if backend request fails, clear local state
       setUser(null);
-      localStorage.removeItem('user');
-      localStorage.removeItem('csrfToken');
+      try {
+        window.localStorage.removeItem('user');
+        window.localStorage.removeItem('csrfToken');
+      } catch {}
     }
   };
 
@@ -113,8 +119,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch (error) {
       console.error('Error refreshing user:', error);
       setUser(null);
-      localStorage.removeItem('user');
-      localStorage.removeItem('csrfToken');
+      try {
+        window.localStorage.removeItem('user');
+        window.localStorage.removeItem('csrfToken');
+      } catch {}
     }
   };
 
