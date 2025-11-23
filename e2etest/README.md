@@ -8,16 +8,22 @@ Las pruebas E2E validan el funcionamiento completo de la aplicación desde la pe
 
 #### 1. Autenticación (`auth.spec.ts`)
 
-- **Abrir modal de Login**: Verifica que el modal se abre al hacer clic en "Iniciar Sesión"
+- **Abrir modal de Login**: Verifica que el modal se abre al hacer click en "Iniciar Sesión"
 - **Validar formato de email**: Prueba validación de email inválido y muestra de alertas de error
 - **Navegar entre modales**: Verifica navegación entre Login y Registro usando los enlaces internos
 - **Contraseñas no coinciden**: Valida que el registro se bloquea cuando las contraseñas no coinciden
 - **Login exitoso y Logout**: Prueba flujo completo de autenticación con mock, verificando cambio de estado del navbar
+- **Denegar acceso sin autenticación**: Verifica que endpoint protegido `/api/auth/me` retorna 401 sin autenticación
+- **Permitir acceso con autenticación**: Verifica que usuario autenticado puede acceder a endpoints protegidos con CSRF token
 
 #### 2. CRUD de Equipos (`teams.spec.ts`)
-**Operaciones READ:**
 
-**Navegación:**
+- **Listar equipos (READ)**: Obtiene lista completa de equipos desde `/api/teams`
+- **Crear equipo (CREATE)**: Crea un nuevo equipo con todos los campos requeridos (sport, name, category, description, founded, captain, playersCount, achievements, nextMatch, image)
+- **Leer equipo por ID (READ)**: Obtiene un equipo específico por su ID desde `/api/teams/:id`
+- **Actualizar equipo (UPDATE)**: Modifica campos de un equipo existente mediante PUT a `/api/teams/:id`
+- **Eliminar equipo (DELETE)**: Elimina un equipo por ID y verifica que retorna 404 al intentar leerlo después
+- **Flujo CRUD completo**: Prueba secuencial de CREATE → READ → UPDATE → DELETE verificando cada operación
 
 
 ## Requisitos Previos
