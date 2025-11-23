@@ -10,6 +10,7 @@ import logoImg from './assets/logo-sin-fondo.png';
 import Calendar from './pages/Calendar';
 import Store from './pages/Store';
 import { AuthProvider } from './context/AuthContext';
+import News from './pages/News';
 
 
 //Tema personalizado anakena
@@ -128,7 +129,7 @@ function App() {
       case 'equipos':
         return <Teams />;
       case 'noticias':
-        return <ComingSoon pageName="Noticias" description="Aquí encontrarás todas las noticias y novedades del club Anakena. Incluirá artículos completos, galerías de fotos y videos de los partidos más importantes." />;
+        return <News />;
       case 'historia':
         return <ComingSoon pageName="Historia del Club" description="Una línea de tiempo interactiva con los hitos más importantes de los 25+ años de historia del club Anakena DCC." />;
       case 'calendario':
