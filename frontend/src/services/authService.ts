@@ -1,10 +1,11 @@
 import type { LoginCredentials, RegisterData, LoginResponse, User } from '../types/auth';
+import { getItem as safeGet, setItem as safeSet, removeItem as safeRemove } from '../utils/safeStorage';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '/api');
 
-// Helper function to get CSRF token from localStorage
+// Helper function to get CSRF token (safe)
 function getCsrfToken(): string | null {
-  return localStorage.getItem('csrfToken');
+  return safeGet('csrfToken');
 }
 
 // Helper function for protected requests (requires CSRF token)
@@ -55,11 +56,10 @@ export async function register(data: RegisterData): Promise<LoginResponse> {
 
   // Store CSRF token in localStorage
   if (responseData.csrfToken) {
-    localStorage.setItem('csrfToken', responseData.csrfToken);
+    safeSet('csrfToken', responseData.csrfToken);
   }
 
-  // Store user info in localStorage
-  localStorage.setItem('user', JSON.stringify({
+  safeSet('user', JSON.stringify({
     id: responseData.id,
     username: responseData.username,
     email: responseData.email
@@ -88,11 +88,10 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
 
   // Store CSRF token in localStorage
   if (data.csrfToken) {
-    localStorage.setItem('csrfToken', data.csrfToken);
+    safeSet('csrfToken', data.csrfToken);
   }
 
-  // Store user info in localStorage
-  localStorage.setItem('user', JSON.stringify({
+  safeSet('user', JSON.stringify({
     id: data.id,
     username: data.username,
     email: data.email
@@ -107,9 +106,8 @@ export async function logout(): Promise<void> {
     method: 'POST',
   });
 
-  // Clear localStorage
-  localStorage.removeItem('csrfToken');
-  localStorage.removeItem('user');
+  safeRemove('csrfToken');
+  safeRemove('user');
 }
 
 // Get current user (protected endpoint - needs CSRF token)
@@ -121,7 +119,7 @@ export async function getCurrentUser(): Promise<User> {
 
 // Get user from localStorage
 export function getUserFromStorage(): User | null {
-  const userStr = localStorage.getItem('user');
+  const userStr = safeGet('user');
   if (!userStr) return null;
 
   try {
