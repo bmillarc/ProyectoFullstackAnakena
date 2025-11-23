@@ -28,6 +28,20 @@ export default function LoginDialog({ open, onClose, onSwitchToRegister }: Login
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      setError('Por favor ingresa un email válido');
+      return;
+    }
+
+    // Validar contraseña
+    if (!password) {
+      setError('Por favor ingresa tu contraseña');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -62,13 +76,11 @@ export default function LoginDialog({ open, onClose, onSwitchToRegister }: Login
 
           <TextField
             margin="normal"
-            required
             fullWidth
             id="email"
             label="Correo Electrónico"
             name="email"
             autoComplete="email"
-            type="email"
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -77,7 +89,6 @@ export default function LoginDialog({ open, onClose, onSwitchToRegister }: Login
 
           <TextField
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Contraseña"

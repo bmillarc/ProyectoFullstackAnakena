@@ -31,15 +31,34 @@ export default function RegisterDialog({ open, onClose, onSwitchToLogin }: Regis
     e.preventDefault();
     setError('');
 
-    // Validate passwords match
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+    // Validate username
+    if (!username || username.trim().length === 0) {
+      setError('Por favor ingresa un nombre de usuario');
+      return;
+    }
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      setError('Por favor ingresa un email válido');
+      return;
+    }
+
+    // Validate password
+    if (!password) {
+      setError('Por favor ingresa una contraseña');
       return;
     }
 
     // Validate password length
     if (password.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
       return;
     }
 
@@ -81,7 +100,6 @@ export default function RegisterDialog({ open, onClose, onSwitchToLogin }: Regis
 
           <TextField
             margin="normal"
-            required
             fullWidth
             id="username"
             label="Nombre de Usuario"
@@ -95,13 +113,11 @@ export default function RegisterDialog({ open, onClose, onSwitchToLogin }: Regis
 
           <TextField
             margin="normal"
-            required
             fullWidth
             id="email"
             label="Correo Electrónico"
             name="email"
             autoComplete="email"
-            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoading}
@@ -109,7 +125,6 @@ export default function RegisterDialog({ open, onClose, onSwitchToLogin }: Regis
 
           <TextField
             margin="normal"
-            required
             fullWidth
             name="password"
             label="Contraseña"
@@ -123,7 +138,6 @@ export default function RegisterDialog({ open, onClose, onSwitchToLogin }: Regis
 
           <TextField
             margin="normal"
-            required
             fullWidth
             name="confirmPassword"
             label="Confirmar Contraseña"

@@ -96,6 +96,13 @@ ProyectoFullstackAnakena/
 │   ├── package.json
 │   ├── vite.config.ts
 │   └── tsconfig.json
+├── e2etest/                 # Pruebas End-to-End con Playwright
+│   ├── tests/
+│   │   ├── auth.spec.ts     # Pruebas de autenticación
+│   │   └── teams.spec.ts    # Pruebas CRUD de equipos
+│   ├── playwright.config.ts
+│   ├── package.json
+│   └── README.md            # Instrucciones detalladas de E2E tests
 └── README.md
 ```
 
@@ -391,6 +398,22 @@ npm run build
 npm start
 ```
 
+#### E2E Tests (Playwright)
+```bash
+cd e2etest
+
+# Ejecutar todos los tests
+npm test
+
+# Ejecutar tests con UI interactiva
+npm run test:ui
+
+# Ver reporte de tests
+npm run report
+```
+
+Para más información sobre los tests E2E, consulta [e2etest/README.md](./e2etest/README.md).
+
 ## Decisiones de Diseño y Arquitectura
 
 ### Frontend
@@ -542,10 +565,41 @@ POST http://localhost:3001/api/teams
 Body: {"name": "Anakena Fútbol", "sport": "Fútbol", "category": "Varones"}
 ```
 
+## Testing
+
+### Pruebas E2E con Playwright
+
+El proyecto incluye pruebas End-to-End automatizadas ubicadas en el directorio [`e2etest/`](./e2etest/).
+
+**Casos de prueba implementados:**
+
+1. **Autenticación** ([auth.spec.ts](./e2etest/tests/auth.spec.ts))
+   - Registro de nuevos usuarios
+   - Login y logout
+   - Validación de credenciales
+   - Persistencia de sesión
+   - Manejo de errores de autenticación
+
+2. **CRUD de Equipos** ([teams.spec.ts](./e2etest/tests/teams.spec.ts))
+   - Visualización de lista de equipos
+   - Detalles de equipo en modal
+   - Visualización de jugadores
+   - Navegación y responsive design
+
+**Ejecutar los tests:**
+
+```bash
+cd e2etest
+npm install
+npm test
+```
+
+Para instrucciones detalladas, consulta la [documentación de E2E tests](./e2etest/README.md).
+
 ## Problemas Conocidos y Limitaciones
 
 1. **Imágenes mock**: Algunas imágenes de equipos son placeholders
-2. **Falta de testing**: Pendiente implementación de tests unitarios
+2. **Tests unitarios**: Pendiente implementación de tests unitarios (solo E2E implementados)
 3. **Datos iniciales**: La base de datos comienza vacía (se puede poblar manualmente vía API)
 4. **Rutas protegidas**: Algunas rutas están abiertas, se implementará protección completa en próximos hitos
 
