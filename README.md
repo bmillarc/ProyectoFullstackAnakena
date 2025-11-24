@@ -473,143 +473,6 @@ La aplicación está completamente funcional y desplegada. Para acceder:
 - `POST /api/auth/logout` - Cierre de sesión
 - `GET /api/auth/me` - Obtener usuario actual (protegido)
 
-## Instrucciones de Despliegue
-
-### Requisitos Previos
-- Node.js 20.x o superior
-- MongoDB 6.0 o superior
-- Acceso SSH al servidor fullstack.dcc.uchile.cl
-- Puerto asignado por el equipo docente (7112)
-
-### Variables de Entorno
-
-#### Backend (.env)
-```env
-PORT=7112
-HOST=0.0.0.0
-MONGODB_URI=mongodb://127.0.0.1:27017/
-MONGODB_DBNAME=anakena_db
-JWT_SECRET=your_secure_jwt_secret_here
-FRONTEND_URL=http://fullstack.dcc.uchile.cl:7112
-NODE_ENV=production
-SERVE_UI=true
-```
-
-#### Frontend (.env)
-```env
-VITE_API_URL=/api
-```
-
-### Pasos de Despliegue
-
-#### 1. Preparación del Backend
-
-```bash
-# Conectar al servidor
-ssh usuario@fullstack.dcc.uchile.cl
-
-# Clonar el repositorio (si es primera vez)
-git clone https://github.com/usuario/proyecto-anakena.git
-cd proyecto-anakena
-
-# Actualizar código (deploys subsecuentes)
-git pull origin hito-3
-
-# Instalar dependencias del backend
-cd backend
-npm install
-
-# Configurar variables de entorno
-cp .env.example .env
-nano .env  # Editar con valores de producción
-
-# Compilar TypeScript
-npm run build
-```
-
-#### 2. Preparación del Frontend
-
-```bash
-# Desde la raíz del proyecto
-cd ../frontend
-
-# Instalar dependencias
-npm install
-
-# Compilar para producción
-npm run build
-
-# Copiar build al backend (para servir estáticamente)
-cd ../backend
-npm run build:ui
-```
-
-Este último comando ejecuta:
-1. Elimina carpeta dist del backend
-2. Construye el frontend con Vite
-3. Copia el build del frontend a backend/dist
-
-#### 3. Configuración de MongoDB
-
-```bash
-# Conectar a MongoDB
-mongosh
-
-# Seleccionar/crear base de datos
-use anakena_db
-
-# Verificar colecciones (opcional)
-show collections
-
-# Salir
-exit
-```
-
-#### 4. Iniciar la Aplicación
-
-##### Usando node directamente
-
-```bash
-# Desde la carpeta backend
-cd backend
-node dist/index.js
-
-# Para ejecutar en background
-nohup node dist/index.js > app.log 2>&1 &
-```
-
-### Troubleshooting
-
-#### Error: Puerto en uso
-```bash
-# Encontrar proceso usando el puerto
-lsof -i :7112
-
-# Terminar proceso
-kill -9 <PID>
-```
-
-#### Error: No puede conectar a MongoDB
-```bash
-# Verificar que MongoDB está corriendo
-sudo systemctl status mongod
-
-# Iniciar MongoDB si está detenido
-sudo systemctl start mongod
-```
-
-#### Error: CORS
-Verificar que `FRONTEND_URL` en .env del backend coincide con la URL de acceso y que está en la lista de orígenes permitidos en `backend/src/index.ts`.
-
-#### Logs y Debugging
-```bash
-# Ver logs en tiempo real
-pm2 logs anakena-app --lines 100
-
-# Ver logs del sistema
-journalctl -u anakena-app -f
-```
-
 ## Estructura del Proyecto
 
 ```
@@ -691,19 +554,20 @@ proyecto-anakena/
 └── README.md
 ```
 
-## Instalación y Ejecución Local
+## Instalación y Ejecución
 
 ### Prerrequisitos
 - Node.js 20.x o superior
 - MongoDB 6.0 o superior
-- npm o yarn
+- npm
 
 ### Instalación
 
 #### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/usuario/proyecto-anakena.git
-cd proyecto-anakena
+git clone https://github.com/bmillarc/ProyectoFullstackAnakena.git
+cd ProyectoFullstackAnakena
+git checkout hito-3
 ```
 
 #### 2. Instalar dependencias del Backend
@@ -712,19 +576,13 @@ cd backend
 npm install
 ```
 
-#### 3. Configurar variables de entorno del Backend
-```bash
-cp .env.example .env
-# Editar .env con valores locales
-```
-
-#### 4. Instalar dependencias del Frontend
+#### 3. Instalar dependencias del Frontend
 ```bash
 cd ../frontend
 npm install
 ```
 
-#### 5. Instalar dependencias de Tests E2E
+#### 4. Instalar dependencias de Tests E2E
 ```bash
 cd ../e2etest
 npm install

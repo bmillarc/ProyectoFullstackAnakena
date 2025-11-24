@@ -1,4 +1,4 @@
-# E2E Tests - Proyecto Anakena
+# Anakena DCC: Aplicación Web Fullstack | E2E Tests
 
 ## Descripción
 
@@ -79,25 +79,25 @@ Este comando:
 
 ### Opción 2: Ejecución Manual
 
-Si prefieres iniciar los servidores manualmente:
+Si se prefiere iniciar los servidores manualmente:
 
 #### Paso 1: Iniciar Backend
 ```bash
-# Terminal 1 - Desde la raíz del proyecto
+# Terminal 1: Desde la raíz del proyecto
 cd backend
 npm run dev
 ```
 
 #### Paso 2: Iniciar Frontend
 ```bash
-# Terminal 2 - Desde la raíz del proyecto
+# Terminal 2: Desde la raíz del proyecto
 cd frontend
 npm run dev
 ```
 
 #### Paso 3: Ejecutar Pruebas
 ```bash
-# Terminal 3 - Desde la raíz del proyecto
+# Terminal 3: Desde la raíz del proyecto
 cd e2etest
 npm test
 ```
