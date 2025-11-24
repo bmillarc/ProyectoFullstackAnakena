@@ -1,4 +1,4 @@
-# Guía de Deploy por SSH - Anakena Fullstack
+# Anakena DCC: Aplicación Web Fullstack | Guía de Deploy por SSH
 
 Esta guía explica cómo realizar el deploy de la aplicación Anakena Fullstack al servidor mediante SSH.
 
@@ -69,7 +69,7 @@ npm install
 
 ### 5. Configurar Variables de Entorno
 
-Asegúrate de que el archivo `.env` exista en el backend:
+Es necesario verificar que el archivo `.env` exista en el backend:
 
 ```bash
 cd fullstackAnakena/backend

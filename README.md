@@ -4,7 +4,7 @@
 **Profesor:** Matías Toro  
 **Auxiliares:** Martín Rojas, Carlos Ruz  
 **Ayudantes:** Bastián Corrales, Javier Kauer, Martín Pinochet, Juan Valdivia  
-**Fecha de Entrega Hito 2:** 23-11-25
+**Fecha de Entrega Hito 3:** 23-11-25
 
 ## Descripción General del Proyecto
 
