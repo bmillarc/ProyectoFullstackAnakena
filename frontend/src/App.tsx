@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Teams from './pages/Teams';
-import ComingSoon from './pages/ComingSoon';
+//import ComingSoon from './pages/ComingSoon';
 import type { NavbarItem } from './types/navbar';
 import Footer from './components/Footer';
 import logoImg from './assets/logo-sin-fondo.png';
@@ -12,6 +12,9 @@ import Store from './pages/Store';
 import News from './pages/News';
 // Context providers removed after migration to Zustand
 import NotificationHost from './components/NotificationHost';
+import History from './pages/History';
+import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 
@@ -105,12 +108,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/equipos" element={<Teams />} />
                   <Route path="/noticias" element={<News />} />
-                  <Route path="/historia" element={
-                    <ComingSoon
-                      pageName="Historia del Club"
-                      description="Una línea de tiempo interactiva con los hitos más importantes de los 25+ años de historia del club Anakena DCC."
-                    />
-                  } />
+                  <Route path="/historia" element={<History />} />
                   <Route path="/calendario" element={<Calendar />} />
 
                   {/* Rutas protegidas - requieren autenticación */}
