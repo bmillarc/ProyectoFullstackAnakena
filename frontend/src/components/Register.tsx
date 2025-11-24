@@ -10,7 +10,7 @@ import {
   Alert,
   Link,
 } from '@mui/material';
-import { useAuth } from '../context/AuthContext';
+import { useAuthStore } from '../store/authStore';
 
 interface RegisterDialogProps {
   open: boolean;
@@ -19,7 +19,7 @@ interface RegisterDialogProps {
 }
 
 export default function RegisterDialog({ open, onClose, onSwitchToLogin }: RegisterDialogProps) {
-  const { register } = useAuth();
+  const register = useAuthStore((s) => s.register);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

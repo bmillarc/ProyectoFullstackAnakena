@@ -1,44 +1,17 @@
-import { useState } from 'react';
-import { Box, Typography, Container, Card, CardMedia, CardContent, Alert, AlertTitle, Chip } from '@mui/material';
+import { Box, Typography, Container, Card, CardMedia, CardContent, Alert, AlertTitle, Chip, Button, Badge } from '@mui/material';
 import { ShoppingBag, Info } from '@mui/icons-material';
-import type { StoreItem } from '../types/store';
-import polera1 from '../assets/store/polera1.jpeg';
-import polera2 from '../assets/store/polera2.jpeg';
-import polera3 from '../assets/store/polera3.jpeg';
+import { useStoreStore } from '../store/storeStore';
 
-//Datos de ejemplo
-const mockStoreItems: StoreItem[] = [
-  {
-    id: 1,
-    label: 'Polera Anakena (local)',
-    price: '$$$$',
-    image: polera1,
-    category: 'Poleras'
-  },
-  {
-    id: 2,
-    label: 'Polera Anakena (visita)',
-    price: '$$$$',
-    image: polera2,
-    category: 'Poleras'
-  },
-  {
-    id: 3,
-    label: 'Polera Anakena (DR)',
-    price: '$$$$',
-    image: polera3,
-    category: 'Poleras'
-  },
-];
+// Items ahora provienen del store global
 
 export default function Store() {
-  const [items] = useState<StoreItem[]>(mockStoreItems);
+  const { items, addToCart, totalItems, findInCart, removeFromCart } = useStoreStore();
 
   return (
     <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 6 }}>
       <Container>
         {/* Header */}
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
+        <Box sx={{ textAlign: 'center', mb: 6, position: 'relative' }}>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, mb: 2 }}>
             <ShoppingBag sx={{ fontSize: 40, color: 'primary.main' }} />
             <Typography variant="h3" component="h1" fontWeight="bold">
@@ -48,6 +21,9 @@ export default function Store() {
           <Typography variant="h6" color="text.secondary">
             Productos oficiales
           </Typography>
+          <Badge badgeContent={totalItems()} color="primary" sx={{ position: 'absolute', top: 0, right: 0 }}>
+            <Box sx={{ width: 32, height: 32 }} />
+          </Badge>
         </Box>
 
         {/* Instructions Card */}
@@ -221,6 +197,16 @@ export default function Store() {
                 <Typography variant="caption" color="text.secondary">
                   Tallas disponibles: XS, S, M, L, XL, XXL
                 </Typography>
+                <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+                  <Button size="small" variant="contained" onClick={() => addToCart(item)}>
+                    Agregar
+                  </Button>
+                  {findInCart(item.id) && (
+                    <Button size="small" variant="outlined" onClick={() => removeFromCart(item.id)}>
+                      - {findInCart(item.id)?.quantity}
+                    </Button>
+                  )}
+                </Box>
               </CardContent>
             </Card>
           ))}
