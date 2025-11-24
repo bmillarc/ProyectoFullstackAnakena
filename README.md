@@ -705,7 +705,7 @@ npm run test:headed        # Ver ejecución en navegador
 - Listado de jugadores por equipo con sus posiciones y datos personales
 
 ### Sistema de Noticias
-- Publicación y visualización de noticias del club
+- Visualización de noticias del club
 - Noticias destacadas en la página principal
 - Filtrado por categoría y búsqueda de noticias
 - Sistema de paginación
