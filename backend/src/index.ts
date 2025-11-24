@@ -38,6 +38,7 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://localhost:5175',
       'http://localhost:5176',
       'http://fullstack.dcc.uchile.cl:7112',
       'https://fullstack.dcc.uchile.cl:7112',

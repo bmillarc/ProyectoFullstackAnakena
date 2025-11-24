@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Teams from './pages/Teams';
@@ -9,8 +9,10 @@ import Footer from './components/Footer';
 import logoImg from './assets/logo-sin-fondo.png';
 import Calendar from './pages/Calendar';
 import Store from './pages/Store';
-import { AuthProvider } from './context/AuthContext';
 import News from './pages/News';
+import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 //Tema personalizado anakena
@@ -57,108 +59,75 @@ const theme = createTheme({
 });
 
 function App() {
-  // Function to get the current page from URL hash
-  const getPageFromHash = (): string => {
-    const hash = window.location.hash.slice(1); // Remove the '#'
-    return hash || 'inicio';
-  };
-
-  const [currentPage, setCurrentPage] = useState(getPageFromHash());
-  const logo = logoImg; 
-
-  // Handle navigation and update URL hash
-  const handleNavigation = (page: string) => {
-    setCurrentPage(page);
-    window.location.hash = `#${page}`;
-  };
-
-  // Listen for hash changes (back/forward buttons, direct hash changes)
-  useEffect(() => {
-    const handleHashChange = () => {
-      const newPage = getPageFromHash();
-      setCurrentPage(newPage);
-    };
-
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
-
-    // Set initial page based on current hash
-    handleHashChange();
-
-    // Cleanup listener on component unmount
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, []);
+  const logo = logoImg;
 
   const navbarItems: NavbarItem[] = [
     {
       label: 'Inicio',
-      href: 'inicio',
-      onClick: () => handleNavigation('inicio'),
+      href: '/',
     },
     {
       label: 'Equipos',
-      href: 'equipos',
-      onClick: () => handleNavigation('equipos'),
+      href: '/equipos',
     },
     {
       label: 'Noticias',
-      href: 'noticias',
-      onClick: () => handleNavigation('noticias'),
+      href: '/noticias',
     },
     {
       label: 'Historia',
-      href: 'historia',
-      onClick: () => handleNavigation('historia'),
+      href: '/historia',
     },
     {
       label: 'Calendario',
-      href: 'calendario',
-      onClick: () => handleNavigation('calendario'),
+      href: '/calendario',
     },
     {
       label: 'Tienda',
-      href: 'tienda',
-      onClick: () => handleNavigation('tienda'),
+      href: '/tienda',
     },
   ];
 
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'equipos':
-        return <Teams />;
-      case 'noticias':
-        return <News />;
-      case 'historia':
-        return <ComingSoon pageName="Historia del Club" description="Una línea de tiempo interactiva con los hitos más importantes de los 25+ años de historia del club Anakena DCC." />;
-      case 'calendario':
-        return <Calendar/>;
-      case 'tienda':
-        return <Store/>;
-      case 'inicio':
-      default:
-        return <Home />;
-    }
-  };
-
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Box sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
-          <Navbar logo={logo} items={navbarItems} />
-          <Box component="main" sx={{ flex: 1 }}>
-            {renderCurrentPage()}
-          </Box>
-          <Footer onNavigate={handleNavigation} />
-        </Box>
-      </ThemeProvider>
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <NotificationProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Box sx={{
+              minHeight: '100vh',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <Navbar logo={logo} items={navbarItems} />
+              <Box component="main" sx={{ flex: 1 }}>
+                <Routes>
+                  {/* Rutas públicas */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/equipos" element={<Teams />} />
+                  <Route path="/noticias" element={<News />} />
+                  <Route path="/historia" element={
+                    <ComingSoon
+                      pageName="Historia del Club"
+                      description="Una línea de tiempo interactiva con los hitos más importantes de los 25+ años de historia del club Anakena DCC."
+                    />
+                  } />
+                  <Route path="/calendario" element={<Calendar />} />
+
+                  {/* Rutas protegidas - requieren autenticación */}
+                  <Route path="/tienda" element={
+                    <ProtectedRoute>
+                      <Store />
+                    </ProtectedRoute>
+                  } />
+                </Routes>
+              </Box>
+              <Footer />
+            </Box>
+          </ThemeProvider>
+        </NotificationProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

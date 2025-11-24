@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   AppBar, Toolbar, Box, Button, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText,
   Menu, MenuItem, Typography,
 } from '@mui/material';
 import { Menu as MenuIcon, AccountCircle } from '@mui/icons-material';
-import type { NavbarProps, NavbarItem } from '../types/navbar';
+import type { NavbarProps } from '../types/navbar';
 import { useAuth } from '../context/AuthContext';
 import LoginDialog from './Login';
 import RegisterDialog from './Register';
@@ -18,13 +19,6 @@ export default function Navbar({ logo, items }: NavbarProps) {
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const handleItemClick = (item: NavbarItem, event: React.MouseEvent) => {
-    event.preventDefault();
-    if (item.onClick) {
-      item.onClick();
-    }
   };
 
   const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -64,7 +58,8 @@ export default function Navbar({ logo, items }: NavbarProps) {
               <Button
                 key={index}
                 color="inherit"
-                onClick={(e) => handleItemClick(item, e)}
+                component={Link}
+                to={item.href}
                 sx={{ px: 2, py: 0 }}
               >
                 {item.label}
@@ -141,10 +136,9 @@ export default function Navbar({ logo, items }: NavbarProps) {
             {items.map((item, index) => (
               <ListItem key={index} disablePadding>
                 <ListItemButton
-                  onClick={(e) => {
-                    handleItemClick(item, e);
-                    handleDrawerToggle();
-                  }}
+                  component={Link}
+                  to={item.href}
+                  onClick={handleDrawerToggle}
                 >
                   <ListItemText primary={item.label} />
                 </ListItemButton>
