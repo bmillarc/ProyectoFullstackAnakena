@@ -1,618 +1,795 @@
-# Anakena DCC: Aplicación Web Fullstack | Hito 2
+# Anakena DCC: Aplicación Web Fullstack | Hito 3
 
 **Curso:** \[CC5003] Aplicaciones Web Reactivas  
 **Profesor:** Matías Toro  
 **Auxiliares:** Martín Rojas, Carlos Ruz  
 **Ayudantes:** Bastián Corrales, Javier Kauer, Martín Pinochet, Juan Valdivia  
-**Fecha de Entrega Hito 2:** 20-10-25
+**Fecha de Entrega Hito 2:** 23-11-25
 
-## Descripción del Proyecto
+## Descripción General del Proyecto
 
-El portal web Anakena es una aplicación web fullstack desarrollada como parte del curso CC5003. El proyecto busca centralizar toda la información deportiva del club Anakena del Departamento de Ciencias de la Computación (DCC) de la Universidad de Chile.
+Este proyecto corresponde a una aplicación web fullstack desarrollada para el Club Deportivo Anakena del Departamento de Ciencias de la Computación (DCC) de la Universidad de Chile. La aplicación permite gestionar información sobre equipos deportivos, jugadores, partidos, noticias, torneos, eventos y una tienda de productos oficiales del club.
 
-**Hito 2**: Backend real con Express + TypeScript + MongoDB, reemplazando el json-server del Hito 1.
-
-### Motivación
-
-El club deportivo Anakena participa en múltiples disciplinas (fútbol, básquetbol, vóleibol, handball, tenis de mesa, atletismo, entre otros). Actualmente, la información sobre resultados, calendarios, planteles y la historia del club está dispersa en redes sociales, planillas y mensajes, lo que dificulta que estudiantes, docentes y egresados sigan a sus equipos y valoren su trayectoria.
-
-### Solución Propuesta
-
-Desarrollamos una aplicación web **reactiva** (SPA: Single Page Application) que concentra toda la información deportiva de Anakena, permitiendo:
-
-- **Módulo público**: Visualización de resultados, fixture, planteles, perfiles de jugadores e historia del club
-- **Navegación fluida**: Sistema de navegación por hash que permite acceso directo a secciones específicas
-- **Diseño responsivo**: Interfaz adaptable a diferentes dispositivos usando Material-UI
-- **Arquitectura escalable**: Preparada para futuras funcionalidades como autenticación y actualizaciones en tiempo real
+La plataforma incluye funcionalidades de autenticación de usuarios, acceso a rutas protegidas, gestión de contenido dinámico y una interfaz moderna construida con React y Material UI. El backend está desarrollado con Node.js, Express y MongoDB, proporcionando una API RESTful completa.
 
 ## Tecnologías Utilizadas
 
 ### Frontend
-- **React 19.1.1** con TypeScript
-- **Material-UI (MUI) 7.3.2** para componentes y diseño
-- **Vite** como build tool y dev server
-- **ESLint** para linting de código
+- React 19.1.1
+- TypeScript 5.8.3
+- Vite 7.1.2
+- Material UI 7.3.2
+- React Router DOM 7.9.6
+- React Context API para manejo de estado
 
 ### Backend
-- **Express 4.18.2** con TypeScript para servidor REST
-- **MongoDB** como base de datos NoSQL
-- **Mongoose 8.0.0** como ODM para modelado de datos
-- **JWT (jsonwebtoken)** para autenticación basada en tokens
-- **bcrypt** para hash de contraseñas
-- **CORS** habilitado para comunicación con frontend
+- Node.js con Express 4.21.2
+- TypeScript 5.9.3
+- MongoDB con Mongoose 8.19.2
+- JSON Web Tokens (jsonwebtoken 9.0.2)
+- bcrypt 6.0.0 para encriptación de contraseñas
+- cookie-parser 1.4.7 para manejo de cookies
+- CORS 2.8.5
+
+### Testing
+- Playwright 1.56.1 para pruebas End-to-End
 
 ### Herramientas de Desarrollo
-- **TypeScript** para tipado estático
-- **CSS-in-JS** con Emotion (integrado con MUI)
-- **Manejo de assets** con Vite's import.meta.glob
+- ESLint 9.33.0
+- ts-node-dev 2.0.0
+- dotenv 16.6.1
+
+## Estructura del Estado Global
+
+El proyecto utiliza React Context API para el manejo del estado global de la aplicación, implementado a través de dos contextos principales:
+
+### AuthContext
+Ubicado en `frontend/src/context/AuthContext.tsx`, este contexto maneja todo lo relacionado con la autenticación de usuarios:
+
+- **Estado gestionado:**
+  - `user`: Objeto con información del usuario autenticado (id, username, email)
+  - `isAuthenticated`: Booleano que indica si hay un usuario autenticado
+  - `isLoading`: Booleano para indicar estados de carga
+
+- **Funciones proporcionadas:**
+  - `login(credentials)`: Autenticación de usuarios existentes
+  - `register(data)`: Registro de nuevos usuarios
+  - `logout()`: Cierre de sesión
+  - `refreshUser()`: Actualización de datos del usuario
+
+- **Persistencia:** Utiliza localStorage de manera segura mediante wrappers personalizados (safeStorage.ts) para almacenar información básica del usuario y tokens CSRF.
+
+### NotificationContext
+Ubicado en `frontend/src/context/NotificationContext.tsx`, maneja las notificaciones y mensajes al usuario:
+
+- **Estado gestionado:**
+  - Mensajes de notificación (texto y severidad)
+  - Estado de visibilidad del Snackbar
+
+- **Funciones proporcionadas:**
+  - `showNotification(message, severity)`: Muestra notificaciones al usuario con diferentes niveles de severidad (info, success, warning, error)
+
+## Mapa de Rutas y Flujo de Autenticación
+
+### Configuración de Rutas
+El sistema de ruteo está implementado con React Router DOM v7 en `frontend/src/App.tsx`:
+
+#### Rutas Públicas
+- `/` - Página de inicio (Home)
+- `/equipos` - Listado de equipos deportivos (Teams)
+- `/noticias` - Sección de noticias (News)
+- `/historia` - Historia del club (History)
+- `/calendario` - Calendario de eventos (Calendar)
+
+#### Rutas Protegidas
+- `/tienda` - Tienda de productos (Store)
+  - Requiere autenticación mediante el componente ProtectedRoute
+  - Redirige a la página principal si el usuario no está autenticado
+
+### Flujo de Autenticación
+
+#### 1. Registro de Usuario
+```
+Usuario → Click "Registrarse" → RegisterDialog → 
+POST /api/auth/register → Backend valida datos → 
+Crea usuario en MongoDB → Retorna JWT + CSRF token → 
+Almacena en localStorage → Actualiza AuthContext → 
+Cierra dialog → Usuario autenticado
+```
+
+#### 2. Inicio de Sesión
+```
+Usuario → Click "Iniciar Sesión" → LoginDialog → 
+POST /api/auth/login → Backend valida credenciales → 
+Compara contraseña con bcrypt → Retorna JWT + CSRF token → 
+Almacena en localStorage → Actualiza AuthContext → 
+Cierra dialog → Usuario autenticado
+```
+
+#### 3. Protección de Rutas
+El componente `ProtectedRoute` (frontend/src/components/ProtectedRoute.tsx) implementa el siguiente flujo:
+
+```
+Usuario intenta acceder a ruta protegida → 
+ProtectedRoute verifica isAuthenticated → 
+Si está autenticado: renderiza componente solicitado → 
+Si no está autenticado: 
+  - Muestra notificación "Debes iniciar sesión" → 
+  - Redirige a "/" → 
+  - Guarda location intentada en state
+```
+
+#### 4. Verificación de Sesión
+Al cargar la aplicación, AuthContext ejecuta:
+```
+useEffect inicial → Verifica localStorage → 
+Si hay datos almacenados: 
+  - GET /api/auth/me con CSRF token → 
+  - Backend valida token → 
+  - Retorna datos actualizados → 
+  - Actualiza estado del usuario
+Si no hay datos o token inválido:
+  - Limpia localStorage → 
+  - Establece isAuthenticated = false
+```
+
+#### 5. Cierre de Sesión
+```
+Usuario → Click "Cerrar Sesión" → 
+POST /api/auth/logout → 
+Backend limpia cookies → 
+Frontend limpia localStorage → 
+Actualiza AuthContext (user = null) → 
+Redirige a página principal
+```
+
+### Seguridad Implementada
+
+1. **Tokens JWT en HttpOnly Cookies:** Los tokens de autenticación se almacenan en cookies HttpOnly, protegiéndolos contra ataques XSS.
+
+2. **Tokens CSRF:** Se implementa protección CSRF mediante tokens que se validan en cada petición protegida.
+
+3. **Encriptación de Contraseñas:** bcrypt con salt rounds de 10 para hash seguro de contraseñas.
+
+4. **Validación en Frontend y Backend:** Validaciones duplicadas para prevenir envío de datos inválidos.
+
+5. **CORS Configurado:** Lista blanca de orígenes permitidos con soporte para credenciales.
+
+## Descripción de los Tests E2E
+
+### Herramienta Utilizada
+Playwright 1.56.1 es el framework seleccionado para las pruebas End-to-End. Se eligió Playwright por:
+- Soporte multi-navegador (Chromium, Firefox, WebKit)
+- API moderna y poderosa
+- Buenas herramientas de debugging
+- Capacidad de interceptar y mockear requests
+
+### Estructura de Tests
+Los tests se encuentran en la carpeta `e2etest/` con la siguiente estructura:
+
+```
+e2etest/
+├── tests/
+│   ├── auth.spec.ts      # Tests de autenticación
+│   └── teams.spec.ts     # Tests CRUD de equipos
+├── playwright.config.ts  # Configuración de Playwright
+└── package.json
+```
+
+### Flujos Cubiertos
+
+#### 1. Tests de Autenticación (auth.spec.ts)
+
+**Test: Abrir modal de Login**
+- Verifica que el modal de login se abre correctamente al hacer click en "Iniciar Sesión"
+- Confirma la presencia del dialog mediante su rol y título
+
+**Test: Validación de formularios**
+- Valida que el formulario de login requiere email y contraseña
+- Verifica que se muestra error cuando el formato del email es inválido
+- Confirma que aparecen alertas visuales ante errores
+
+**Test: Navegación entre Login y Registro**
+- Valida la navegación fluida entre modales de Login y Registro
+- Verifica que los modales se alternan correctamente sin perder estado
+
+**Test: Validación de contraseñas en registro**
+- Confirma que el sistema rechaza registros cuando las contraseñas no coinciden
+- Verifica el mensaje de error específico mostrado al usuario
+
+**Test: Flujo completo de autenticación**
+- Mockea el endpoint `/api/auth/login` para simular respuesta exitosa
+- Realiza login completo con credenciales válidas
+- Verifica que aparece el saludo con el nombre de usuario
+- Ejecuta el flujo de cierre de sesión
+- Confirma que el estado vuelve al inicial (no autenticado)
+
+**Test: Acceso denegado a rutas protegidas**
+- Intenta acceder al endpoint `/api/auth/me` sin autenticación
+- Verifica que retorna código 401 Unauthorized
+
+**Test: Acceso permitido con autenticación**
+- Mockea endpoints de login y `/api/auth/me`
+- Realiza login exitoso
+- Verifica que el CSRF token se envía correctamente en los headers
+- Confirma que el acceso a recursos protegidos es exitoso
+
+#### 2. Tests CRUD de Equipos (teams.spec.ts)
+
+**Setup (beforeEach)**
+- Limpia equipos de prueba (IDs 995-999) antes de cada test
+- Asegura un estado limpio para evitar conflictos entre tests
+
+**Test: Listar equipos (READ)**
+- Ejecuta GET `/api/teams`
+- Verifica código de respuesta 200
+- Confirma que retorna un array
+
+**Test: Crear equipo (CREATE)**
+- Crea un equipo completo con todos sus campos
+- POST `/api/teams` con datos del nuevo equipo
+- Verifica código 201 y que los datos retornados coinciden
+
+**Test: Leer equipo específico (READ)**
+- Crea un equipo de prueba
+- Ejecuta GET `/api/teams/{id}`
+- Verifica que los datos del equipo son correctos
+
+**Test: Actualizar equipo (UPDATE)**
+- Crea un equipo inicial
+- Ejecuta PUT `/api/teams/{id}` con datos modificados
+- Verifica que solo los campos enviados se actualizaron
+- Confirma que los demás campos permanecen sin cambios
+
+**Test: Eliminar equipo (DELETE)**
+- Crea un equipo temporal
+- Ejecuta DELETE `/api/teams/{id}`
+- Verifica código 204 (No Content)
+- Confirma que el equipo ya no existe (GET retorna 404)
+
+**Test: Flujo CRUD completo**
+- Ejecuta secuencialmente: CREATE → READ → UPDATE → DELETE
+- Valida cada paso del ciclo de vida completo de una entidad
+- Verifica que todas las operaciones se completan exitosamente
+
+### Configuración de Tests
+
+El archivo `playwright.config.ts` incluye:
+- Tests en paralelo para mayor velocidad
+- Reintentos automáticos en CI (2 veces)
+- Soporte para Chromium, Firefox y WebKit
+- Trazas automáticas en fallos para debugging
+- Base URL configurada a `http://localhost:5173`
+
+### Ejecución de Tests
+
+Los tests requieren que tanto backend como frontend estén ejecutándose:
+
+```bash
+# Terminal 1: Backend
+cd backend
+npm run dev
+
+# Terminal: Frontend
+cd frontend
+npm run dev
+
+# Terminal 3: Tests
+cd e2etest
+npm test                   # Ejecutar todos los tests
+npm run test:ui            # Modo UI interactivo
+npm run test:headed        # Ver ejecución en navegador
+```
+
+### Cobertura de Tests
+
+Los tests cubren los siguientes aspectos críticos:
+1. Autenticación completa (registro, login, logout)
+2. Protección de rutas
+3. Validación de formularios
+4. Manejo de errores
+5. Operaciones CRUD completas
+6. Integración frontend-backend
+7. Persistencia de estado
+
+## Librería de Estilos y Decisiones de Diseño
+
+### Librería Principal: Material UI (MUI) v7.3.2
+
+Se seleccionó Material UI como la librería de componentes y estilos por las siguientes razones:
+
+1. **Ecosistema Completo:** Proporciona componentes pre-construidos, sistema de theming y utilidades de layout
+2. **Accesibilidad:** Componentes con soporte ARIA integrado
+3. **Personalización:** Sistema de theming flexible mediante `createTheme`
+4. **TypeScript:** Excelente soporte y tipado completo
+5. **Documentación:** Extensa y con ejemplos prácticos
+6. **Comunidad:** Amplia comunidad y soporte a largo plazo
+
+### Tema Personalizado
+
+El tema de la aplicación está definido en `frontend/src/App.tsx`:
+
+```typescript
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#2f8549ff',    // Verde institucional Anakena
+      dark: '#073d23ff',    // Verde oscuro
+      light: '#297438ff',   // Verde claro
+    },
+    secondary: {
+      main: '#f50057',
+    },
+    background: {
+      default: '#fafafa',
+    },
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontWeight: 700 },
+    h2: { fontWeight: 600 },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 600,
+        },
+      },
+    },
+  },
+});
+```
+
+### Paleta de Colores
+
+- **Primary Green (#2f8549):** Color principal del club Anakena, utilizado en navbar, botones principales y elementos destacados
+- **Dark Green (#073d23):** Para hover states y elementos de énfasis
+- **Light Green (#297438):** Headers de secciones y fondos sutiles
+- **Secondary Pink (#f50057):** Elementos de acción secundarios
+- **Background (#fafafa):** Fondo general de la aplicación para mejor legibilidad
+
+### Componentes Principales Utilizados
+
+#### Layout y Navegación
+- `AppBar` y `Toolbar`: Barra de navegación superior
+- `Drawer`: Menú lateral para móviles
+- `Container`: Contenedor responsivo para contenido
+- `Box`: Componente de layout flexible
+
+#### Formularios y Inputs
+- `TextField`: Inputs para formularios de login/registro
+- `Button`: Botones de acción en toda la aplicación
+- `Select` y `MenuItem`: Filtros en página de noticias
+- `InputAdornment`: Íconos en campos de búsqueda
+
+#### Visualización de Datos
+- `Card`, `CardMedia`, `CardContent`, `CardActions`: Tarjetas para equipos, noticias y productos
+- `List`, `ListItem`, `ListItemText`: Listas de jugadores y logros
+- `Chip`: Etiquetas para categorías y estados
+- `Avatar`: Avatares para jugadores
+
+#### Feedback y Diálogos
+- `Dialog`, `DialogTitle`, `DialogContent`, `DialogActions`: Modales para login, registro y detalles
+- `Alert` y `Snackbar`: Notificaciones y mensajes al usuario
+- `CircularProgress`: Indicadores de carga
+- `Pagination`: Paginación en listados
+
+#### Íconos
+- `@mui/icons-material`: Librería de íconos Material Design (SportsSoccer, SportsBasketball, AccountCircle, etc.)
+
+### Decisiones de Diseño Visual
+
+#### 1. Diseño Responsivo
+- Sistema de Grid con breakpoints: `xs`, `sm`, `md`, `lg`
+- Layouts adaptativos mediante `display: grid` con columnas responsivas
+- Drawer colapsable en móviles, menú horizontal en desktop
+
+#### 2. Jerarquía Visual
+- Uso de Typography variants (h1-h6, body1-body2) para estructura clara
+- Espaciado consistente mediante sistema `sx` de MUI (múltiplos de 8px)
+- Elevación mediante `boxShadow` para elementos interactivos
+
+#### 3. Interactividad
+- Transiciones suaves en hover (`transition: 'all 0.3s'`)
+- Efecto de elevación en cards al hacer hover (`transform: 'translateY(-4px)'`)
+- Estados visuales claros (loading, error, success)
+
+#### 4. Accesibilidad
+- Roles ARIA en componentes interactivos
+- Labels descriptivos en todos los formularios
+- Navegación por teclado soportada
+
+#### 5. Consistencia
+- Paleta de colores limitada y consistente
+- Espaciado uniforme en toda la aplicación
+- Componentes reutilizables (Footer, Navbar, ProtectedRoute)
+- Estructura de layout predecible
+
+### Componentes Personalizados
+
+#### Slider (frontend/src/components/Slider.tsx)
+Carrusel personalizado para el 'hero' de la página principal con:
+- Transiciones automáticas configurables
+- Navegación manual con flechas
+- Indicadores de posición (dots)
+- Overlay oscuro para mejor legibilidad del texto
+
+#### Footer (frontend/src/components/Footer.tsx)
+Footer institucional con:
+- Secciones organizadas (patrocinadores, FAQ, social, contacto)
+- Links internos con React Router
+- Íconos de redes sociales
+- Diseño responsivo de columnas
+
+#### NewsDetail (frontend/src/components/NewsDetail.tsx)
+Dialog fullscreen para mostrar noticias completas con:
+- Imagen destacada
+- Metadatos (fecha, autor, categoría)
+- Contenido formateado
+- Botón de compartir
+
+### CSS y Estilos Adicionales
+
+- `index.css`: Estilos globales básicos y variables CSS
+- No se utiliza CSS Modules ni styled-components para mantener simplicidad
+
+## URL de la Aplicación Desplegada
+
+**Servidor:** fullstack.dcc.uchile.cl  
+**Puerto:** 7112  
+**URL Frontend:** http://fullstack.dcc.uchile.cl:7112  
+**URL Backend API:** http://fullstack.dcc.uchile.cl:7112/api
+
+### Acceso a la Aplicación
+
+La aplicación está completamente funcional y desplegada. Para acceder:
+
+1. Navegar a http://fullstack.dcc.uchile.cl:7112
+2. La página principal carga automáticamente
+3. Para acceder a rutas protegidas (como la tienda), es necesario crear una cuenta o iniciar sesión
+
+### Endpoints Principales del API
+
+- `GET /api/teams` - Obtener todos los equipos
+- `GET /api/teams/:id` - Obtener equipo específico
+- `GET /api/players?teamId=:id` - Obtener jugadores de un equipo
+- `GET /api/news` - Obtener todas las noticias
+- `GET /api/news?featured=true` - Obtener noticias destacadas
+- `GET /api/matches` - Obtener partidos
+- `GET /api/tournaments` - Obtener torneos
+- `GET /api/events` - Obtener eventos del calendario
+- `GET /api/store` - Obtener productos de la tienda
+- `POST /api/auth/register` - Registro de usuario
+- `POST /api/auth/login` - Inicio de sesión
+- `POST /api/auth/logout` - Cierre de sesión
+- `GET /api/auth/me` - Obtener usuario actual (protegido)
+
+## Instrucciones de Despliegue
+
+### Requisitos Previos
+- Node.js 20.x o superior
+- MongoDB 6.0 o superior
+- Acceso SSH al servidor fullstack.dcc.uchile.cl
+- Puerto asignado por el equipo docente (7112)
+
+### Variables de Entorno
+
+#### Backend (.env)
+```env
+PORT=7112
+HOST=0.0.0.0
+MONGODB_URI=mongodb://127.0.0.1:27017/
+MONGODB_DBNAME=anakena_db
+JWT_SECRET=your_secure_jwt_secret_here
+FRONTEND_URL=http://fullstack.dcc.uchile.cl:7112
+NODE_ENV=production
+SERVE_UI=true
+```
+
+#### Frontend (.env)
+```env
+VITE_API_URL=/api
+```
+
+### Pasos de Despliegue
+
+#### 1. Preparación del Backend
+
+```bash
+# Conectar al servidor
+ssh usuario@fullstack.dcc.uchile.cl
+
+# Clonar el repositorio (si es primera vez)
+git clone https://github.com/usuario/proyecto-anakena.git
+cd proyecto-anakena
+
+# Actualizar código (deploys subsecuentes)
+git pull origin hito-3
+
+# Instalar dependencias del backend
+cd backend
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+nano .env  # Editar con valores de producción
+
+# Compilar TypeScript
+npm run build
+```
+
+#### 2. Preparación del Frontend
+
+```bash
+# Desde la raíz del proyecto
+cd ../frontend
+
+# Instalar dependencias
+npm install
+
+# Compilar para producción
+npm run build
+
+# Copiar build al backend (para servir estáticamente)
+cd ../backend
+npm run build:ui
+```
+
+Este último comando ejecuta:
+1. Elimina carpeta dist del backend
+2. Construye el frontend con Vite
+3. Copia el build del frontend a backend/dist
+
+#### 3. Configuración de MongoDB
+
+```bash
+# Conectar a MongoDB
+mongosh
+
+# Seleccionar/crear base de datos
+use anakena_db
+
+# Verificar colecciones (opcional)
+show collections
+
+# Salir
+exit
+```
+
+#### 4. Iniciar la Aplicación
+
+##### Usando node directamente
+
+```bash
+# Desde la carpeta backend
+cd backend
+node dist/index.js
+
+# Para ejecutar en background
+nohup node dist/index.js > app.log 2>&1 &
+```
+
+### Troubleshooting
+
+#### Error: Puerto en uso
+```bash
+# Encontrar proceso usando el puerto
+lsof -i :7112
+
+# Terminar proceso
+kill -9 <PID>
+```
+
+#### Error: No puede conectar a MongoDB
+```bash
+# Verificar que MongoDB está corriendo
+sudo systemctl status mongod
+
+# Iniciar MongoDB si está detenido
+sudo systemctl start mongod
+```
+
+#### Error: CORS
+Verificar que `FRONTEND_URL` en .env del backend coincide con la URL de acceso y que está en la lista de orígenes permitidos en `backend/src/index.ts`.
+
+#### Logs y Debugging
+```bash
+# Ver logs en tiempo real
+pm2 logs anakena-app --lines 100
+
+# Ver logs del sistema
+journalctl -u anakena-app -f
+```
 
 ## Estructura del Proyecto
 
 ```
-ProyectoFullstackAnakena/
+proyecto-anakena/
 ├── backend/
 │   ├── src/
-│   │   ├── models/          # Modelos de Mongoose
-│   │   │   ├── teams.ts
-│   │   │   ├── players.ts
+│   │   ├── controllers/
+│   │   │   └── authController.ts
+│   │   ├── middleware/
+│   │   │   ├── auth.ts
+│   │   │   └── authMiddleware.ts
+│   │   ├── models/
+│   │   │   ├── events.ts
 │   │   │   ├── matches.ts
 │   │   │   ├── news.ts
-│   │   │   ├── tournaments.ts
-│   │   │   ├── events.ts
+│   │   │   ├── players.ts
 │   │   │   ├── store.ts
-│   │   │   └── users.ts     # Modelo de usuarios (autenticación)
-│   │   └── index.ts         # Servidor Express
-│   ├── .env                 # Variables de entorno
-│   ├── .env.example         # Ejemplo de configuración
+│   │   │   ├── teams.ts
+│   │   │   ├── tournaments.ts
+│   │   │   └── user.ts
+│   │   ├── routes/
+│   │   │   └── authRoutes.ts
+│   │   └── index.ts
+│   ├── .env
+│   ├── .env.example
 │   ├── package.json
 │   └── tsconfig.json
 ├── frontend/
-│   ├── public/
-│   │   └── vite.svg
 │   ├── src/
-│   │   ├── assets/          # Imágenes y recursos estáticos
-│   │   │   ├── teams/       # Imágenes de equipos
-│   │   │   ├── news/        # Imágenes de noticias
-│   │   │   └── ...
-│   │   ├── components/      # Componentes reutilizables
+│   │   ├── assets/
+│   │   ├── components/
 │   │   │   ├── Footer.tsx
+│   │   │   ├── Login.tsx
 │   │   │   ├── Navbar.tsx
+│   │   │   ├── NewsDetail.tsx
+│   │   │   ├── ProtectedRoute.tsx
+│   │   │   ├── Register.tsx
 │   │   │   └── Slider.tsx
-│   │   ├── pages/           # Páginas principales
+│   │   ├── context/
+│   │   │   ├── AuthContext.tsx
+│   │   │   └── NotificationContext.tsx
+│   │   ├── pages/
+│   │   │   ├── Calendar.tsx
+│   │   │   ├── ComingSoon.tsx
+│   │   │   ├── History.tsx
 │   │   │   ├── Home.tsx
-│   │   │   ├── Teams.tsx
-│   │   │   └── ComingSoon.tsx
-│   │   ├── services/        # Servicios de API
-│   │   │   └── api.ts
-│   │   ├── types/           # Definiciones de tipos TypeScript
-│   │   │   ├── navbar.ts
+│   │   │   ├── News.tsx
+│   │   │   ├── Store.tsx
+│   │   │   └── Teams.tsx
+│   │   ├── services/
+│   │   │   ├── api.ts
+│   │   │   └── authService.ts
+│   │   ├── types/
+│   │   │   ├── auth.ts
+│   │   │   ├── calendar.ts
 │   │   │   ├── footer.ts
-│   │   │   └── slider.ts
-│   │   ├── utils/           # Utilidades
-│   │   │   └── imagenes.ts
-│   │   ├── App.tsx          # Componente principal
-│   │   └── Main.tsx         # Punto de entrada
+│   │   │   ├── navbar.ts
+│   │   │   ├── slider.ts
+│   │   │   └── store.ts
+│   │   ├── utils/
+│   │   │   ├── imagenes.ts
+│   │   │   └── safeStorage.ts
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   └── vite-env.d.ts
 │   ├── index.html
 │   ├── package.json
-│   ├── vite.config.ts
-│   └── tsconfig.json
-├── e2etest/                 # Pruebas End-to-End con Playwright
+│   ├── tsconfig.json
+│   └── vite.config.ts
+├── e2etest/
 │   ├── tests/
-│   │   ├── auth.spec.ts     # Pruebas de autenticación
-│   │   └── teams.spec.ts    # Pruebas CRUD de equipos
-│   ├── playwright.config.ts
+│   │   ├── auth.spec.ts
+│   │   └── teams.spec.ts
 │   ├── package.json
-│   └── README.md            # Instrucciones detalladas de E2E tests
+│   └── playwright.config.ts
+├── .gitignore
+├── package.json
 └── README.md
 ```
 
-## Funcionalidades Implementadas
-
-### Hito 1
--  Página de inicio con slider y estadísticas
--  Página de equipos con grid responsivo
--  Navegación por hash (SPA)
--  Componentes reutilizables (Navbar, Footer, Slider)
--  Diseño responsivo con Material-UI
--  API Service para llamadas centralizadas
-
-### Hito 2
--  **Backend real con Express + TypeScript**
--  **MongoDB como base de datos NoSQL**
--  **7 modelos Mongoose** (Teams, Players, Matches, News, Tournaments, Events, Store)
--  **35+ endpoints REST** con operaciones CRUD completas
--  **Sistema de autenticación con JWT**
-  - Registro e inicio de sesión de usuarios
-  - Hash de contraseñas con bcrypt
-  - Protección de rutas con middleware de autenticación
-  - Tokens JWT para sesiones
--  **Validaciones robustas** en todos los modelos
--  **Manejo de errores** consistente con códigos HTTP estándar
--  **CORS habilitado** para comunicación frontend-backend
--  **Variables de entorno** para configuración segura
-
-### Vistas Completas Desarrolladas
-
-1. **Página de Inicio (Home)**
-   - Slider con imágenes representativas del club
-   - Estadísticas del club en formato de tarjetas
-   - Sección de últimas noticias con integración a la API
-   - Navegación
-
-2. **Página de Equipos (Teams)**
-   - Grid responsivo con todos los equipos del club
-   - Información detallada por equipo (fundación, capitán, logros)
-   - Modal con detalles completos y plantel de jugadores
-   - Próximos partidos por equipo
-   - Iconos diferenciados por deporte
-
-### Componentes Reutilizables
-
-1. **Navbar**: Navegación responsiva con drawer móvil
-2. **Footer**: Enlaces de navegación, redes sociales y patrocinadores
-3. **Slider**: Carrusel automático con controles manuales
-4. **ComingSoon**: Página placeholder para funcionalidades futuras
-
-### Servicios y Arquitectura
-
-- **API Service**: Clase centralizada para todas las llamadas a la API REST
-- **Manejo de Estado**: useState para interacciones del usuario
-- **Gestión de Imágenes**: Sistema dinámico de resolución de assets
-- **Navegación por Hash**: Sistema SPA con URLs amigables
-
-## Modelo de Datos
-
-La aplicación maneja las siguientes entidades principales con sus interfaces TypeScript y modelos Mongoose:
-
-### Teams (Equipos)
-```typescript
-// Frontend Interface
-interface Team {
-  id: number;
-  sport: string;
-  name: string;
-  category: 'Masculino' | 'Femenino' | 'Mixto';
-  description: string;
-  founded: string;
-  captain: string;
-  playersCount: number;
-  achievements: string[];
-  nextMatch?: NextMatch;
-  image: string;
-}
-
-// Backend Mongoose Interface
-interface ITeam extends Document {
-  name: string;
-  sport: string;
-  category: string;
-  description?: string;
-  players?: string[];
-}
-```
-
-### Players (Jugadores)
-```typescript
-// Frontend Interface
-interface Player {
-  id: number;
-  name: string;
-  teamId: number;
-  position: string;
-  number?: number;
-  age: number;
-  carrera: string;
-  isCaptain: boolean;
-}
-
-// Backend Mongoose Interface
-interface IPlayer extends Document {
-  name: string;
-  sport: string;
-  position?: string;
-  number?: number;
-  bio?: string;
-}
-```
-
-### News (Noticias)
-```typescript
-// Frontend Interface
-interface NewsItem {
-  id: number;
-  title: string;
-  summary: string;
-  content: string;
-  date: string;
-  author: string;
-  category: string;
-  image: string;
-  teamId?: number;
-  featured: boolean;
-}
-
-// Backend Mongoose Interface
-interface INews extends Document {
-  title: string;
-  content: string;
-  author: string;
-  date: Date;
-  imageUrl?: string;
-}
-```
-
-### Matches (Partidos)
-```typescript
-// Backend Mongoose Interface
-interface IMatch extends Document {
-  homeTeam: string;
-  awayTeam: string;
-  date: Date;
-  location: string;
-  homeScore?: number;
-  awayScore?: number;
-  status: 'scheduled' | 'ongoing' | 'finished';
-}
-```
-
-### Tournaments (Torneos)
-```typescript
-// Backend Mongoose Interface
-interface ITournament extends Document {
-  name: string;
-  sport: string;
-  startDate: Date;
-  endDate: Date;
-  description?: string;
-}
-```
-
-### Events (Eventos)
-```typescript
-// Backend Mongoose Interface
-interface IEvent extends Document {
-  title: string;
-  description: string;
-  date: Date;
-  location: string;
-  type: 'partido' | 'entrenamiento' | 'reunión' | 'otro';
-}
-```
-
-### Store (Tienda)
-```typescript
-// Backend Mongoose Interface
-interface IStore extends Document {
-  name: string;
-  description: string;
-  price: number;
-  imageUrl?: string;
-  stock: number;
-}
-```
-
-### Users (Usuarios - Autenticación)
-```typescript
-// Backend Mongoose Interface
-interface IUser extends Document {
-  username: string;
-  email: string;
-  password: string;  // Hash generado con bcrypt
-  role?: string;
-  createdAt?: Date;
-}
-```
-
-## Instalación y Ejecución
+## Instalación y Ejecución Local
 
 ### Prerrequisitos
-- Node.js (versión 18 o superior)
-- npm (incluido con Node.js)
-- MongoDB (versión 6 o superior) - [Descargar aquí](https://www.mongodb.com/try/download/community)
+- Node.js 20.x o superior
+- MongoDB 6.0 o superior
+- npm o yarn
 
-### Pasos de Instalación
+### Instalación
 
-1. **Clonar el repositorio**
+#### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/bmillarc/ProyectoFullstackAnakena/tree/hito-2
-cd ProyectoFullstackAnakena
+git clone https://github.com/usuario/proyecto-anakena.git
+cd proyecto-anakena
 ```
 
-2. **Instalar y configurar MongoDB**
-   - Instalar MongoDB Community Server desde [mongodb.com](https://www.mongodb.com/try/download/community)
-   - Iniciar el servicio de MongoDB:
-     - **Windows**: `net start MongoDB` (o buscar en Services)
-     - **macOS**: `brew services start mongodb-community`
-     - **Linux**: `sudo systemctl start mongod`
-   
-3. **Configurar el backend**
+#### 2. Instalar dependencias del Backend
 ```bash
 cd backend
 npm install
-# Copiar y configurar variables de entorno
+```
+
+#### 3. Configurar variables de entorno del Backend
+```bash
 cp .env.example .env
+# Editar .env con valores locales
 ```
 
-Editar el archivo `.env` con tu configuración:
-```env
-PORT=3001
-HOST=localhost
-MONGODB_URI=mongodb://localhost:27017/
-MONGODB_DBNAME=anakena_db
-JWT_SECRET=tu_clave_secreta_muy_segura_aqui
-```
-
-4. **Instalar dependencias del frontend**
+#### 4. Instalar dependencias del Frontend
 ```bash
 cd ../frontend
 npm install
 ```
 
-### Ejecución
-
-**Importante**: Ambos servidores deben ejecutarse simultáneamente en terminales separadas.
-
-#### Backend (Terminal 1)
+#### 5. Instalar dependencias de Tests E2E
 ```bash
-cd backend
-npm run dev
-```
-El servidor estará disponible en: `http://localhost:3001`
-
-Verás un mensaje como:
-```
-🚀 Server running on http://localhost:3001
-📊 MongoDB connection: mongodb://localhost:27017/anakena_db
+cd ../e2etest
+npm install
+npx playwright install  # Instalar navegadores
 ```
 
-#### Frontend (Terminal 2)
-```bash
-cd frontend
-npm run dev
-```
-La aplicación estará disponible en: `http://localhost:5173`
-
-### Comandos Adicionales
-
-#### Frontend
-```bash
-# Construcción para producción
-npm run build
-
-# Linting de código
-npm run lint
-
-# Vista previa de build de producción
-npm run preview
-```
+### Ejecución en Desarrollo
 
 #### Backend
 ```bash
-# Modo desarrollo con auto-reload
+cd backend
 npm run dev
-
-# Compilar TypeScript
-npm run build
-
-# Ejecutar servidor compilado
-npm start
+# Servidor corriendo en http://localhost:3001
 ```
 
-#### E2E Tests (Playwright)
+#### Frontend
 ```bash
-cd e2etest
-
-# Ejecutar todos los tests
-npm test
-
-# Ejecutar tests con UI interactiva
-npm run test:ui
-
-# Ver reporte de tests
-npm run report
+cd frontend
+npm run dev
+# Aplicación corriendo en http://localhost:5173
 ```
 
-Para más información sobre los tests E2E, consulta [e2etest/README.md](./e2etest/README.md).
-
-## Decisiones de Diseño y Arquitectura
-
-### Frontend
-
-1. **Material-UI como sistema de diseño**
-   - Componentes consistentes y accesibles
-   - Tema personalizado con colores de Anakena
-   - Sistema de breakpoints responsivo
-
-2. **Arquitectura de Componentes**
-   - Componentes funcionales con hooks
-   - Separación clara entre componentes de UI y lógica de negocio
-   - Props tipadas con TypeScript
-
-3. **Manejo de Estado**
-   - useState para estado local de componentes
-   - Servicios centralizados para llamadas API
-   - Error handling y fallbacks a datos mock
-
-4. **Sistema de Navegación**
-   - Hash-based routing para SPA simple
-   - Estado sincronizado con URL
-   - Soporte para navegación con botones del browser
-
-### Backend
-
-1. **Express + TypeScript**
-   - Servidor REST completo con tipado estático
-   - Middleware de logging y manejo de errores
-   - CORS habilitado para desarrollo
-
-2. **MongoDB con Mongoose**
-   - Modelos con validaciones robustas
-   - Relaciones entre entidades (teams/players)
-   - Schemas con timestamps automáticos
-
-3. **Endpoints REST**
-   - CRUD completo para todas las entidades
-   - Query params para filtrado (ej: `/api/players?teamId=1`)
-   - Códigos HTTP estándar y manejo de errores consistente
-
-4. **Entidades Modeladas**
-   - **Teams**: Equipos deportivos con información completa
-   - **Players**: Jugadores con relación a equipos
-   - **Matches**: Partidos con resultados y estado
-   - **News**: Noticias del club con categorías
-   - **Tournaments**: Torneos activos y completados
-   - **Events**: Eventos del calendario
-   - **Store**: Productos de la tienda del club
-   - **Users**: Sistema de autenticación con JWT y bcrypt
-
-## Priorización de Funcionalidades
-
-### Alta Prioridad (Implementado)
-- **Visualización de equipos**: Información completa de 6 equipos del club
-- **Información de jugadores**: Planteles detallados por equipo  
-- **Navegación principal**: Sistema de navegación funcional
-- **Diseño responsivo**: Adaptación a dispositivos móviles y desktop
-
-### Media Prioridad (Próximos Hitos)
-- **Noticias completas**: Sistema de gestión de noticias con contenido expandido
-- **Calendario de partidos**: Vista de calendario con próximos encuentros
-- **Historia del club**: Línea de tiempo interactiva
-- **Estadísticas avanzadas**: Métricas detalladas por jugador y equipo
-
-
-### Baja Prioridad (Futuro)
-- **Tienda online**: Merch del club
-- **Notificaciones push?**: Alertas de partidos y resultados
-- **Sistema de comentarios?**: Interacción de la comunidad
-- **Panel de administración**: Dashboard para gestión de contenido
-
-## Próximos Pasos Posibles (Hitos Futuros)
-
-**Hito 3 (Potencial)**: 
-   - Implementación completa del sistema de noticias con administración
-   - Desarrollo del calendario interactivo
-   - Panel de administración protegido con autenticación
-   - Mejoras en UX/UI basadas en feedback
-   - Tests unitarios y de integración
-
-## API Endpoints
-
-El backend expone los siguientes endpoints REST:
-
-### Teams (Equipos)
-- `GET /api/teams` - Listar todos los equipos
-- `GET /api/teams/:id` - Obtener equipo por ID
-- `POST /api/teams` - Crear nuevo equipo
-- `PUT /api/teams/:id` - Actualizar equipo
-- `DELETE /api/teams/:id` - Eliminar equipo
-
-### Players (Jugadores)
-- `GET /api/players` - Listar jugadores (soporta `?teamId=1`)
-- `GET /api/players/:id` - Obtener jugador por ID
-- `POST /api/players` - Crear jugador
-- `PUT /api/players/:id` - Actualizar jugador
-- `DELETE /api/players/:id` - Eliminar jugador
-
-### Matches (Partidos)
-- `GET /api/matches` - Listar partidos (soporta `?teamId=1`)
-- `GET /api/matches/:id` - Obtener partido por ID
-- `POST /api/matches` - Crear partido
-- `PUT /api/matches/:id` - Actualizar partido
-- `DELETE /api/matches/:id` - Eliminar partido
-
-### News (Noticias)
-- `GET /api/news` - Listar noticias (soporta `?featured=true`)
-- `GET /api/news/:id` - Obtener noticia por ID
-- `POST /api/news` - Crear noticia
-- `PUT /api/news/:id` - Actualizar noticia
-- `DELETE /api/news/:id` - Eliminar noticia
-
-### Tournaments, Events y Store
-- Endpoints similares disponibles para torneos, eventos y tienda
-
-### Auth (Autenticación) 
-- `POST /api/auth/register` - Registrar nuevo usuario
-  ```json
-  Body: {
-    "username": "usuario123",
-    "email": "usuario@email.com",
-    "password": "contraseña_segura"
-  }
-  ```
-- `POST /api/auth/login` - Iniciar sesión
-  ```json
-  Body: {
-    "email": "usuario@email.com",
-    "password": "contraseña_segura"
-  }
-  Response: {
-    "token": "jwt_token_aqui",
-    "user": { "id": "...", "username": "...", "email": "..." }
-  }
-  ```
-- `GET /api/auth/verify` - Verificar token (requiere header `Authorization: Bearer <token>`)
-
-**Nota**: Para probar estos endpoints, puedes usar:
-- **Thunder Client** (extensión de VS Code)
-- **Postman** 
-- **cURL** desde terminal
-- Directamente en el navegador para peticiones GET
-
-Ejemplo con Thunder Client:
-```
-GET http://localhost:3001/api/teams
-POST http://localhost:3001/api/teams
-Body: {"name": "Anakena Fútbol", "sport": "Fútbol", "category": "Varones"}
-```
-
-## Testing
-
-### Pruebas E2E con Playwright
-
-El proyecto incluye pruebas End-to-End automatizadas ubicadas en el directorio [`e2etest/`](./e2etest/).
-
-**Casos de prueba implementados:**
-
-1. **Autenticación** ([auth.spec.ts](./e2etest/tests/auth.spec.ts))
-   - Registro de nuevos usuarios
-   - Login y logout
-   - Validación de credenciales
-   - Persistencia de sesión
-   - Manejo de errores de autenticación
-
-2. **CRUD de Equipos** ([teams.spec.ts](./e2etest/tests/teams.spec.ts))
-   - Visualización de lista de equipos
-   - Detalles de equipo en modal
-   - Visualización de jugadores
-   - Navegación y responsive design
-
-**Ejecutar los tests:**
-
+#### Tests E2E
 ```bash
+# Asegurar de que backend y frontend estén corriendo
 cd e2etest
-npm install
-npm test
+npm test                   # Ejecutar todos los tests
+npm run test:ui            # Modo interactivo
+npm run test:headed        # Ver ejecución en navegador
 ```
 
-Para instrucciones detalladas, consulta la [documentación de E2E tests](./e2etest/README.md).
+## Funcionalidades Principales
 
-## Problemas Conocidos y Limitaciones
+### Gestión de Equipos
+- Visualización de todos los equipos deportivos del club
+- Información detallada de cada equipo (capitán, jugadores, logros, próximos partidos)
+- Listado de jugadores por equipo con sus posiciones y datos personales
 
-1. **Imágenes mock**: Algunas imágenes de equipos son placeholders
-2. **Tests unitarios**: Pendiente implementación de tests unitarios (solo E2E implementados)
-3. **Datos iniciales**: La base de datos comienza vacía (se puede poblar manualmente vía API)
-4. **Rutas protegidas**: Algunas rutas están abiertas, se implementará protección completa en próximos hitos
+### Sistema de Noticias
+- Publicación y visualización de noticias del club
+- Noticias destacadas en la página principal
+- Filtrado por categoría y búsqueda de noticias
+- Sistema de paginación
+- Vista detallada de cada noticia
 
-### Solución de Problemas Comunes
+### Calendario de Eventos
+- Visualización mensual de eventos deportivos
+- Detalles de entrenamientos, y actividades sociales
+- Filtrado por fecha
 
-**Error: "MongooseServerSelectionError"**
-- MongoDB no está corriendo. Iniciar con `net start MongoDB` (Windows) o verificar el servicio
+### Historia del Club
+- Línea de tiempo con eventos históricos importantes
+- Categorización de eventos (fundación, logros, expansión, hitos)
+- Estadísticas del club
 
-**Error: "Port 3001 already in use"**
-- Cambiar el puerto en `.env`: `PORT=3002`
+### Tienda (Ruta Protegida)
+- Catálogo de productos oficiales del club
+- Información de compra y contacto
+- Acceso exclusivo para usuarios registrados
 
-**Error: "MONGODB_URI is not defined"**
-- Verificar que existe el archivo `.env` en la carpeta `backend/` con la variable configurada
+### Sistema de Autenticación
+- Registro de nuevos usuarios
+- Inicio y cierre de sesión
+- Protección de rutas sensibles
+- Gestión segura de tokens y sesiones
 
 ## Equipo de Desarrollo
 
@@ -622,9 +799,3 @@ Para instrucciones detalladas, consulta la [documentación de E2E tests](./e2ete
 - **Pablo Reyes**  
 - **Benjamín Millar**
 - **Camila Rojas**
-
----
-
-**Nota**: Este proyecto está en desarrollo activo como parte del curso CC5003. 
-- **Hito 1**: Frontend con React + Material-UI 
-- **Hito 2**: Backend con Express + MongoDB + TypeScript + Autenticación JWT 
