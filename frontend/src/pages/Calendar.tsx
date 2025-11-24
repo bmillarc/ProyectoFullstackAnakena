@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Box, Typography, Container, Card, IconButton, Chip } from '@mui/material';
 import { ChevronLeft, ChevronRight, CalendarToday, AccessTime } from '@mui/icons-material';
 import { useCalendarStore } from '../store/calendarStore';
+import type { Event } from '../types/calendar';
 
 // Eventos ahora provienen de Zustand
 
@@ -180,7 +181,7 @@ export default function Calendar() {
               </Box>
             ) : (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {selectedEvents.map(event => {
+                {selectedEvents.map((event: Event) => {
                   const isExpanded = expandedEventId === event.id;
                   
                   return (

@@ -67,7 +67,7 @@ export default function News() {
   }, [searchQuery, categoryFilter, news]);
 
   // Obtener categorías únicas
-  const categories = ['all', ...new Set(news.map((n) => n.category))];
+  const categories: string[] = ['all', ...Array.from(new Set(news.map((n: NewsItem) => n.category)))];
 
   // Paginación
   const totalPages = Math.ceil(filteredNews.length / ITEMS_PER_PAGE);
@@ -199,7 +199,7 @@ export default function News() {
         ) : (
           <>
             {/* Featured News */}
-            {page === 1 && news.filter((n) => n.featured).length > 0 && (
+            {page === 1 && news.filter((n: NewsItem) => n.featured).length > 0 && (
               <Box sx={{ mb: 6 }}>
                 <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
                   Noticias Destacadas
@@ -216,9 +216,9 @@ export default function News() {
                   }}
                 >
                   {news
-                    .filter((n) => n.featured)
+                    .filter((n: NewsItem) => n.featured)
                     .slice(0, 2)
-                    .map((item) => (
+                    .map((item: NewsItem) => (
                       <Card
                         key={item.id}
                         sx={{
@@ -348,7 +348,7 @@ export default function News() {
                 gap: 3,
               }}
             >
-              {paginatedNews.map((item) => (
+              {paginatedNews.map((item: NewsItem) => (
                 <Card
                   key={item.id}
                   sx={{

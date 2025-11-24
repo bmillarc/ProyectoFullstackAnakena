@@ -4,7 +4,8 @@ import {
   Chip, Button, Dialog, DialogTitle, DialogContent, DialogActions,
   List, ListItem, ListItemText, Divider, Avatar, Alert
 } from '@mui/material';
-import { useTeamsStore } from '../store/teamsStore';
+import { useTeamsStore, type TeamWithExtras } from '../store/teamsStore';
+import type { Player } from '../services/api';
 
 
 // Extensión de la interfaz 'Team' para incluir la propiedad 'icon'
@@ -36,7 +37,7 @@ export default function Teams() {
 
   useEffect(() => { loadTeams(); }, [loadTeams]);
 
-  const handleTeamClick = async (team: any) => { await selectTeam(team); };
+  const handleTeamClick = async (team: TeamWithExtras) => { await selectTeam(team); };
 
   const handleCloseDialog = () => { clearSelection(); };
 
@@ -289,7 +290,7 @@ export default function Teams() {
                     Logros Destacados
                   </Typography>
                   <List dense>
-                    {selectedTeam.achievements.map((achievement, index) => (
+                    {selectedTeam.achievements.map((achievement: string, index: number) => (
                       <ListItem key={index}>
                         <ListItemText 
                           primary={achievement}
@@ -304,7 +305,7 @@ export default function Teams() {
                     Plantel {playersLoading && '(Cargando...)'}
                   </Typography>
                   <List dense>
-                    {players.slice(0, 5).map((player) => (
+                    {players.slice(0, 5).map((player: Player) => (
                       <ListItem key={player.id}>
                         <Avatar sx={{ mr: 2, bgcolor: 'primary.main', width: 32, height: 32 }}>
                           {player.number || player.name.charAt(0)}

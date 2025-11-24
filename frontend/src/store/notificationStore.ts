@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { AlertColor } from '@mui/material';
 
-interface NotificationState {
+export interface NotificationState {
   open: boolean;
   message: string;
   severity: AlertColor;

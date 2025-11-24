@@ -3,7 +3,7 @@ import apiService, { type NewsItem } from '../services/api';
 import bannerImg from '../assets/banner.png';
 import { resolveNewsImage } from '../utils/imagenes';
 
-interface NewsStoreState {
+export interface NewsStoreState {
   news: NewsItem[];
   loading: boolean;
   error: string | null;

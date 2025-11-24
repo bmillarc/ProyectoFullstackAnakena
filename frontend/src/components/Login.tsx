@@ -10,7 +10,7 @@ import {
   Alert,
   Link,
 } from '@mui/material';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore, type AuthStoreState } from '../store/authStore';
 
 interface LoginDialogProps {
   open: boolean;
@@ -19,7 +19,7 @@ interface LoginDialogProps {
 }
 
 export default function LoginDialog({ open, onClose, onSwitchToRegister }: LoginDialogProps) {
-  const login = useAuthStore((s) => s.login);
+  const login = useAuthStore((s: AuthStoreState) => s.login);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

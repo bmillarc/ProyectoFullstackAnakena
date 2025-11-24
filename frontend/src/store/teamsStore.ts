@@ -8,12 +8,12 @@ import {
 } from '@mui/icons-material';
 import React, { type ReactNode } from 'react';
 
-interface TeamWithExtras extends Team {
+export interface TeamWithExtras extends Team {
   icon: ReactNode;
   image: string;
 }
 
-interface TeamsStoreState {
+export interface TeamsStoreState {
   teams: TeamWithExtras[];
   loading: boolean;
   error: string | null;

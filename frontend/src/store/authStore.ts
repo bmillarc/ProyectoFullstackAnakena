@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { User, LoginCredentials, RegisterData } from '../types/auth';
 import * as authService from '../services/authService';
 
-interface AuthStoreState {
+export interface AuthStoreState {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;

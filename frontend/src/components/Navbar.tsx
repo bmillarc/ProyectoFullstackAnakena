@@ -6,12 +6,12 @@ import {
 } from '@mui/material';
 import { Menu as MenuIcon, AccountCircle } from '@mui/icons-material';
 import type { NavbarProps } from '../types/navbar';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore, type AuthStoreState } from '../store/authStore';
 import LoginDialog from './Login';
 import RegisterDialog from './Register';
 
 export default function Navbar({ logo, items }: NavbarProps) {
-  const { user, isAuthenticated, logout } = useAuthStore((s) => ({
+  const { user, isAuthenticated, logout } = useAuthStore((s: AuthStoreState) => ({
     user: s.user,
     isAuthenticated: s.isAuthenticated,
     logout: s.logout

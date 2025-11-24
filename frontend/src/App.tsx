@@ -13,8 +13,6 @@ import News from './pages/News';
 // Context providers removed after migration to Zustand
 import NotificationHost from './components/NotificationHost';
 import History from './pages/History';
-import { AuthProvider } from './context/AuthContext';
-import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 

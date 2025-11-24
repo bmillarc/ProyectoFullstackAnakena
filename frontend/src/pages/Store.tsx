@@ -1,6 +1,7 @@
 import { Box, Typography, Container, Card, CardMedia, CardContent, Alert, AlertTitle, Chip, Button, Badge } from '@mui/material';
 import { ShoppingBag, Info } from '@mui/icons-material';
 import { useStoreStore } from '../store/storeStore';
+import type { StoreItem } from '../types/store';
 
 // Items ahora provienen del store global
 
@@ -150,7 +151,7 @@ export default function Store() {
           },
           gap: 4
         }}>
-          {items.map((item) => (
+          {items.map((item: StoreItem) => (
             <Card 
               key={item.id}
               sx={{ 

@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
-import { useNotificationStore } from '../store/notificationStore';
+import { useAuthStore, type AuthStoreState } from '../store/authStore';
+import { useNotificationStore, type NotificationState } from '../store/notificationStore';
 import { Box, CircularProgress } from '@mui/material';
 import { useEffect, useRef } from 'react';
 
@@ -9,11 +9,11 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuthStore((s) => ({
+  const { isAuthenticated, isLoading } = useAuthStore((s: AuthStoreState) => ({
     isAuthenticated: s.isAuthenticated,
     isLoading: s.isLoading
   }));
-  const showNotification = useNotificationStore((s) => s.showNotification);
+  const showNotification = useNotificationStore((s: NotificationState) => s.showNotification);
   const location = useLocation();
   const hasShownNotification = useRef(false);
 

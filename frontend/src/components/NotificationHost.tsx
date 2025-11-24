@@ -1,8 +1,8 @@
 import { Snackbar, Alert } from '@mui/material';
-import { useNotificationStore } from '../store/notificationStore';
+import { useNotificationStore, type NotificationState } from '../store/notificationStore';
 
 export default function NotificationHost() {
-  const { open, message, severity, hide } = useNotificationStore((s) => ({
+  const { open, message, severity, hide } = useNotificationStore((s: NotificationState) => ({
     open: s.open,
     message: s.message,
     severity: s.severity,

@@ -5,9 +5,9 @@ import polera1 from '../assets/store/polera1.jpeg';
 import polera2 from '../assets/store/polera2.jpeg';
 import polera3 from '../assets/store/polera3.jpeg';
 
-interface CartItem extends StoreItem { quantity: number; }
+export interface CartItem extends StoreItem { quantity: number; }
 
-interface StoreState {
+export interface StoreState {
   items: StoreItem[];
   cart: CartItem[];
   addToCart: (item: StoreItem) => void;

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { Event } from '../types/calendar';
 
-interface CalendarState {
+export interface CalendarState {
   currentDate: Date;
   selectedDate: Date | null;
   expandedEventId: number | null;
