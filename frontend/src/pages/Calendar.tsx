@@ -1,62 +1,21 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { Box, Typography, Container, Card, IconButton, Chip } from '@mui/material';
 import { ChevronLeft, ChevronRight, CalendarToday, AccessTime } from '@mui/icons-material';
-import type { Event } from '../types/calendar';
+import { useCalendarStore } from '../store/calendarStore';
 
-// Datos de ejemplo - reemplaza con tu llamada a la API
-const mockEvents: Event[] = [
-  {
-    id: 1,
-    start: new Date(2025, 9, 20, 15, 0),
-    end: new Date(2025, 9, 20, 17, 0),
-    title: 'Partido de Fútbol ALumnos vs Profesores',
-    category: 'Partido',
-    location: 'Cancha 850',
-    description: 'Partido amistoso entre alumnos y profesores de la DCC. ¡Ven a apoyar a tu equipo favorito!'
-  },
-  {
-    id: 2,
-    start: new Date(2025, 9, 20, 18, 30),
-    end: new Date(2025, 9, 20, 20, 0),
-    title: 'Entrenamiento Básquetbol Femenino',
-    category: 'Entrenamiento',
-    location: 'Cancha 851, -3er piso',
-    description: 'Entrenamiento táctico enfocado en defensa y contraataque. Todas las jugadoras deben asistir.'
-  },
-  {
-    id: 3,
-    start: new Date(2025, 9, 22, 16, 0),
-    end: new Date(2025, 9, 22, 18, 0),
-    title: 'Torneo Interuniversitario Vóleibol',
-    category: 'Torneo',
-    location: 'Casa central Universidad de Chile',
-    description: 'Primera fase del torneo interuniversitario. Enfrentaremos a los equipos de Medicina y Derecho.'
-  },
-  {
-    id: 4,
-    start: new Date(2025, 9, 25, 14, 0),
-    end: new Date(2025, 9, 25, 16, 0),
-    title: 'Práctica de Tenis de mesa',
-    category: 'Practica',
-    location: 'Gimnasio casino',
-    description: 'Sesión de práctica abierta. Todos los niveles son bienvenidos.'
-  },
-  {
-    id: 5,
-    start: new Date(2025, 9, 25, 17, 0),
-    end: new Date(2025, 9, 25, 19, 0),
-    title: 'Bingo benefico Anakena DCC',
-    category: 'Evento Social',
-    location: 'Araña 851',
-    description: 'Evento social para recaudar fondos para el club. Habrá premios y sorpresas para los asistentes. Carton a 2000 CLP.'
-  }
-];
+// Eventos ahora provienen de Zustand
 
 export default function Calendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
-  const [events] = useState<Event[]>(mockEvents);
+  const {
+    currentDate,
+    selectedDate,
+    expandedEventId,
+    setMonthOffset,
+    selectDate,
+    toggleExpandEvent,
+    getEventsForDate,
+    isSameDay
+  } = useCalendarStore();
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -69,28 +28,15 @@ export default function Calendar() {
     return { daysInMonth, startingDayOfWeek };
   };
 
-  const isSameDay = (date1: Date, date2: Date) => {
-    return date1.getDate() === date2.getDate() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getFullYear() === date2.getFullYear();
-  };
-
-  const getEventsForDate = (date: Date) => {
-    return events.filter(event => isSameDay(event.start, date));
-  };
+  // isSameDay y getEventsForDate vienen del store
 
   const hasEvents = (day: number) => {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     return getEventsForDate(date).length > 0;
   };
 
-  const previousMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
-  };
-
-  const nextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
-  };
+  const previousMonth = () => setMonthOffset(-1);
+  const nextMonth = () => setMonthOffset(1);
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
@@ -100,7 +46,7 @@ export default function Calendar() {
   const monthName = currentDate.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
   const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-  const selectedEvents = selectedDate ? getEventsForDate(selectedDate) : [];
+  const selectedEvents = useMemo(() => selectedDate ? getEventsForDate(selectedDate) : [], [selectedDate, getEventsForDate]);
 
   return (
     <Container sx={{ py: 6 }}>
@@ -170,7 +116,7 @@ export default function Calendar() {
               return (
                 <Box
                   key={day}
-                  onClick={() => setSelectedDate(date)}
+                  onClick={() => selectDate(date)}
                   sx={{
                     aspectRatio: '1',
                     display: 'flex',
@@ -251,7 +197,7 @@ export default function Calendar() {
                       }}
                     >
                       <Box 
-                        onClick={() => setExpandedEventId(isExpanded ? null : event.id)}
+                        onClick={() => toggleExpandEvent(event.id)}
                         sx={{ 
                           p: 2, 
                           cursor: 'pointer',

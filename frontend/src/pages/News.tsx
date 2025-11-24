@@ -21,18 +21,15 @@ import {
 } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material';
 import { Search, CalendarToday, Person } from '@mui/icons-material';
-import apiService, { type NewsItem } from '../services/api';
-import { resolveNewsImage } from '../utils/imagenes';
-import bannerImg from '../assets/banner.png';
+import { type NewsItem } from '../services/api';
+import { useNewsStore } from '../store/newsStore';
 import NewsDetailDialog from '../components/NewsDetail';
 
 const ITEMS_PER_PAGE = 9;
 
 export default function News() {
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const { news, loading, error, loadNews } = useNewsStore();
   const [filteredNews, setFilteredNews] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
@@ -42,128 +39,8 @@ export default function News() {
   const [page, setPage] = useState(1);
 
   // Cargar noticias
-  useEffect(() => {
-    const loadNews = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const newsData = await apiService.getNews();
-
-        // Resolver imágenes
-        const newsWithImages = newsData.map((n) => ({
-          ...n,
-          image: resolveNewsImage(n.image) || bannerImg,
-        }));
-
-        // Ordenar por fecha más reciente
-        newsWithImages.sort(
-          (a, b) =>
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
-
-        setNews(newsWithImages);
-        setFilteredNews(newsWithImages);
-      } catch (err) {
-        console.error('Error loading news:', err);
-        setError('Error al cargar las noticias desde el servidor');
-
-        // Fallback a datos mock
-        const mockNews: NewsItem[] = [
-          {
-            id: 1,
-            title: 'Victoria histórica en el torneo de fútbol',
-            summary:
-              'El equipo de fútbol masculino de Anakena logró una victoria decisiva 3-1 contra el equipo de Ingeniería.',
-            content:
-              'En un partido emocionante disputado en la Cancha Sur del Campus, el equipo de fútbol masculino de Anakena DCC demostró su calidad y determinación al vencer 3-1 al equipo de Ingeniería. Los goles fueron anotados por Carlos Rodríguez (2) y Mario Silva (1), consolidando la posición del equipo en el torneo interfacultades.',
-            date: '2024-11-20',
-            author: 'Comunicaciones Anakena',
-            category: 'Fútbol',
-            image: bannerImg,
-            teamId: 1,
-            featured: true,
-          },
-          {
-            id: 2,
-            title: 'Nuevas incorporaciones en básquetbol femenino',
-            summary:
-              'Se suman 4 nuevas jugadoras al plantel de básquetbol femenino para la temporada 2024.',
-            content:
-              'El equipo de básquetbol femenino de Anakena DCC se refuerza con cuatro nuevas jugadoras de gran calidad. Las incorporaciones traen experiencia de torneos universitarios previos y están listas para aportar al equipo en la próxima temporada.',
-            date: '2024-11-18',
-            author: 'Staff Técnico',
-            category: 'Básquetbol',
-            image: bannerImg,
-            teamId: 2,
-            featured: false,
-          },
-          {
-            id: 3,
-            title: 'Torneo interuniversitario de vólibol',
-            summary:
-              'Anakena participa en el torneo interuniversitario con grandes expectativas.',
-            content:
-              'El equipo mixto de vólibol de Anakena DCC se prepara para enfrentar a los mejores equipos universitarios del país en el torneo interuniversitario que se realizará durante el próximo mes.',
-            date: '2024-11-15',
-            author: 'Prensa Anakena',
-            category: 'Vólibol',
-            image: bannerImg,
-            teamId: 3,
-            featured: true,
-          },
-          {
-            id: 4,
-            title: 'Anakena celebra su aniversario',
-            summary:
-              'El club deportivo cumple un año más de historia y tradición en el DCC.',
-            content:
-              'Con una emotiva ceremonia, el club deportivo Anakena DCC celebró un aniversario más, recordando los logros alcanzados y mirando hacia el futuro con optimismo y nuevos desafíos.',
-            date: '2024-11-10',
-            author: 'Directiva Anakena',
-            category: 'Institucional',
-            image: bannerImg,
-            featured: false,
-          },
-          {
-            id: 5,
-            title: 'Resultados destacados en atletismo',
-            summary:
-              'Los corredores de Anakena obtienen excelentes tiempos en la última competencia.',
-            content:
-              'Los atletas de Anakena Runners demostraron su preparación al lograr tiempos destacados en la última carrera universitaria de 10K, posicionándose entre los mejores competidores.',
-            date: '2024-11-08',
-            author: 'Equipo de Atletismo',
-            category: 'Atletismo',
-            image: bannerImg,
-            teamId: 6,
-            featured: false,
-          },
-          {
-            id: 6,
-            title: 'Inicio de la temporada de handball',
-            summary:
-              'El equipo de handball masculino comienza su preparación para el torneo regional.',
-            content:
-              'Con intensos entrenamientos y nuevas estrategias, el equipo de handball masculino de Anakena se prepara para competir en el torneo regional que comenzará el próximo mes.',
-            date: '2024-11-05',
-            author: 'Coach Handball',
-            category: 'Handball',
-            image: bannerImg,
-            teamId: 4,
-            featured: false,
-          },
-        ];
-
-        setNews(mockNews);
-        setFilteredNews(mockNews);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadNews();
-  }, []);
+  useEffect(() => { loadNews(); }, [loadNews]);
+  useEffect(() => { setFilteredNews(news); }, [news]);
 
   // Aplicar filtros
   useEffect(() => {
