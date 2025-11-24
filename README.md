@@ -651,7 +651,6 @@ proyecto-anakena/
 ```bash
 git clone https://github.com/bmillarc/ProyectoFullstackAnakena.git
 cd ProyectoFullstackAnakena
-git checkout hito-3
 ```
 
 #### 2. Instalar dependencias del Backend
