@@ -20,7 +20,7 @@ La plataforma incluye funcionalidades de autenticación de usuarios, acceso a ru
 - Vite 7.1.2
 - Material UI 7.3.2
 - React Router DOM 7.9.6
-- React Context API para manejo de estado
+- Zustand 4.5.2 para manejo de estado global
 
 ### Backend
 - Node.js con Express 4.21.2
@@ -41,10 +41,10 @@ La plataforma incluye funcionalidades de autenticación de usuarios, acceso a ru
 
 ## Estructura del Estado Global
 
-El proyecto utiliza React Context API para el manejo del estado global de la aplicación, implementado a través de dos contextos principales:
+El proyecto utiliza Zustand para el manejo del estado global de la aplicación, implementado a través de múltiples stores independientes:
 
-### AuthContext
-Ubicado en `frontend/src/context/AuthContext.tsx`, este contexto maneja todo lo relacionado con la autenticación de usuarios:
+### authStore
+Ubicado en `frontend/src/store/authStore.ts`, este store maneja todo lo relacionado con la autenticación de usuarios:
 
 - **Estado gestionado:**
   - `user`: Objeto con información del usuario autenticado (id, username, email)
@@ -59,8 +59,10 @@ Ubicado en `frontend/src/context/AuthContext.tsx`, este contexto maneja todo lo 
 
 - **Persistencia:** Utiliza localStorage de manera segura mediante wrappers personalizados (safeStorage.ts) para almacenar información básica del usuario y tokens CSRF.
 
-### NotificationContext
-Ubicado en `frontend/src/context/NotificationContext.tsx`, maneja las notificaciones y mensajes al usuario:
+- **Inicialización:** Al cargar el store, automáticamente verifica si hay un usuario en localStorage y valida su sesión con el backend.
+
+### notificationStore
+Ubicado en `frontend/src/store/notificationStore.ts`, maneja las notificaciones y mensajes al usuario:
 
 - **Estado gestionado:**
   - Mensajes de notificación (texto y severidad)
@@ -68,6 +70,75 @@ Ubicado en `frontend/src/context/NotificationContext.tsx`, maneja las notificaci
 
 - **Funciones proporcionadas:**
   - `showNotification(message, severity)`: Muestra notificaciones al usuario con diferentes niveles de severidad (info, success, warning, error)
+  - `hide()`: Oculta la notificación actual
+
+### teamsStore
+Ubicado en `frontend/src/store/teamsStore.ts`, gestiona el estado de equipos y jugadores:
+
+- **Estado gestionado:**
+  - `teams`: Lista de equipos con iconos e imágenes resueltas
+  - `loading`: Estado de carga de equipos
+  - `error`: Mensajes de error
+  - `selectedTeam`: Equipo actualmente seleccionado
+  - `players`: Lista de jugadores del equipo seleccionado
+  - `playersLoading`: Estado de carga de jugadores
+
+- **Funciones proporcionadas:**
+  - `loadTeams()`: Carga todos los equipos desde la API (con fallback a datos mock)
+  - `selectTeam(team)`: Selecciona un equipo y carga sus jugadores
+  - `clearSelection()`: Limpia la selección actual
+
+### newsStore
+Ubicado en `frontend/src/store/newsStore.ts`, gestiona el estado de noticias:
+
+- **Estado gestionado:**
+  - `news`: Lista de noticias ordenadas por fecha
+  - `loading`: Estado de carga
+  - `error`: Mensajes de error
+
+- **Funciones proporcionadas:**
+  - `loadNews()`: Carga todas las noticias desde la API con imágenes resueltas (con fallback a datos mock)
+
+### calendarStore
+Ubicado en `frontend/src/store/calendarStore.ts`, gestiona el estado del calendario de eventos:
+
+- **Estado gestionado:**
+  - `currentDate`: Fecha del mes actual mostrado
+  - `selectedDate`: Fecha seleccionada por el usuario
+  - `expandedEventId`: ID del evento expandido en la vista
+  - `events`: Lista de eventos del calendario
+
+- **Funciones proporcionadas:**
+  - `setMonthOffset(offset)`: Navega entre meses
+  - `selectDate(date)`: Selecciona una fecha específica
+  - `toggleExpandEvent(eventId)`: Expande/contrae detalles de un evento
+  - `getEventsForDate(date)`: Obtiene eventos de una fecha específica
+  - `isSameDay(a, b)`: Utilidad para comparar fechas
+
+### storeStore
+Ubicado en `frontend/src/store/storeStore.ts`, gestiona productos de la tienda y carrito de compras:
+
+- **Estado gestionado:**
+  - `items`: Catálogo de productos disponibles
+  - `cart`: Items en el carrito con cantidades
+
+- **Funciones proporcionadas:**
+  - `addToCart(item)`: Agrega un producto al carrito (incrementa cantidad si ya existe)
+  - `removeFromCart(id)`: Reduce cantidad o elimina del carrito
+  - `clearCart()`: Vacía el carrito completamente
+  - `totalItems()`: Retorna el total de items en el carrito
+  - `findInCart(id)`: Busca un producto específico en el carrito
+
+- **Persistencia:** Utiliza el middleware `persist` de Zustand para mantener el carrito en localStorage bajo la clave `anakena-store-cart`
+
+### Ventajas de Zustand sobre Context API
+
+1. **Simplicidad:** No requiere providers envolviendo la aplicación
+2. **Performance:** Re-renderiza solo los componentes que usan el estado específico modificado
+3. **DevTools:** Soporte nativo para Redux DevTools
+4. **Middleware:** Fácil integración de persist y otros middlewares
+5. **TypeScript:** Excelente inferencia de tipos sin boilerplate adicional
+6. **Tamaño:** Librería muy ligera (~1KB gzipped)
 
 ## Mapa de Rutas y Flujo de Autenticación
 
@@ -93,7 +164,7 @@ El sistema de ruteo está implementado con React Router DOM v7 en `frontend/src/
 Usuario → Click "Registrarse" → RegisterDialog → 
 POST /api/auth/register → Backend valida datos → 
 Crea usuario en MongoDB → Retorna JWT + CSRF token → 
-Almacena en localStorage → Actualiza AuthContext → 
+Almacena en localStorage → Actualiza authStore → 
 Cierra dialog → Usuario autenticado
 ```
 
@@ -102,7 +173,7 @@ Cierra dialog → Usuario autenticado
 Usuario → Click "Iniciar Sesión" → LoginDialog → 
 POST /api/auth/login → Backend valida credenciales → 
 Compara contraseña con bcrypt → Retorna JWT + CSRF token → 
-Almacena en localStorage → Actualiza AuthContext → 
+Almacena en localStorage → Actualiza authStore → 
 Cierra dialog → Usuario autenticado
 ```
 
@@ -120,17 +191,18 @@ Si no está autenticado:
 ```
 
 #### 4. Verificación de Sesión
-Al cargar la aplicación, AuthContext ejecuta:
+Al cargar la aplicación, authStore ejecuta automáticamente:
 ```
-useEffect inicial → Verifica localStorage → 
+Inicialización del store → Verifica localStorage → 
 Si hay datos almacenados: 
   - GET /api/auth/me con CSRF token → 
   - Backend valida token → 
   - Retorna datos actualizados → 
-  - Actualiza estado del usuario
+  - Actualiza estado del usuario en el store
 Si no hay datos o token inválido:
   - Limpia localStorage → 
   - Establece isAuthenticated = false
+Finaliza → isLoading = false
 ```
 
 #### 5. Cierre de Sesión
@@ -139,7 +211,7 @@ Usuario → Click "Cerrar Sesión" →
 POST /api/auth/logout → 
 Backend limpia cookies → 
 Frontend limpia localStorage → 
-Actualiza AuthContext (user = null) → 
+Actualiza authStore (user = null, isAuthenticated = false) → 
 Redirige a página principal
 ```
 
@@ -430,6 +502,13 @@ Footer institucional con:
 - Íconos de redes sociales
 - Diseño responsivo de columnas
 
+#### NotificationHost (frontend/src/components/NotificationHost.tsx)
+Componente global que renderiza notificaciones usando `notificationStore`:
+- Snackbar con Alert de Material UI
+- Cierre automático después de 6 segundos
+- Posicionamiento superior centrado
+- Diferentes severidades (success, error, warning, info)
+
 #### NewsDetail (frontend/src/components/NewsDetail.tsx)
 Dialog fullscreen para mostrar noticias completas con:
 - Imagen destacada
@@ -508,12 +587,17 @@ proyecto-anakena/
 │   │   │   ├── Login.tsx
 │   │   │   ├── Navbar.tsx
 │   │   │   ├── NewsDetail.tsx
+│   │   │   ├── NotificationHost.tsx
 │   │   │   ├── ProtectedRoute.tsx
 │   │   │   ├── Register.tsx
 │   │   │   └── Slider.tsx
-│   │   ├── context/
-│   │   │   ├── AuthContext.tsx
-│   │   │   └── NotificationContext.tsx
+│   │   ├── store/
+│   │   │   ├── authStore.ts
+│   │   │   ├── calendarStore.ts
+│   │   │   ├── newsStore.ts
+│   │   │   ├── notificationStore.ts
+│   │   │   ├── storeStore.ts
+│   │   │   └── teamsStore.ts
 │   │   ├── pages/
 │   │   │   ├── Calendar.tsx
 │   │   │   ├── ComingSoon.tsx
