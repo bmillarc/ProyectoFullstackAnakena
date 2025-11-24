@@ -10,6 +10,8 @@ import logoImg from './assets/logo-sin-fondo.png';
 import Calendar from './pages/Calendar';
 import Store from './pages/Store';
 import News from './pages/News';
+// Context providers removed after migration to Zustand
+import NotificationHost from './components/NotificationHost';
 import History from './pages/History';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -91,8 +93,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <NotificationProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Box sx={{
@@ -101,6 +101,7 @@ function App() {
               flexDirection: 'column'
             }}>
               <Navbar logo={logo} items={navbarItems} />
+              <NotificationHost />
               <Box component="main" sx={{ flex: 1 }}>
                 <Routes>
                   {/* Rutas públicas */}
@@ -121,8 +122,6 @@ function App() {
               <Footer />
             </Box>
           </ThemeProvider>
-        </NotificationProvider>
-      </AuthProvider>
     </BrowserRouter>
   );
 }
