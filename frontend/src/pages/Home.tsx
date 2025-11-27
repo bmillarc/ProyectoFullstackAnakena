@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Card, CardContent, CardMedia, Button, Container } from '@mui/material';
 import { CalendarToday, EmojiEvents, Groups, Timeline } from '@mui/icons-material';
 import Slider from '../components/Slider';
@@ -19,6 +20,7 @@ interface Stat {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +54,7 @@ export default function Home() {
 
   // Función de navegacion
   const handleNavigation = (page: string) => {
-    window.location.hash = `#${page}`;
+    navigate(`/${page}`);
   };
 
   useEffect(() => {

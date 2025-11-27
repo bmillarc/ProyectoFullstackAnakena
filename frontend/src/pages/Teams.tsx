@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Box, Typography, Container, Card, CardContent, CardMedia, 
   Chip, Button, Dialog, DialogTitle, DialogContent, DialogActions,
@@ -12,6 +13,7 @@ import type { Player } from '../services/api';
 // TeamWithIcon ahora proviene del store (TeamWithExtras)
 
 export default function Teams() {
+  const navigate = useNavigate();
   const {
     teams,
     selectedTeam,
@@ -32,7 +34,7 @@ export default function Teams() {
     // Cerrar el dialog primero
     handleCloseDialog();
     // Navegar a la página de calendario (que mostrará ComingSoon)
-    window.location.hash = '#calendario';
+    navigate('/calendario');
   };
 
   useEffect(() => { loadTeams(); }, [loadTeams]);
