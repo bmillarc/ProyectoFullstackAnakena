@@ -25,9 +25,10 @@ export interface TeamsStoreState {
   clearSelection: () => void;
 }
 
-function getSportIcon(sport: string) {
+function getSportIcon(sport?: string) {
   const iconProps = { sx: { fontSize: 40 } } as const;
-  switch (sport.toLowerCase()) {
+  const key = (sport || '').toLowerCase();
+  switch (key) {
     case 'fútbol': return React.createElement(SportsSoccer, iconProps);
     case 'básquetbol': return React.createElement(SportsBasketball, iconProps);
     case 'vóleibol': return React.createElement(SportsVolleyball, iconProps);

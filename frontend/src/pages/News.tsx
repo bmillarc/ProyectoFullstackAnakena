@@ -49,12 +49,16 @@ export default function News() {
     // Filtro por búsqueda
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (item) =>
-          item.title.toLowerCase().includes(query) ||
-          item.summary.toLowerCase().includes(query) ||
-          item.author.toLowerCase().includes(query)
-      );
+      result = result.filter((item) => {
+        const title = (item.title || '').toLowerCase();
+        const summary = (item.summary || '').toLowerCase();
+        const author = (item.author || '').toLowerCase();
+        return (
+          title.includes(query) ||
+          summary.includes(query) ||
+          author.includes(query)
+        );
+      });
     }
 
     // Filtro por categoría
@@ -67,7 +71,7 @@ export default function News() {
   }, [searchQuery, categoryFilter, news]);
 
   // Obtener categorías únicas
-  const categories: string[] = ['all', ...Array.from(new Set(news.map((n: NewsItem) => n.category)))];
+  const categories: string[] = ['all', ...Array.from(new Set(news.map((n: NewsItem) => n.category || '')))].filter(Boolean);
 
   // Paginación
   const totalPages = Math.ceil(filteredNews.length / ITEMS_PER_PAGE);
