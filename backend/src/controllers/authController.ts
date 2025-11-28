@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import UserModel from '../models/user';
 import { AuthRequest } from '../middleware/authMiddleware';
 import { JWT_SECRET } from '../middleware/authMiddleware';
+import { RequestWithUserId } from '../middleware/auth';
 
 //Generate JWT token with CSRF token embedded
 const generateToken = (userId: string, csrfToken: string): string => {
@@ -151,25 +152,24 @@ export const logout = async (_req: Request, res: Response) => {
 };
 
 // Get current user (session endpoint)
-export const getCurrentUser = async (req: AuthRequest, res: Response) => {
+export const getCurrentUser = async (req: AuthRequest & RequestWithUserId, res: Response) => {
   try {
-    if (!req.user) {
+    // Support both auth middlewares: authMiddleware sets req.user, auth sets req.userId
+    const userId = (req.user && req.user.id) || req.userId;
+    if (!userId) {
       return res.status(401).json({ error: 'Not authenticated' });
     }
 
-    // Get full user from database
-    const user = await UserModel.findById(req.user.id).select('-password');
-
+    const user = await UserModel.findById(userId).select('-password');
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Return a consistent shape matching frontend expectations (LoginResponse/User)
     return res.json({
-      user: user.toJSON(),
-      userInfo: {
-        username: user.username,
-        email: user.email
-      }
+      id: user._id.toString(),
+      username: user.username,
+      email: user.email
     });
   } catch (error) {
     console.error('Get current user error:', error);
