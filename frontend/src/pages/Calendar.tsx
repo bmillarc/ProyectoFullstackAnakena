@@ -1,62 +1,141 @@
-import { useState } from 'react';
-import { Box, Typography, Container, Card, IconButton, Chip } from '@mui/material';
-import { ChevronLeft, ChevronRight, CalendarToday, AccessTime } from '@mui/icons-material';
-import type { Event } from '../types/calendar';
+import { useState, useEffect } from 'react';
+import {
+  Box, Typography, Container, Card, IconButton, Chip, Button,
+  Dialog, DialogTitle, DialogContent, DialogActions, TextField,
+  Snackbar, MenuItem
+} from '@mui/material';
+import {
+  ChevronLeft, ChevronRight, CalendarToday, AccessTime,
+  Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon
+} from '@mui/icons-material';
+import { apiService, type Event } from '../services/api';
+import { isAdmin } from '../services/authService';
 
-// Datos de ejemplo - reemplaza con tu llamada a la API
-const mockEvents: Event[] = [
-  {
-    id: 1,
-    start: new Date(2025, 9, 20, 15, 0),
-    end: new Date(2025, 9, 20, 17, 0),
-    title: 'Partido de Fútbol ALumnos vs Profesores',
-    category: 'Partido',
-    location: 'Cancha 850',
-    description: 'Partido amistoso entre alumnos y profesores de la DCC. ¡Ven a apoyar a tu equipo favorito!'
-  },
-  {
-    id: 2,
-    start: new Date(2025, 9, 20, 18, 30),
-    end: new Date(2025, 9, 20, 20, 0),
-    title: 'Entrenamiento Básquetbol Femenino',
-    category: 'Entrenamiento',
-    location: 'Cancha 851, -3er piso',
-    description: 'Entrenamiento táctico enfocado en defensa y contraataque. Todas las jugadoras deben asistir.'
-  },
-  {
-    id: 3,
-    start: new Date(2025, 9, 22, 16, 0),
-    end: new Date(2025, 9, 22, 18, 0),
-    title: 'Torneo Interuniversitario Vóleibol',
-    category: 'Torneo',
-    location: 'Casa central Universidad de Chile',
-    description: 'Primera fase del torneo interuniversitario. Enfrentaremos a los equipos de Medicina y Derecho.'
-  },
-  {
-    id: 4,
-    start: new Date(2025, 9, 25, 14, 0),
-    end: new Date(2025, 9, 25, 16, 0),
-    title: 'Práctica de Tenis de mesa',
-    category: 'Practica',
-    location: 'Gimnasio casino',
-    description: 'Sesión de práctica abierta. Todos los niveles son bienvenidos.'
-  },
-  {
-    id: 5,
-    start: new Date(2025, 9, 25, 17, 0),
-    end: new Date(2025, 9, 25, 19, 0),
-    title: 'Bingo benefico Anakena DCC',
-    category: 'Evento Social',
-    location: 'Araña 851',
-    description: 'Evento social para recaudar fondos para el club. Habrá premios y sorpresas para los asistentes. Carton a 2000 CLP.'
-  }
-];
+// Interfaz local para manejar eventos con Date
+interface EventWithDate extends Omit<Event, 'start' | 'end'> {
+  start: Date;
+  end: Date;
+}
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
-  const [events] = useState<Event[]>(mockEvents);
+  const [events, setEvents] = useState<EventWithDate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<Partial<Event> | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const userIsAdmin = isAdmin();
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  const loadEvents = async () => {
+    try {
+      setLoading(true);
+      const eventsData = await apiService.getEvents();
+      // Convertir strings a Date
+      const eventsWithDates: EventWithDate[] = eventsData.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end)
+      }));
+      setEvents(eventsWithDates);
+    } catch (err) {
+      console.error('Error loading events:', err);
+      setSnackbarMessage('Error al cargar eventos');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateEvent = () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 1, 0, 0, 0); // Round to next hour
+
+    setEditingEvent({
+      title: '',
+      category: 'Partido',
+      location: '',
+      description: '',
+      start: now.toISOString(),
+      end: now.toISOString() // Will be calculated from duration
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditEvent = (event: EventWithDate) => {
+    setEditingEvent({
+      id: event.id,
+      title: event.title,
+      category: event.category,
+      location: event.location,
+      description: event.description,
+      start: event.start.toISOString(),
+      end: event.end.toISOString()
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleDeleteEvent = async (eventId: number) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este evento?')) {
+      return;
+    }
+
+    try {
+      await apiService.deleteEvent(eventId);
+      setEvents(events.filter(e => e.id !== eventId));
+      setSnackbarMessage('Evento eliminado correctamente');
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error('Error deleting event:', err);
+      setSnackbarMessage('Error al eliminar el evento');
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleSaveEvent = async () => {
+    if (!editingEvent || !editingEvent.title || !editingEvent.start) return;
+
+    try {
+      // Ensure end date is set (should be calculated from duration in the form)
+      const eventToSave = { ...editingEvent };
+
+      if (editingEvent.id) {
+        // Update existing event
+        const updated = await apiService.updateEvent(editingEvent.id, eventToSave);
+        const updatedWithDate: EventWithDate = {
+          ...updated,
+          start: new Date(updated.start),
+          end: new Date(updated.end)
+        };
+        setEvents(events.map(e => e.id === updated.id ? updatedWithDate : e));
+        setSnackbarMessage('Evento actualizado correctamente');
+      } else {
+        // Create new event
+        const { id, ...eventData } = eventToSave as Event;
+        const newEvent = await apiService.createEvent(eventData);
+        const newEventWithDate: EventWithDate = {
+          ...newEvent,
+          start: new Date(newEvent.start),
+          end: new Date(newEvent.end)
+        };
+        setEvents([...events, newEventWithDate]);
+        setSnackbarMessage('Evento creado correctamente');
+      }
+      setSnackbarOpen(true);
+      setEditDialogOpen(false);
+      setEditingEvent(null);
+    } catch (err: any) {
+      console.error('Error saving event:', err);
+      setSnackbarMessage(err.message || 'Error al guardar el evento');
+      setSnackbarOpen(true);
+    }
+  };
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -69,25 +148,40 @@ export default function Calendar() {
     return { daysInMonth, startingDayOfWeek };
   };
 
-  // isSameDay y getEventsForDate vienen del store
+  const isSameDay = (date1: Date, date2: Date) => {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+  };
+
+  const getEventsForDate = (date: Date) => {
+    return events.filter(event => isSameDay(event.start, date));
+  };
 
   const hasEvents = (day: number) => {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     return getEventsForDate(date).length > 0;
   };
 
-  const previousMonth = () => setMonthOffset(-1);
-  const nextMonth = () => setMonthOffset(1);
+  const previousMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+  };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
   };
 
   const { daysInMonth, startingDayOfWeek } = getDaysInMonth(currentDate);
   const monthName = currentDate.toLocaleDateString('es-CL', { month: 'long', year: 'numeric' });
   const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-  const selectedEvents = useMemo(() => selectedDate ? getEventsForDate(selectedDate) : [], [selectedDate, getEventsForDate]);
+  const selectedEvents = selectedDate ? getEventsForDate(selectedDate) : [];
 
   return (
     <Container sx={{ py: 6 }}>
@@ -170,7 +264,7 @@ export default function Calendar() {
               return (
                 <Box
                   key={day}
-                  onClick={() => selectDate(date)}
+                  onClick={() => setSelectedDate(date)}
                   sx={{
                     aspectRatio: '1',
                     display: 'flex',
@@ -238,7 +332,7 @@ export default function Calendar() {
               </Box>
             ) : (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {selectedEvents.map((event: Event) => {
+                {selectedEvents.map(event => {
                   const isExpanded = expandedEventId === event.id;
 
                   return (
@@ -255,10 +349,49 @@ export default function Calendar() {
                         }
                       }}
                     >
-                      <Box 
+                      {userIsAdmin && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 8,
+                            zIndex: 10,
+                            display: 'flex',
+                            gap: 0.5
+                          }}
+                        >
+                          <IconButton
+                            size="small"
+                            sx={{
+                              bgcolor: 'white',
+                              '&:hover': { bgcolor: 'primary.light', color: 'white' }
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditEvent(event);
+                            }}
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            sx={{
+                              bgcolor: 'white',
+                              '&:hover': { bgcolor: 'error.main', color: 'white' }
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteEvent(event.id);
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
+                      )}
+                      <Box
                         onClick={() => setExpandedEventId(isExpanded ? null : event.id)}
-                        sx={{ 
-                          p: 2, 
+                        sx={{
+                          p: 2,
                           cursor: 'pointer',
                           '&:hover': {
                             bgcolor: 'grey.50'
@@ -363,20 +496,28 @@ export default function Calendar() {
               }}
             />
             <TextField
-              label="Fecha y Hora de Inicio"
-              type="datetime-local"
-              value={editingEvent?.start ? new Date(editingEvent.start).toISOString().slice(0, 16) : ''}
+              label="Fecha de Inicio"
+              type="date"
+              value={editingEvent?.start ? new Date(editingEvent.start).toISOString().slice(0, 10) : ''}
               onChange={(e) => {
-                const startDate = new Date(e.target.value);
+                if (!e.target.value) return;
+
+                // Maintain current time or use default
+                const currentStart = editingEvent?.start ? new Date(editingEvent.start) : new Date();
+                const hours = currentStart.getHours();
+                const minutes = currentStart.getMinutes();
+
+                const [year, month, day] = e.target.value.split('-').map(Number);
+                const newStart = new Date(year, month - 1, day, hours, minutes);
 
                 // Auto-calculate end time based on current duration or default 2 hours
                 if (editingEvent?.end && editingEvent?.start) {
                   const currentDuration = (new Date(editingEvent.end).getTime() - new Date(editingEvent.start).getTime()) / (1000 * 60 * 60);
-                  const endDate = new Date(startDate.getTime() + currentDuration * 60 * 60 * 1000);
-                  setEditingEvent((prev) => ({ ...prev, start: startDate.toISOString(), end: endDate.toISOString() }));
+                  const endDate = new Date(newStart.getTime() + currentDuration * 60 * 60 * 1000);
+                  setEditingEvent({ ...editingEvent, start: newStart.toISOString(), end: endDate.toISOString() });
                 } else {
-                  const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-                  setEditingEvent((prev) => ({ ...prev, start: startDate.toISOString(), end: endDate.toISOString() }));
+                  const endDate = new Date(newStart.getTime() + 2 * 60 * 60 * 1000);
+                  setEditingEvent({ ...editingEvent, start: newStart.toISOString(), end: endDate.toISOString() });
                 }
               }}
               fullWidth
@@ -384,8 +525,42 @@ export default function Calendar() {
               slotProps={{
                 inputLabel: { shrink: true },
                 htmlInput: {
-                  min: new Date().toISOString().slice(0, 16)
+                  min: new Date().toISOString().slice(0, 10)
                 }
+              }}
+            />
+            <TextField
+              label="Hora de Inicio"
+              type="time"
+              value={editingEvent?.start ? new Date(editingEvent.start).toTimeString().slice(0, 5) : ''}
+              onChange={(e) => {
+                if (!e.target.value || !editingEvent?.start) return;
+
+                const currentStart = new Date(editingEvent.start);
+                const [hours, minutes] = e.target.value.split(':').map(Number);
+
+                const newStart = new Date(
+                  currentStart.getFullYear(),
+                  currentStart.getMonth(),
+                  currentStart.getDate(),
+                  hours,
+                  minutes
+                );
+
+                // Auto-calculate end time based on current duration or default 2 hours
+                if (editingEvent?.end) {
+                  const currentDuration = (new Date(editingEvent.end).getTime() - new Date(editingEvent.start).getTime()) / (1000 * 60 * 60);
+                  const endDate = new Date(newStart.getTime() + currentDuration * 60 * 60 * 1000);
+                  setEditingEvent({ ...editingEvent, start: newStart.toISOString(), end: endDate.toISOString() });
+                } else {
+                  const endDate = new Date(newStart.getTime() + 2 * 60 * 60 * 1000);
+                  setEditingEvent({ ...editingEvent, start: newStart.toISOString(), end: endDate.toISOString() });
+                }
+              }}
+              fullWidth
+              required
+              slotProps={{
+                inputLabel: { shrink: true }
               }}
             />
             <TextField

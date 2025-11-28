@@ -1,23 +1,29 @@
-import { useState, useEffect } from 'react';
-import { 
-  Box, Typography, Container, Card, CardContent, CardMedia, 
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Box, Typography, Container, Card, CardContent, CardMedia,
   Chip, Button, Dialog, DialogTitle, DialogContent, DialogActions,
   List, ListItem, ListItemText, Divider, Avatar, Alert, IconButton,
   TextField, MenuItem, Snackbar
 } from '@mui/material';
-import { 
+import {
   SportsSoccer, SportsBasketball, SportsVolleyball, SportsHandball,
-  SportsTennis, DirectionsRun, FitnessCenter
+  SportsTennis, DirectionsRun, FitnessCenter, Add as AddIcon,
+  Edit as EditIcon, Delete as DeleteIcon
 } from '@mui/icons-material';
 import { apiService, type Team, type Player } from '../services/api';
 import bannerImg from '../assets/banner.png';
 import { resolveTeamImage } from '../utils/imagenes';
-
+import { isAdmin } from '../services/authService';
 
 // Extensión de la interfaz 'Team' para incluir la propiedad 'icon'
-// TeamWithIcon ahora proviene del store (TeamWithExtras)
+interface TeamWithIcon extends Team {
+  icon: React.ReactElement;
+  image: string;
+}
 
 export default function Teams() {
+  const navigate = useNavigate();
   const [teams, setTeams] = useState<TeamWithIcon[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<TeamWithIcon | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -25,6 +31,11 @@ export default function Teams() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [playersLoading, setPlayersLoading] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingTeam, setEditingTeam] = useState<Partial<TeamWithIcon> | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const userIsAdmin = isAdmin();
 
   const getSportIcon = (sport: string) => {
     const iconProps = { sx: { fontSize: 40 } };
@@ -39,19 +50,56 @@ export default function Teams() {
     }
   };
 
-  // Función para navegar al calendario (ComingSoon)
-  const handleNavigateToCalendar = () => {
-    // Cerrar el dialog primero
-    handleCloseDialog();
-    // Navegar a la página de calendario (que mostrará ComingSoon)
-    navigate('/calendario');
+  const loadTeams = useCallback(async () => {
+    try {
+      setLoading(true);
+      const teamsData = await apiService.getTeams();
+      const teamsWithIcons: TeamWithIcon[] = teamsData.map(team => ({
+        ...team,
+        icon: getSportIcon(team.sport),
+        image: resolveTeamImage(team.image) || bannerImg
+      }));
+      setTeams(teamsWithIcons);
+      setError(null);
+    } catch (err) {
+      console.error('Error loading teams:', err);
+      setError('Error al cargar equipos');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadTeams();
+  }, [loadTeams]);
+
+  const handleTeamClick = async (team: TeamWithIcon) => {
+    setSelectedTeam(team);
+    setDialogOpen(true);
+
+    // Load players for this team
+    try {
+      setPlayersLoading(true);
+      const playersData = await apiService.getPlayersByTeam(team.id);
+      setPlayers(playersData);
+    } catch (err) {
+      console.error('Error loading players:', err);
+      setPlayers([]);
+    } finally {
+      setPlayersLoading(false);
+    }
   };
 
-  useEffect(() => { loadTeams(); }, [loadTeams]);
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedTeam(null);
+    setPlayers([]);
+  };
 
-  const handleTeamClick = async (team: TeamWithExtras) => { await selectTeam(team); };
-
-  const handleCloseDialog = () => { clearSelection(); };
+  const handleNavigateToCalendar = () => {
+    handleCloseDialog();
+    navigate('/calendario');
+  };
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -94,7 +142,7 @@ export default function Teams() {
     try {
       if (editingTeam.id) {
         // Update existing team
-        const updated = await apiService.updateTeam(editingTeam.id, editingTeam);
+        const updated = await apiService.updateTeam(editingTeam.id, editingTeam as Partial<Team>);
         const updatedWithIcon = {
           ...updated,
           icon: getSportIcon(updated.sport),
@@ -104,8 +152,8 @@ export default function Teams() {
         setSnackbarMessage('Equipo actualizado correctamente');
       } else {
         // Create new team - don't send id, let backend handle it
-        const { id, ...teamData } = editingTeam as Team;
-        const newTeam = await apiService.createTeam(teamData);
+        const { id, icon, ...teamData } = editingTeam;
+        const newTeam = await apiService.createTeam(teamData as Omit<Team, 'id'>);
         const newTeamWithIcon = {
           ...newTeam,
           icon: getSportIcon(newTeam.sport),
@@ -117,9 +165,10 @@ export default function Teams() {
       setSnackbarOpen(true);
       setEditDialogOpen(false);
       setEditingTeam(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error saving team:', err);
-      setSnackbarMessage(err.message || 'Error al guardar el equipo');
+      const errorMessage = err instanceof Error ? err.message : 'Error al guardar el equipo';
+      setSnackbarMessage(errorMessage);
       setSnackbarOpen(true);
     }
   };
@@ -146,13 +195,11 @@ export default function Teams() {
     setEditDialogOpen(true);
   };
 
-
-
   return (
     <Box>
       {/* Header Section */}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           bgcolor: 'primary.light',
           color: 'white',
           py: 8,
@@ -185,10 +232,10 @@ export default function Teams() {
 
         {error && (
           <Alert severity="warning" sx={{ mb: 4 }}>
-            {error} (Mostrando datos de ejemplo)
+            {error}
           </Alert>
         )}
-        
+
         {loading ? (
           <Box textAlign="center" py={6}>
             <Typography variant="h6" color="text.secondary">
@@ -196,8 +243,8 @@ export default function Teams() {
             </Typography>
           </Box>
         ) : (
-          <Box 
-            sx={{ 
+          <Box
+            sx={{
               display: 'grid',
               gridTemplateColumns: {
                 xs: '1fr',
@@ -278,22 +325,22 @@ export default function Teams() {
                       <Typography variant="h6" component="h3">
                         {team.name}
                       </Typography>
-                      <Chip 
-                      label={team.category} 
-                      size="small" 
-                      sx={{ 
-                        mt: 0.5, 
-                        backgroundColor: getCategoryColor(team.category),  
+                      <Chip
+                      label={team.category}
+                      size="small"
+                      sx={{
+                        mt: 0.5,
+                        backgroundColor: getCategoryColor(team.category),
                         color: 'white',
                       }}
                     />
                     </Box>
                   </Box>
-                  
+
                   <Typography variant="body2" color="text.secondary" paragraph sx={{ flexGrow: 1 }}>
                     {team.description}
                   </Typography>
-                  
+
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
                     <Typography variant="body2" color="text.secondary">
                       {team.playersCount} jugadores
@@ -302,7 +349,7 @@ export default function Teams() {
                       Desde {team.founded}
                     </Typography>
                   </Box>
-                  
+
                   {team.nextMatch && (
                     <Box sx={{ mt: 2, p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
                       <Typography variant="caption" color="primary.main" fontWeight="bold">
@@ -328,8 +375,8 @@ export default function Teams() {
       </Container>
 
       {/* Team Detail Dialog */}
-      <Dialog 
-        open={dialogOpen} 
+      <Dialog
+        open={dialogOpen}
         onClose={handleCloseDialog}
         maxWidth="md"
         fullWidth
@@ -345,27 +392,26 @@ export default function Teams() {
                   <Typography variant="h5" component="div">
                     {selectedTeam.name}
                   </Typography>
-                  <Chip 
-                  label={selectedTeam.category} 
-                  size="small" 
-                  sx={{ 
-                    mt: 0.5, 
-                    backgroundColor: getCategoryColor(selectedTeam.category),  
+                  <Chip
+                  label={selectedTeam.category}
+                  size="small"
+                  sx={{
+                    mt: 0.5,
+                    backgroundColor: getCategoryColor(selectedTeam.category),
                     color: 'white',
                   }}
                 />
                 </Box>
               </Box>
             </DialogTitle>
-            
+
             <DialogContent>
               <Typography variant="body1" paragraph>
                 {selectedTeam.description}
               </Typography>
-              
-              {/* CSS Grid */}
-              <Box 
-                sx={{ 
+
+              <Box
+                sx={{
                   display: 'grid',
                   gridTemplateColumns: {
                     xs: '1fr',
@@ -380,25 +426,25 @@ export default function Teams() {
                   </Typography>
                   <List dense>
                     <ListItem>
-                      <ListItemText 
-                        primary="Capitán" 
-                        secondary={selectedTeam.captain} 
+                      <ListItemText
+                        primary="Capitán"
+                        secondary={selectedTeam.captain}
                       />
                     </ListItem>
                     <ListItem>
-                      <ListItemText 
-                        primary="Fundado en" 
-                        secondary={selectedTeam.founded} 
+                      <ListItemText
+                        primary="Fundado en"
+                        secondary={selectedTeam.founded}
                       />
                     </ListItem>
                     <ListItem>
-                      <ListItemText 
-                        primary="Jugadores activos" 
-                        secondary={`${selectedTeam.playersCount} miembros`} 
+                      <ListItemText
+                        primary="Jugadores activos"
+                        secondary={`${selectedTeam.playersCount} miembros`}
                       />
                     </ListItem>
                   </List>
-                  
+
                   {selectedTeam.nextMatch && (
                     <>
                       <Divider sx={{ my: 2 }} />
@@ -407,28 +453,28 @@ export default function Teams() {
                       </Typography>
                       <List dense>
                         <ListItem>
-                          <ListItemText 
-                            primary="Rival" 
-                            secondary={selectedTeam.nextMatch.opponent} 
+                          <ListItemText
+                            primary="Rival"
+                            secondary={selectedTeam.nextMatch.opponent}
                           />
                         </ListItem>
                         <ListItem>
-                          <ListItemText 
-                            primary="Fecha y Hora" 
-                            secondary={`${new Date(selectedTeam.nextMatch.date).toLocaleDateString('es-CL')} - ${selectedTeam.nextMatch.time}`} 
+                          <ListItemText
+                            primary="Fecha y Hora"
+                            secondary={`${new Date(selectedTeam.nextMatch.date).toLocaleDateString('es-CL')} - ${selectedTeam.nextMatch.time}`}
                           />
                         </ListItem>
                         <ListItem>
-                          <ListItemText 
-                            primary="Lugar" 
-                            secondary={selectedTeam.nextMatch.location} 
+                          <ListItemText
+                            primary="Lugar"
+                            secondary={selectedTeam.nextMatch.location}
                           />
                         </ListItem>
                       </List>
                     </>
                   )}
                 </Box>
-                
+
                 <Box>
                   <Typography variant="h6" gutterBottom>
                     Logros Destacados
@@ -436,14 +482,14 @@ export default function Teams() {
                   <List dense>
                     {selectedTeam.achievements.map((achievement: string, index: number) => (
                       <ListItem key={index}>
-                        <ListItemText 
+                        <ListItemText
                           primary={achievement}
                           primaryTypographyProps={{ variant: 'body2' }}
                         />
                       </ListItem>
                     ))}
                   </List>
-                  
+
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="h6" gutterBottom>
                     Plantel {playersLoading && '(Cargando...)'}
@@ -454,7 +500,7 @@ export default function Teams() {
                         <Avatar sx={{ mr: 2, bgcolor: 'primary.main', width: 32, height: 32 }}>
                           {player.number || player.name.charAt(0)}
                         </Avatar>
-                        <ListItemText 
+                        <ListItemText
                           primary={`${player.name} ${player.isCaptain ? '(C)' : ''}`}
                           secondary={`${player.position} - ${player.carrera}`}
                           primaryTypographyProps={{ variant: 'body2' }}
@@ -464,7 +510,7 @@ export default function Teams() {
                     ))}
                     {players.length > 5 && (
                       <ListItem>
-                        <ListItemText 
+                        <ListItemText
                           primary={`... y ${players.length - 5} jugadores más`}
                           primaryTypographyProps={{ variant: 'body2', style: { fontStyle: 'italic', opacity: 0.7 } }}
                         />
@@ -474,7 +520,7 @@ export default function Teams() {
                 </Box>
               </Box>
             </DialogContent>
-            
+
             <DialogActions>
               <Button onClick={handleCloseDialog}>Cerrar</Button>
               <Button variant="contained" onClick={handleNavigateToCalendar}>
