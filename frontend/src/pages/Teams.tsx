@@ -1,33 +1,43 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { 
   Box, Typography, Container, Card, CardContent, CardMedia, 
   Chip, Button, Dialog, DialogTitle, DialogContent, DialogActions,
-  List, ListItem, ListItemText, Divider, Avatar, Alert
+  List, ListItem, ListItemText, Divider, Avatar, Alert, IconButton,
+  TextField, MenuItem, Snackbar
 } from '@mui/material';
-import { useTeamsStore, type TeamWithExtras } from '../store/teamsStore';
-import type { Player } from '../services/api';
+import { 
+  SportsSoccer, SportsBasketball, SportsVolleyball, SportsHandball,
+  SportsTennis, DirectionsRun, FitnessCenter
+} from '@mui/icons-material';
+import { apiService, type Team, type Player } from '../services/api';
+import bannerImg from '../assets/banner.png';
+import { resolveTeamImage } from '../utils/imagenes';
 
 
 // Extensión de la interfaz 'Team' para incluir la propiedad 'icon'
 // TeamWithIcon ahora proviene del store (TeamWithExtras)
 
 export default function Teams() {
-  const navigate = useNavigate();
-  const {
-    teams,
-    selectedTeam,
-    players,
-    loading,
-    error,
-    playersLoading,
-    loadTeams,
-    selectTeam,
-    clearSelection
-  } = useTeamsStore();
-  const dialogOpen = selectedTeam !== null;
+  const [teams, setTeams] = useState<TeamWithIcon[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<TeamWithIcon | null>(null);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [playersLoading, setPlayersLoading] = useState(false);
 
-  // Icon resolution movida al store
+  const getSportIcon = (sport: string) => {
+    const iconProps = { sx: { fontSize: 40 } };
+    switch (sport.toLowerCase()) {
+      case 'fútbol': return <SportsSoccer {...iconProps} />;
+      case 'básquetbol': return <SportsBasketball {...iconProps} />;
+      case 'vóleibol': return <SportsVolleyball {...iconProps} />;
+      case 'handball': return <SportsHandball {...iconProps} />;
+      case 'tenis': return <SportsTennis {...iconProps} />;
+      case 'atletismo': return <DirectionsRun {...iconProps} />;
+      default: return <FitnessCenter {...iconProps} />;
+    }
+  };
 
   // Función para navegar al calendario (ComingSoon)
   const handleNavigateToCalendar = () => {
@@ -44,17 +54,97 @@ export default function Teams() {
   const handleCloseDialog = () => { clearSelection(); };
 
   const getCategoryColor = (category: string) => {
-  switch (category) {
-    case 'Masculino': 
-      return '#000000'; 
-    case 'Femenino': 
-      return '#dd5415ff'; 
-    case 'Mixto': 
-      return '#2f8549'; 
-    default: 
-      return '#9e9e9e';
-  }
-};
+    switch (category) {
+      case 'Masculino':
+        return '#000000';
+      case 'Femenino':
+        return '#dd5415ff';
+      case 'Mixto':
+        return '#2f8549';
+      default:
+        return '#9e9e9e';
+    }
+  };
+
+  const handleEditTeam = (team: TeamWithIcon) => {
+    setEditingTeam(team);
+    setEditDialogOpen(true);
+  };
+
+  const handleDeleteTeam = async (teamId: number) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este equipo?')) {
+      return;
+    }
+
+    try {
+      await apiService.deleteTeam(teamId);
+      setTeams(teams.filter(t => t.id !== teamId));
+      setSnackbarMessage('Equipo eliminado correctamente');
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error('Error deleting team:', err);
+      setSnackbarMessage('Error al eliminar el equipo');
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleSaveTeam = async () => {
+    if (!editingTeam) return;
+
+    try {
+      if (editingTeam.id) {
+        // Update existing team
+        const updated = await apiService.updateTeam(editingTeam.id, editingTeam);
+        const updatedWithIcon = {
+          ...updated,
+          icon: getSportIcon(updated.sport),
+          image: resolveTeamImage(updated.image) || bannerImg
+        };
+        setTeams(teams.map(t => t.id === updated.id ? updatedWithIcon : t));
+        setSnackbarMessage('Equipo actualizado correctamente');
+      } else {
+        // Create new team - don't send id, let backend handle it
+        const { id, ...teamData } = editingTeam as Team;
+        const newTeam = await apiService.createTeam(teamData);
+        const newTeamWithIcon = {
+          ...newTeam,
+          icon: getSportIcon(newTeam.sport),
+          image: resolveTeamImage(newTeam.image) || bannerImg
+        };
+        setTeams([...teams, newTeamWithIcon]);
+        setSnackbarMessage('Equipo creado correctamente');
+      }
+      setSnackbarOpen(true);
+      setEditDialogOpen(false);
+      setEditingTeam(null);
+    } catch (err: any) {
+      console.error('Error saving team:', err);
+      setSnackbarMessage(err.message || 'Error al guardar el equipo');
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleCreateTeam = () => {
+    setEditingTeam({
+      sport: '',
+      name: '',
+      category: 'Masculino',
+      description: '',
+      founded: new Date().getFullYear().toString(),
+      captain: '',
+      playersCount: 0,
+      achievements: [],
+      nextMatch: {
+        id: 1,
+        date: '',
+        opponent: '',
+        location: '',
+        time: ''
+      },
+      image: 'default.jpg'
+    });
+    setEditDialogOpen(true);
+  };
 
 
 
@@ -81,6 +171,18 @@ export default function Teams() {
 
       {/* Teams Grid */}
       <Container sx={{ py: 6 }}>
+        {userIsAdmin && (
+          <Box sx={{ mb: 4, display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleCreateTeam}
+            >
+              Crear Nuevo Equipo
+            </Button>
+          </Box>
+        )}
+
         {error && (
           <Alert severity="warning" sx={{ mb: 4 }}>
             {error} (Mostrando datos de ejemplo)
@@ -106,9 +208,9 @@ export default function Teams() {
             }}
           >
             {teams.map((team) => (
-              <Card 
+              <Card
                 key={team.id}
-                sx={{ 
+                sx={{
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -117,10 +219,50 @@ export default function Teams() {
                   '&:hover': {
                     transform: 'translateY(-8px)',
                     boxShadow: 6
-                  }
+                  },
+                  position: 'relative'
                 }}
                 onClick={() => handleTeamClick(team)}
               >
+                {userIsAdmin && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      zIndex: 10,
+                      display: 'flex',
+                      gap: 1
+                    }}
+                  >
+                    <IconButton
+                      size="small"
+                      sx={{
+                        bgcolor: 'white',
+                        '&:hover': { bgcolor: 'primary.light', color: 'white' }
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditTeam(team);
+                      }}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      sx={{
+                        bgcolor: 'white',
+                        '&:hover': { bgcolor: 'error.main', color: 'white' }
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteTeam(team.id);
+                      }}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                )}
                 <CardMedia
                   component="img"
                   height="200"
@@ -342,6 +484,99 @@ export default function Teams() {
           </>
         )}
       </Dialog>
+
+      {/* Edit/Create Team Dialog */}
+      <Dialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          {editingTeam?.id ? 'Editar Equipo' : 'Crear Nuevo Equipo'}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+            <TextField
+              label="Deporte"
+              value={editingTeam?.sport || ''}
+              onChange={(e) => setEditingTeam({ ...editingTeam, sport: e.target.value })}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Nombre del Equipo"
+              value={editingTeam?.name || ''}
+              onChange={(e) => setEditingTeam({ ...editingTeam, name: e.target.value })}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Categoría"
+              select
+              value={editingTeam?.category || 'Masculino'}
+              onChange={(e) => setEditingTeam({ ...editingTeam, category: e.target.value as 'Masculino' | 'Femenino' | 'Mixto' })}
+              fullWidth
+            >
+              <MenuItem value="Masculino">Masculino</MenuItem>
+              <MenuItem value="Femenino">Femenino</MenuItem>
+              <MenuItem value="Mixto">Mixto</MenuItem>
+            </TextField>
+            <TextField
+              label="Descripción"
+              value={editingTeam?.description || ''}
+              onChange={(e) => setEditingTeam({ ...editingTeam, description: e.target.value })}
+              fullWidth
+              multiline
+              rows={3}
+              required
+            />
+            <TextField
+              label="Año de Fundación"
+              value={editingTeam?.founded || ''}
+              onChange={(e) => setEditingTeam({ ...editingTeam, founded: e.target.value })}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Capitán"
+              value={editingTeam?.captain || ''}
+              onChange={(e) => setEditingTeam({ ...editingTeam, captain: e.target.value })}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Número de Jugadores"
+              type="number"
+              value={editingTeam?.playersCount || 0}
+              onChange={(e) => setEditingTeam({ ...editingTeam, playersCount: parseInt(e.target.value) || 0 })}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Imagen (nombre del archivo)"
+              value={editingTeam?.image || ''}
+              onChange={(e) => setEditingTeam({ ...editingTeam, image: e.target.value })}
+              fullWidth
+              helperText="Ej: futbol-masculino.jpg"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialogOpen(false)}>Cancelar</Button>
+          <Button variant="contained" onClick={handleSaveTeam}>
+            {editingTeam?.id ? 'Guardar Cambios' : 'Crear Equipo'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </Box>
   );
 }

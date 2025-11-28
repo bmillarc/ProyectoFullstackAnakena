@@ -2,6 +2,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  isAdmin?: boolean;
 }
 
 export interface LoginCredentials {
@@ -19,5 +20,6 @@ export interface LoginResponse {
   id: string;
   username: string;
   email: string;
+  isAdmin: boolean;
   csrfToken: string;
 }

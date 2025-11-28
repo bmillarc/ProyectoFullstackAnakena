@@ -74,6 +74,7 @@ export const register = async (req: Request, res: Response) => {
       id: user._id.toString(),
       username: user.username,
       email: user.email,
+      isAdmin: user.isAdmin,
       csrfToken
     });
   } catch (error: any) {
@@ -125,6 +126,7 @@ export const login = async (req: Request, res: Response) => {
       id: user._id.toString(),
       username: user.username,
       email: user.email,
+      isAdmin: user.isAdmin,
       csrfToken
     });
   } catch (error) {

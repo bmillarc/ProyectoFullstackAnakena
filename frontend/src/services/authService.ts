@@ -62,7 +62,8 @@ export async function register(data: RegisterData): Promise<LoginResponse> {
   safeSet('user', JSON.stringify({
     id: responseData.id,
     username: responseData.username,
-    email: responseData.email
+    email: responseData.email,
+    isAdmin: responseData.isAdmin
   }));
 
   return responseData;
@@ -94,7 +95,8 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
   safeSet('user', JSON.stringify({
     id: data.id,
     username: data.username,
-    email: data.email
+    email: data.email,
+    isAdmin: data.isAdmin
   }));
 
   return data;
@@ -132,4 +134,10 @@ export function getUserFromStorage(): User | null {
 // Check if user is logged in
 export function isLoggedIn(): boolean {
   return getUserFromStorage() !== null && getCsrfToken() !== null;
+}
+
+// Check if current user is admin
+export function isAdmin(): boolean {
+  const user = getUserFromStorage();
+  return user !== null && user.isAdmin === true;
 }

@@ -13,6 +13,7 @@ import TournamentModel from "./models/tournaments";
 import EventModel from "./models/events";
 import StoreItemModel from "./models/store";
 import authRoutes from "./routes/authRoutes";
+import { authenticate, isAdmin } from "./middleware/auth";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -110,7 +111,7 @@ app.get("/api/teams/:id", (request, response, next) => {
 });
 
 
-app.post("/api/teams", (request, response, next) => {
+app.post("/api/teams", authenticate, isAdmin, (request, response, next) => {
   const body = request.body;
 
   const team = new TeamModel({
@@ -135,7 +136,7 @@ app.post("/api/teams", (request, response, next) => {
 });
 
 
-app.put("/api/teams/:id", (request, response, next) => {
+app.put("/api/teams/:id", authenticate, isAdmin, (request, response, next) => {
   const id = Number(request.params.id);
   const body = request.body;
 
@@ -155,7 +156,7 @@ app.put("/api/teams/:id", (request, response, next) => {
 });
 
 
-app.delete("/api/teams/:id", (request, response, next) => {
+app.delete("/api/teams/:id", authenticate, isAdmin, (request, response, next) => {
   const id = Number(request.params.id);
 
   TeamModel.findOneAndDelete({ id })
@@ -196,7 +197,7 @@ app.get("/api/players/:id", (request, response, next) => {
 });
 
 
-app.post("/api/players", (request, response, next) => {
+app.post("/api/players", authenticate, isAdmin, (request, response, next) => {
   const body = request.body;
 
   const player = new PlayerModel({
@@ -218,7 +219,7 @@ app.post("/api/players", (request, response, next) => {
 });
 
 
-app.put("/api/players/:id", (request, response, next) => {
+app.put("/api/players/:id", authenticate, isAdmin, (request, response, next) => {
   const id = Number(request.params.id);
   const body = request.body;
 
@@ -237,7 +238,7 @@ app.put("/api/players/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.delete("/api/players/:id", (request, response, next) => {
+app.delete("/api/players/:id", authenticate, isAdmin, (request, response, next) => {
   const id = Number(request.params.id);
 
   PlayerModel.findOneAndDelete({ id })
@@ -524,7 +525,7 @@ app.get("/api/events/:id", (request, response, next) => {
 });
 
 
-app.post("/api/events", (request, response, next) => {
+app.post("/api/events", authenticate, isAdmin, (request, response, next) => {
   const body = request.body;
 
   const event = new EventModel({
@@ -545,7 +546,7 @@ app.post("/api/events", (request, response, next) => {
 });
 
 
-app.put("/api/events/:id", (request, response, next) => {
+app.put("/api/events/:id", authenticate, isAdmin, (request, response, next) => {
   const id = Number(request.params.id);
   const body = request.body;
 
@@ -565,7 +566,7 @@ app.put("/api/events/:id", (request, response, next) => {
 });
 
 
-app.delete("/api/events/:id", (request, response, next) => {
+app.delete("/api/events/:id", authenticate, isAdmin, (request, response, next) => {
   const id = Number(request.params.id);
 
   EventModel.findOneAndDelete({ id })

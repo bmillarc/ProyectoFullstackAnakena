@@ -6,6 +6,7 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
+  isAdmin: boolean;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -39,13 +40,22 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters long']
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
 });
 
-// Hash password before saving
+// Set isAdmin based on email domain before saving
 userSchema.pre('save', async function(next) {
+  // Check if email has @anakena.cl domain
+  if (this.email && this.email.endsWith('@anakena.cl')) {
+    this.isAdmin = true;
+  }
+
   if (!this.isModified('password')) {
     return next();
   }

@@ -70,13 +70,51 @@ export interface Tournament {
   status: 'active' | 'finished' | 'upcoming';
 }
 
+export interface Event {
+  id: number;
+  start: string;
+  end: string;
+  title: string;
+  category: string;
+  location: string;
+  description: string;
+}
+
+// Helper function to get CSRF token from localStorage
+function getCsrfToken(): string | null {
+  return localStorage.getItem('csrfToken');
+}
+
 class ApiService {
-  private async fetchApi<T>(endpoint: string): Promise<T> {
+  private async fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const csrfToken = getCsrfToken();
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...(options?.headers as Record<string, string> || {}),
+      };
+
+      // Add CSRF token for protected endpoints
+      if (csrfToken) {
+        headers['x-csrf-token'] = csrfToken;
       }
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...options,
+        credentials: 'include',
+        headers,
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      // Handle 204 No Content responses
+      if (response.status === 204) {
+        return {} as T;
+      }
+
       return await response.json();
     } catch (error) {
       console.error(`Error fetching ${endpoint}:`, error);
@@ -97,6 +135,26 @@ class ApiService {
     return this.fetchApi<Team[]>(`/teams?sport=${sport}`);
   }
 
+  async createTeam(team: Omit<Team, 'id'>): Promise<Team> {
+    return this.fetchApi<Team>('/teams', {
+      method: 'POST',
+      body: JSON.stringify(team),
+    });
+  }
+
+  async updateTeam(id: number, team: Partial<Team>): Promise<Team> {
+    return this.fetchApi<Team>(`/teams/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(team),
+    });
+  }
+
+  async deleteTeam(id: number): Promise<void> {
+    return this.fetchApi<void>(`/teams/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Jugadores
   async getPlayers(): Promise<Player[]> {
     return this.fetchApi<Player[]>('/players');
@@ -108,6 +166,26 @@ class ApiService {
 
   async getPlayer(id: number): Promise<Player> {
     return this.fetchApi<Player>(`/players/${id}`);
+  }
+
+  async createPlayer(player: Omit<Player, 'id'>): Promise<Player> {
+    return this.fetchApi<Player>('/players', {
+      method: 'POST',
+      body: JSON.stringify(player),
+    });
+  }
+
+  async updatePlayer(id: number, player: Partial<Player>): Promise<Player> {
+    return this.fetchApi<Player>(`/players/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(player),
+    });
+  }
+
+  async deletePlayer(id: number): Promise<void> {
+    return this.fetchApi<void>(`/players/${id}`, {
+      method: 'DELETE',
+    });
   }
 
   // Partidos
@@ -151,6 +229,35 @@ class ApiService {
 
   async getActiveTournaments(): Promise<Tournament[]> {
     return this.fetchApi<Tournament[]>('/tournaments?status=active');
+  }
+
+  // Eventos
+  async getEvents(): Promise<Event[]> {
+    return this.fetchApi<Event[]>('/events');
+  }
+
+  async getEvent(id: number): Promise<Event> {
+    return this.fetchApi<Event>(`/events/${id}`);
+  }
+
+  async createEvent(event: Omit<Event, 'id'>): Promise<Event> {
+    return this.fetchApi<Event>('/events', {
+      method: 'POST',
+      body: JSON.stringify(event),
+    });
+  }
+
+  async updateEvent(id: number, event: Partial<Event>): Promise<Event> {
+    return this.fetchApi<Event>(`/events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(event),
+    });
+  }
+
+  async deleteEvent(id: number): Promise<void> {
+    return this.fetchApi<void>(`/events/${id}`, {
+      method: 'DELETE',
+    });
   }
 }
 

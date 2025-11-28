@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import UserModel from '../models/user';
 
 export interface RequestWithUserId extends Request {
   userId?: string;
+  isAdmin?: boolean;
 }
 
 // Interfaz que describe el contenido de nuestro token una vez decodificado
@@ -50,6 +52,31 @@ export const authenticate = (req: RequestWithUserId, res: Response, next: NextFu
       return res.status(401).json({ error: 'Token expired, please log in again' });
     }
     next(error);
+  }
+};
+
+// Middleware to check if user is admin
+export const isAdmin = async (req: RequestWithUserId, res: Response, next: NextFunction) => {
+  try {
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const user = await UserModel.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!user.isAdmin) {
+      return res.status(403).json({ error: 'Admin privileges required' });
+    }
+
+    req.isAdmin = true;
+    next();
+  } catch (error) {
+    console.error('Admin check error:', error);
+    return res.status(500).json({ error: 'Error checking admin privileges' });
   }
 };
 
